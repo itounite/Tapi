@@ -1,0 +1,6 @@
+{
+  "name": "Tapi Life",
+  "description": "Playful bilingual website (Japanese & English) for Tapi Life (King Tapioca and friends) with illustrations, games, and videos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" width="100%" height="100%">
+  <defs>
+    <!-- Soft shadow / gradient for depth -->
+    <radialGradient id="tapiGradient" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#545860" />
+      <stop offset="85%" stop-color="#40434A" />
+      <stop offset="100%" stop-color="#34373D" />
+    </radialGradient>
+    <linearGradient id="hatGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#383B42" />
+      <stop offset="100%" stop-color="#232529" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background is transparent -->
+
+  <!-- Little feet -->
+  <path d="M 162 380 L 162 396" stroke="#18191B" stroke-width="7" stroke-linecap="round" />
+  <path d="M 188 382 L 188 398" stroke="#18191B" stroke-width="7" stroke-linecap="round" />
+
+  <!-- Left little arm -->
+  <path d="M 76 312 Q 68 322 72 334" fill="none" stroke="#18191B" stroke-width="7" stroke-linecap="round" />
+
+  <!-- Main Body Boba Ball -->
+  <circle cx="190" cy="245" r="142" fill="url(#tapiGradient)" stroke="#18191B" stroke-width="8" />
+
+  <!-- Right ear / contour curve -->
+  <path d="M 302 188 C 316 202 322 220 318 238 C 314 252 300 258 290 252" fill="none" stroke="#18191B" stroke-width="7" stroke-linecap="round" />
+
+  <!-- Top Hat Group (Tilted ~16 degrees) -->
+  <g transform="translate(232, 142) rotate(16)">
+    <!-- Hat Brim (Back & Front) -->
+    <ellipse cx="0" cy="22" rx="76" ry="24" fill="url(#hatGradient)" stroke="#18191B" stroke-width="8" />
+
+    <!-- Hat Crown Body -->
+    <path d="M -46 16 L -36 -72 Q 0 -84 36 -72 L 46 16 Z" fill="url(#hatGradient)" stroke="#18191B" stroke-width="8" stroke-linejoin="round" />
+
+    <!-- Top Cap of Hat -->
+    <ellipse cx="0" cy="-72" rx="36" ry="13" fill="#3D4048" stroke="#18191B" stroke-width="7" />
+
+    <!-- Red Ribbon Band -->
+    <path d="M -44 14 L -42 -8 Q 0 -18 42 -8 L 44 14 Q 0 4 -44 14 Z" fill="#FF453A" stroke="#18191B" stroke-width="7" stroke-linejoin="round" />
+  </g>
+
+  <!-- Facial Features -->
+  <!-- Left eye (closed/slanted) -->
+  <path d="M 98 228 L 138 218" stroke="#18191B" stroke-width="7" stroke-linecap="round" />
+
+  <!-- Right eye (closed/slanted) -->
+  <path d="M 182 196 L 222 174" stroke="#18191B" stroke-width="7" stroke-linecap="round" />
+
+  <!-- Wavy mustache/mouth -->
+  <path d="M 130 248 Q 137 240 144 248 Q 151 256 158 248 Q 165 240 172 248 Q 179 256 186 248" fill="none" stroke="#18191B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Red Bow Tie -->
+  <g transform="translate(164, 290)">
+    <!-- Left Wing -->
+    <path d="M -16 -12 L 0 0 L -16 12 Z" fill="#FF453A" stroke="#18191B" stroke-width="6" stroke-linejoin="round" />
+    <!-- Right Wing -->
+    <path d="M 16 -12 L 0 0 L 16 12 Z" fill="#FF453A" stroke="#18191B" stroke-width="6" stroke-linejoin="round" />
+    <!-- Center Knot -->
+    <circle cx="0" cy="0" r="4.5" fill="#FF3B30" stroke="#18191B" stroke-width="4.5" />
+  </g>
+
+  <!-- Sparkles / Yellow Stars -->
+  <!-- Top-Right Sparkle -->
+  <g transform="translate(366, 172)">
+    <path d="M -30 0 Q 0 0 0 -30 Q 0 0 30 0 Q 0 0 0 30 Q 0 0 -30 0 Z" fill="#FFD60A" stroke="#18191B" stroke-width="6" stroke-linejoin="round" />
+  </g>
+
+  <!-- Bottom-Left Sparkle -->
+  <g transform="translate(38, 332)">
+    <path d="M -16 0 Q 0 0 0 -16 Q 0 0 16 0 Q 0 0 0 16 Q 0 0 -16 0 Z" fill="#FFD60A" stroke="#18191B" stroke-width="5" stroke-linejoin="round" />
+  </g>
+</svg>
