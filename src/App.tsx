@@ -19,8 +19,8 @@ import { CHARACTERS } from './data';
 import EssaysPage from './components/EssaysPage';
 import AboutPage from './components/AboutPage';
 
-// Import path of generated hero banner asset
-import heroBanner from "./assets/images/tapi_life_hero_banner_1782021839023.jpg";
+// Import path of hero artwork asset
+import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
 
 export default function App() {
   const [lang, setLang] = useState<Language>('ja'); // Default to Japanese as requested for Tapi Life audience
@@ -230,18 +230,26 @@ export default function App() {
 
         {/* Framed Artwork Display */}
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white p-3 border border-neutral-200 rounded-lg shadow-sm">
-            <div className="relative aspect-[16/10] overflow-hidden rounded border border-neutral-100 bg-[#FAF9F6]">
+          <div className="bg-white p-3.5 sm:p-4 border border-neutral-200 rounded-xl shadow-sm space-y-3">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-neutral-200 bg-[#757575]">
               <img 
                 src={heroBanner} 
-                alt="Tapi Life Collection" 
-                className="w-full h-full object-cover opacity-95 hover:opacity-100 transition-opacity duration-500"
+                alt="まちがいさがし - を見つけろ！" 
+                className="w-full h-full object-contain hover:scale-[1.01] transition-transform duration-500"
                 referrerPolicy="no-referrer"
               />
             </div>
-            <div className="mt-3 flex items-center justify-between text-[11px] font-mono text-neutral-400 px-1">
-              <span>YOSHI TSUIJI — TAPI TRIO</span>
-              <span>© 2026</span>
+            
+            {/* User Requested Caption */}
+            <div className="pt-2 border-t border-neutral-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-1">
+              <p className="font-serif text-xs sm:text-sm text-neutral-800 tracking-wide font-medium">
+                {lang === 'en' 
+                  ? '“まちがいさがしの正解の方じゃ、きっと出会えなかったと思う　byタピオカ玉”' 
+                  : 'まちがいさがしの正解の方じゃ、きっと出会えなかったと思う　byタピオカ玉'}
+              </p>
+              <span className="text-[10px] font-mono text-neutral-400 shrink-0 uppercase">
+                YOSHI TSUIJI — TAPI LIFE
+              </span>
             </div>
           </div>
         </div>

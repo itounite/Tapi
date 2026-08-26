@@ -1,0 +1,267 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 625" width="100%" height="100%">
+  <defs>
+    <style>
+      .outline { stroke: #000000; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .thin-line { stroke: #000000; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; }
+      .crown-text { font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', 'Noto Sans JP', sans-serif; font-weight: bold; font-size: 14px; fill: #000; text-anchor: middle; }
+      .banner-text { font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', 'Noto Sans JP', sans-serif; font-weight: 900; font-size: 38px; fill: #000; letter-spacing: 2px; }
+    </style>
+    <!-- Crowns -->
+    <g id="gold-crown">
+      <path d="M -16 6 L -20 -12 L -7 -4 L 0 -16 L 7 -4 L 20 -12 L 16 6 Z" fill="#FCE833" stroke="#000" stroke-width="3.5" stroke-linejoin="round"/>
+    </g>
+    <!-- Bowties -->
+    <g id="red-bowtie">
+      <path d="M -12 -8 L 0 0 L -12 8 Z" fill="#E83B54" stroke="#000" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M 12 -8 L 0 0 L 12 8 Z" fill="#E83B54" stroke="#000" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="0" cy="0" r="3" fill="#E83B54" stroke="#000" stroke-width="2.5"/>
+    </g>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1000" height="625" fill="#757575"/>
+
+  <!-- BACK ROW BOBAS -->
+  <!-- Back 1 -->
+  <path d="M -20 180 C 20 20, 160 10, 200 180 C 190 200, -10 200, -20 180 Z" fill="#7D7D7D" class="outline" />
+  <path d="M 30 70 Q 40 55 50 70 M 60 70 Q 70 55 80 70" fill="none" class="thin-line" />
+  <path d="M 35 105 Q 45 95 55 105 Q 65 115 75 105" fill="none" class="thin-line" />
+  <use href="#red-bowtie" x="65" y="130" transform="scale(0.9)"/>
+
+  <!-- Back 2 -->
+  <path d="M 130 180 C 180 0, 360 -10, 420 180 Z" fill="#787878" class="outline" />
+  <path d="M 230 80 Q 255 60 280 80" fill="none" class="thin-line" />
+  <path d="M 235 115 Q 255 130 275 115" fill="none" class="thin-line" />
+  <use href="#red-bowtie" x="260" y="145"/>
+
+  <!-- Back 3 Center -->
+  <path d="M 360 200 C 400 -20, 560 -30, 610 200 Z" fill="#737373" class="outline" />
+  <path d="M 460 70 Q 480 50 500 70" fill="none" class="thin-line" />
+  <path d="M 465 105 Q 480 120 495 105" fill="none" class="thin-line" />
+  <use href="#red-bowtie" x="485" y="140"/>
+
+  <!-- Back 4 -->
+  <path d="M 540 220 C 580 20, 720 0, 780 220 Z" fill="#7D7D7D" class="outline" />
+  <path d="M 640 75 L 685 75" class="thin-line" />
+  <path d="M 650 100 Q 665 115 680 100" fill="none" class="thin-line" />
+  <rect x="660" y="118" width="10" height="10" fill="#E83B54" stroke="#000" stroke-width="2"/>
+
+  <!-- Back 5 Right -->
+  <path d="M 730 220 C 770 40, 940 30, 1020 220 Z" fill="#707070" class="outline" />
+
+  <!-- MID-BACK ROW -->
+  <!-- Left blob -->
+  <path d="M -40 360 C -10 160, 150 150, 180 360 Z" fill="#6B6B6B" class="outline" />
+  <use href="#gold-crown" x="80" y="165"/>
+  <text x="80" y="169" class="crown-text">タコ</text>
+  <path d="M 35 240 L 80 240 M 100 240 L 140 240" class="thin-line" stroke-width="6"/>
+  <path d="M 57 220 L 57 260" class="thin-line" stroke-width="6"/>
+  <circle cx="35" cy="275" r="14" fill="#000"/>
+  <path d="M 20 275 L 5 270 M 20 280 L 0 285 M 20 290 L 8 300" stroke="#000" stroke-width="4"/>
+  <use href="#red-bowtie" x="85" y="295"/>
+
+  <!-- Mid-Left 2 -->
+  <path d="M 120 400 C 150 200, 320 180, 360 400 Z" fill="#6E6E6E" class="outline" />
+  <use href="#gold-crown" x="235" y="270"/>
+  <text x="235" y="274" class="crown-text">王</text>
+  <path d="M 175 320 L 235 315 M 265 310 L 320 310" class="thin-line" stroke-width="6"/>
+  <path d="M 195 355 Q 205 345 215 355 Q 225 365 235 355 Q 245 345 255 355 Q 265 365 275 355 Q 285 345 295 355" fill="none" class="thin-line" stroke-width="5"/>
+  <use href="#red-bowtie" x="250" y="390"/>
+
+  <!-- Red Starfish Monster (Top center-left) -->
+  <g transform="translate(325, 175) scale(1.1)">
+    <!-- 5 pointed monster star -->
+    <path d="M 0 -45 L 12 -15 L 45 -15 L 18 6 L 30 38 L 0 18 L -30 38 L -18 6 L -45 -15 L -12 -15 Z" fill="#B71C1C" stroke="#000" stroke-width="4.5" stroke-linejoin="round"/>
+    <!-- Yellow spots -->
+    <circle cx="0" cy="-25" r="2.5" fill="#FFEB3B"/>
+    <circle cx="20" cy="-10" r="2.5" fill="#FFEB3B"/>
+    <circle cx="15" cy="18" r="2.5" fill="#FFEB3B"/>
+    <circle cx="-15" cy="18" r="2.5" fill="#FFEB3B"/>
+    <circle cx="-20" cy="-10" r="2.5" fill="#FFEB3B"/>
+    <!-- Center monster eye / mouth -->
+    <ellipse cx="0" cy="0" rx="14" ry="10" fill="#000"/>
+    <circle cx="-3" cy="-2" r="4" fill="#FFF"/>
+    <!-- Sharp Teeth inside mouth -->
+    <path d="M -12 0 L -8 -5 L -4 0 L 0 -5 L 4 0 L 8 -5 L 12 0" fill="#FFF" stroke="#000" stroke-width="1.5"/>
+    <use href="#gold-crown" x="12" y="-45" transform="scale(0.65)"/>
+    <text x="12" y="-42" font-size="9" class="crown-text">王</text>
+    <use href="#red-bowtie" x="32" y="38" transform="scale(0.7)"/>
+  </g>
+
+  <!-- Natadecoco / White Boba (Center) -->
+  <path d="M 355 375 C 380 260, 500 240, 525 375 Z" fill="#FFFFFF" class="outline" />
+  <use href="#gold-crown" x="445" y="258"/>
+  <text x="445" y="262" class="crown-text">王</text>
+  <path d="M 400 295 L 430 288 M 450 285 L 485 288" class="thin-line" stroke-width="5"/>
+  <path d="M 405 320 Q 415 310 425 320 Q 435 330 445 320 Q 455 310 465 320 Q 475 330 485 320" fill="none" class="thin-line" stroke-width="4.5"/>
+  <use href="#red-bowtie" x="445" y="355"/>
+
+  <!-- TARGET BOBAS: Tapioka King (Circled in red) -->
+  <g id="target-king">
+    <path d="M 485 375 C 505 240, 620 230, 645 375 Z" fill="#5E5E5E" class="outline" />
+    <use href="#gold-crown" x="555" y="245"/>
+    <text x="555" y="249" class="crown-text">王</text>
+    <!-- Face -->
+    <path d="M 525 305 L 555 305 M 575 305 L 610 305" class="thin-line" stroke-width="5"/>
+    <path d="M 535 330 Q 543 322 551 330 Q 559 338 567 330 Q 575 322 583 330 Q 591 338 599 330" fill="none" class="thin-line" stroke-width="4.5"/>
+    <use href="#red-bowtie" x="567" y="365"/>
+
+    <!-- RED HAND-DRAWN CIRCLE (THE PUZZLE ANSWER MARKER) -->
+    <path d="M 530 215 C 640 190, 680 340, 595 410 C 510 470, 440 370, 485 270 C 515 210, 610 200, 670 270 C 685 290, 690 320, 685 345" fill="none" stroke="#D32F2F" stroke-width="9" stroke-linecap="round"/>
+  </g>
+
+  <!-- Mid-Right 1: Square / Boxy Boba -->
+  <path d="M 690 380 C 700 230, 850 200, 875 380 Z" fill="#666666" class="outline" />
+  <use href="#gold-crown" x="780" y="235"/>
+  <text x="780" y="239" class="crown-text">王</text>
+  <!-- Face -->
+  <path d="M 725 295 L 755 295 M 785 290 L 820 290" class="thin-line" stroke-width="5"/>
+  <path d="M 740 320 Q 750 310 760 320 Q 770 330 780 320 Q 790 310 800 320 Q 810 330 820 320" fill="none" class="thin-line" stroke-width="4.5"/>
+  <use href="#red-bowtie" x="780" y="355"/>
+
+  <!-- Mid-Right 2: Tall 'U U' Boba -->
+  <path d="M 830 380 C 850 160, 990 150, 1020 380 Z" fill="#6B6B6B" class="outline" />
+  <path d="M 885 215 C 885 195, 905 195, 905 215 M 925 215 C 925 195, 945 195, 945 215" fill="none" class="thin-line" stroke-width="5.5"/>
+  <path d="M 885 245 Q 895 235 905 245 Q 915 255 925 245 Q 935 235 945 245" fill="none" class="thin-line" stroke-width="4.5"/>
+  <use href="#red-bowtie" x="915" y="275"/>
+
+  <!-- Glasses Boba in between -->
+  <path d="M 640 290 C 650 210, 740 200, 750 290 Z" fill="#5A5A5A" class="outline"/>
+  <rect x="650" y="225" width="22" height="15" fill="#FFF" stroke="#000" stroke-width="3"/>
+  <rect x="678" y="225" width="22" height="15" fill="#FFF" stroke="#000" stroke-width="3"/>
+  <line x1="672" y1="232" x2="678" y2="232" stroke="#000" stroke-width="3"/>
+  <use href="#red-bowtie" x="675" y="280" transform="scale(0.8)"/>
+
+  <!-- FOREGROUND ROWS -->
+
+  <!-- Left Green Boba with X X eyes and cracked bottom -->
+  <g transform="translate(0, 440)">
+    <path d="M -10 200 C -10 60, 120 50, 135 200 Z" fill="#76FF03" class="outline"/>
+    <!-- X X Eyes -->
+    <path d="M 25 105 L 50 135 M 50 105 L 25 135" class="thin-line" stroke-width="6"/>
+    <path d="M 65 105 L 90 135 M 90 105 L 65 135" class="thin-line" stroke-width="6"/>
+    <!-- Open Cyan Mouth -->
+    <ellipse cx="58" cy="165" rx="14" ry="18" fill="#00E5FF" stroke="#000" stroke-width="4"/>
+  </g>
+
+  <!-- Big Slanted Boba (Left) -->
+  <path d="M 0 540 C 30 380, 240 370, 270 540 Z" fill="#636363" class="outline"/>
+  <use href="#gold-crown" x="48" y="445"/>
+  <text x="48" y="449" class="crown-text">王</text>
+  <path d="M 28 530 L 68 535 M 90 535 L 125 530" class="thin-line" stroke-width="5"/>
+  <ellipse cx="40" cy="570" rx="8" ry="16" fill="#D50000" stroke="#000" stroke-width="3"/>
+  <use href="#red-bowtie" x="80" y="605"/>
+
+  <!-- Henohenomoheji Face Boba -->
+  <path d="M 90 625 C 100 480, 270 470, 290 625 Z" fill="#696969" class="outline"/>
+  <use href="#gold-crown" x="180" y="495"/>
+  <text x="180" y="499" class="crown-text">王</text>
+  <!-- Henoheno characters vertically -->
+  <text x="180" y="530" font-family="sans-serif" font-weight="bold" font-size="22" text-anchor="middle" fill="#000">へ</text>
+  <text x="180" y="555" font-family="sans-serif" font-weight="bold" font-size="20" text-anchor="middle" fill="#000">の</text>
+  <text x="180" y="575" font-family="sans-serif" font-weight="bold" font-size="22" text-anchor="middle" fill="#000">へ</text>
+  <text x="180" y="595" font-family="sans-serif" font-weight="bold" font-size="18" text-anchor="middle" fill="#000">も</text>
+  <use href="#red-bowtie" x="180" y="618" transform="scale(0.8)"/>
+
+  <!-- Center-Left Smiling Boba -->
+  <path d="M 270 550 C 310 400, 480 390, 500 550 Z" fill="#5F5F5F" class="outline"/>
+  <use href="#gold-crown" x="350" y="425"/>
+  <text x="350" y="429" class="crown-text">王</text>
+  <!-- Nose/mouth -->
+  <path d="M 335 440 L 350 460 L 335 465" class="thin-line" stroke-width="4"/>
+  <path d="M 320 485 Q 330 475 340 485 Q 350 495 360 485 Q 370 475 380 485" fill="none" class="thin-line" stroke-width="4.5"/>
+  <use href="#red-bowtie" x="355" y="520"/>
+
+  <!-- Sleeping / Chill Boba -->
+  <path d="M 230 625 C 250 510, 400 500, 410 625 Z" fill="#666666" class="outline"/>
+  <use href="#gold-crown" x="290" y="525"/>
+  <text x="290" y="529" class="crown-text">王</text>
+  <path d="M 280 575 Q 290 565 300 575 Q 310 585 320 575" fill="none" class="thin-line" stroke-width="4"/>
+  <use href="#red-bowtie" x="300" y="605"/>
+
+  <!-- Wide Smiling Crowned Boba (Center) -->
+  <path d="M 410 570 C 430 430, 610 420, 630 570 Z" fill="#616161" class="outline"/>
+  <use href="#gold-crown" x="540" y="445"/>
+  <text x="540" y="449" class="crown-text">王</text>
+  <path d="M 465 475 Q 480 460 495 475 M 545 475 Q 560 460 575 475" fill="none" class="thin-line" stroke-width="5"/>
+  <path d="M 460 505 Q 470 495 480 505 Q 490 515 500 505 Q 510 495 520 505" fill="none" class="thin-line" stroke-width="4"/>
+  <use href="#red-bowtie" x="490" y="540"/>
+
+  <!-- Big Eyeglasses Boba -->
+  <path d="M 580 560 C 600 390, 780 380, 800 560 Z" fill="#6E6E6E" class="outline"/>
+  <rect x="618" y="445" width="38" height="26" fill="#FFF" stroke="#000" stroke-width="4"/>
+  <rect x="670" y="445" width="38" height="26" fill="#FFF" stroke="#000" stroke-width="4"/>
+  <line x1="656" y1="458" x2="670" y2="458" stroke="#000" stroke-width="4"/>
+  <path d="M 665 490 Q 675 500 685 490" fill="none" class="thin-line" stroke-width="4"/>
+  <use href="#gold-crown" x="680" y="525"/>
+  <text x="680" y="529" class="crown-text">王</text>
+
+  <!-- Swirly Face Boba -->
+  <path d="M 720 570 C 740 450, 880 440, 900 570 Z" fill="#636363" class="outline"/>
+  <path d="M 770 480 C 750 490, 750 515, 770 520 C 785 525, 795 510, 790 495 C 785 485, 775 485, 770 495 C 768 500, 772 505, 778 505" fill="none" class="thin-line" stroke-width="3.5"/>
+
+  <!-- Star-Eyes Boba (Bottom Center) -->
+  <path d="M 430 625 C 440 540, 550 530, 560 625 Z" fill="#595959" class="outline"/>
+  <use href="#gold-crown" x="480" y="555"/>
+  <text x="480" y="559" class="crown-text">王</text>
+  <!-- Pink / Yellow Star Eyes -->
+  <path d="M 460 595 L 465 580 L 470 595 L 485 595 L 472 605 L 478 620 L 465 610 L 452 620 L 458 605 L 445 595 Z" fill="#FF4081" stroke="#FFEB3B" stroke-width="2.5"/>
+  <path d="M 500 595 L 505 580 L 510 595 L 525 595 L 512 605 L 518 620 L 505 610 L 492 620 L 498 605 L 485 595 Z" fill="#FF4081" stroke="#FFEB3B" stroke-width="2.5"/>
+
+  <!-- Sticking Tongue Out Boba (Bottom Mid-Right) -->
+  <path d="M 515 625 C 530 520, 650 510, 660 625 Z" fill="#545454" class="outline"/>
+  <path d="M 545 580 L 585 580 M 595 580 L 630 580" class="thin-line" stroke-width="4"/>
+  <!-- Tongue -->
+  <path d="M 570 600 C 570 620, 590 620, 590 600 Z" fill="#E91E63" stroke="#000" stroke-width="3"/>
+  <use href="#gold-crown" x="590" y="535"/>
+  <text x="590" y="539" class="crown-text">王</text>
+
+  <!-- TAPIOKA OU / Named Boba on right -->
+  <path d="M 810 600 C 820 420, 990 410, 1020 600 Z" fill="#696969" class="outline"/>
+  <use href="#gold-crown" x="910" y="425"/>
+  <text x="910" y="429" class="crown-text">王</text>
+  <text x="910" y="480" font-family="'Arial Black', sans-serif" font-size="20" font-weight="bold" fill="#000" text-anchor="middle">TAPIOKA</text>
+  <text x="890" y="515" font-family="'Arial Black', sans-serif" font-size="20" font-weight="bold" fill="#000" text-anchor="middle">OU</text>
+  <use href="#red-bowtie" x="925" y="510"/>
+  <!-- Little Zakuro tag -->
+  <rect x="900" y="535" width="28" height="18" fill="#C6FF00" stroke="#000" stroke-width="2"/>
+  <text x="914" y="548" font-size="10" font-weight="bold" text-anchor="middle">ザク</text>
+
+  <!-- Big Sleepy Boba (Bottom Right) -->
+  <path d="M 680 625 C 700 480, 880 470, 895 625 Z" fill="#525252" class="outline"/>
+  <use href="#gold-crown" x="780" y="500"/>
+  <text x="780" y="504" class="crown-text">王</text>
+  <path d="M 720 550 L 760 550 M 785 550 L 825 550" class="thin-line" stroke-width="6"/>
+  <path d="M 735 575 Q 745 565 755 575 Q 765 585 775 575 Q 785 565 795 575 Q 805 585 815 575" fill="none" class="thin-line" stroke-width="4.5"/>
+  <use href="#red-bowtie" x="780" y="605"/>
+
+  <!-- Red Winking Character (Bottom Far-Right) -->
+  <path d="M 845 625 C 855 500, 1020 480, 1030 625 Z" fill="#EF5350" class="outline"/>
+  <!-- Wink eye + Big round eye -->
+  <path d="M 875 565 L 920 565" class="thin-line" stroke-width="7"/>
+  <ellipse cx="955" cy="565" rx="16" ry="12" fill="#FFF" stroke="#000" stroke-width="4"/>
+  <circle cx="955" cy="565" r="7" fill="#000"/>
+  <!-- Grin with teeth -->
+  <path d="M 890 600 Q 940 620 975 590 Z" fill="#FFF" stroke="#000" stroke-width="4"/>
+  <path d="M 910 600 L 910 610 M 930 605 L 930 615 M 950 600 L 950 610" stroke="#000" stroke-width="2.5"/>
+
+  <!-- TOP-RIGHT GAME BANNER: [King Head] を見つけろ！ -->
+  <g transform="translate(695, 0)">
+    <rect x="0" y="0" width="305" height="90" fill="#FFF79A" stroke="#000" stroke-width="6"/>
+    
+    <!-- Mini King Icon in circle -->
+    <g transform="translate(56, 48)">
+      <circle cx="0" cy="0" r="32" fill="#757575" stroke="#000" stroke-width="4"/>
+      <!-- Tiny Crown -->
+      <use href="#gold-crown" x="0" y="-32" transform="scale(0.8)"/>
+      <text x="0" y="-29" font-size="11" class="crown-text">王</text>
+      <!-- Face -->
+      <path d="M -16 -4 L -4 -4 M 4 -4 L 16 -4" stroke="#000" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M -12 10 Q -6 5 0 10 Q 6 15 12 10" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round"/>
+      <use href="#red-bowtie" x="0" y="24" transform="scale(0.65)"/>
+    </g>
+
+    <!-- Japanese Text: を見つけろ！ -->
+    <text x="105" y="58" class="banner-text">を見つけろ！</text>
+  </g>
+</svg>
