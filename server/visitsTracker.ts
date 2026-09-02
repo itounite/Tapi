@@ -32,18 +32,7 @@ export function initVisitsTracker() {
   const now = Date.now();
   const cutoff = now - TWENTY_FOUR_HOURS_MS;
   visitTimestamps = visitTimestamps.filter((t) => t > cutoff);
-
-  // If tracker is brand new or file didn't exist, seed realistic baseline visits for past 24h
-  if (visitTimestamps.length === 0) {
-    const baselineVisits = 32;
-    for (let i = 0; i < baselineVisits; i++) {
-      // Randomly distribute timestamps across the trailing 23.5 hours
-      const randomOffset = Math.floor(Math.random() * (TWENTY_FOUR_HOURS_MS - 30 * 60 * 1000));
-      visitTimestamps.push(now - randomOffset);
-    }
-    visitTimestamps.sort((a, b) => a - b);
-    saveVisits();
-  }
+  saveVisits();
 }
 
 function saveVisits() {
