@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, BookOpen, Clock, ArrowRight, CornerDownRight, Globe } from 'lucide-react';
 import { Language } from '../types';
+import Footer from './Footer';
 
 interface EssaysPageProps {
   lang: Language;
   onBack: () => void;
+  visits24h?: number | null;
 }
 
 interface Essay {
@@ -369,6 +371,9 @@ export default function EssaysPage(props: EssaysPageProps) {
           </button>
         </div>
       </div>
+
+      {/* Site Footer */}
+      <Footer lang={lang} visits24h={props.visits24h} />
     </div>
   );
 }

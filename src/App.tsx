@@ -18,6 +18,7 @@ import { CHARACTERS } from './data';
 // Subcomponents
 import EssaysPage from './components/EssaysPage';
 import AboutPage from './components/AboutPage';
+import Footer from './components/Footer';
 
 // Import path of hero artwork asset
 import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
@@ -25,6 +26,7 @@ import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
 export default function App() {
   const [lang, setLang] = useState<Language>('ja'); // Default to Japanese as requested for Tapi Life audience
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
+  const [visits24h, setVisits24h] = useState<number | null>(null);
   
   // Custom SPA Path Routing State
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
@@ -36,6 +38,62 @@ export default function App() {
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Track site visit and retrieve trailing 24-hour visits count
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchVisits = async () => {
+      try {
+        let hasRecordedSession = false;
+        try {
+          hasRecordedSession = !!sessionStorage.getItem('tapi_session_visited_24h');
+        } catch {
+          // In case sessionStorage is blocked by browser privacy modes
+        }
+
+        // Use POST if new session to increment count, else GET to just refresh count
+        const method = hasRecordedSession ? 'GET' : 'POST';
+        const res = await fetch('/api/visits', {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && typeof data.visits24h === 'number') {
+            setVisits24h(data.visits24h);
+          }
+          try {
+            sessionStorage.setItem('tapi_session_visited_24h', 'true');
+          } catch {
+            // ignore
+          }
+        }
+      } catch (err) {
+        console.error('Failed to sync 24h visits:', err);
+      }
+    };
+
+    fetchVisits();
+
+    // Periodically sync every 2 minutes
+    const interval = setInterval(() => {
+      fetch('/api/visits')
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (isMounted && data && typeof data.visits24h === 'number') {
+            setVisits24h(data.visits24h);
+          }
+        })
+        .catch(() => {});
+    }, 120000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   // Dynamic SEO and Document Title/Meta Sync for SPA routing & AI search
@@ -126,11 +184,11 @@ export default function App() {
 
   // Router dispatcher
   if (currentPath === '/essays') {
-    return <EssaysPage lang={lang} onBack={() => navigate('/')} />;
+    return <EssaysPage lang={lang} onBack={() => navigate('/')} visits24h={visits24h} />;
   }
 
   if (currentPath === '/about') {
-    return <AboutPage lang={lang} onBack={() => navigate('/')} onNavigate={navigate} />;
+    return <AboutPage lang={lang} onBack={() => navigate('/')} onNavigate={navigate} visits24h={visits24h} />;
   }
 
   return (
@@ -550,23 +608,7 @@ export default function App() {
       </section>
 
       {/* Elegant Footer */}
-      <footer className="border-t border-neutral-200 bg-[#F5F3EE] py-12 text-xs text-neutral-500 font-serif">
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-4">
-          <div className="flex justify-center items-center gap-2">
-            <span className="tracking-widest text-neutral-900 font-medium uppercase text-sm">TAPI LIFE</span>
-            <span className="w-1 h-1 rounded-full bg-neutral-400" />
-            <span className="text-[10px] text-neutral-400 uppercase font-mono">辻義 / YOSHI TSUIJI</span>
-          </div>
-          <p className="max-w-md mx-auto text-[11px] leading-relaxed text-neutral-500">
-            {lang === 'en' 
-              ? 'Tapi Life brand concept, characters, and illustrations are designed and created by Yoshi Tsuiji. All rights reserved.' 
-              : 'Tapi Lifeのキャラクター、世界観、イラストレーション、ストーリー企画および著作権は、原作者である辻義（Yoshi Tsuiji）に帰属します。'}
-          </p>
-          <div className="text-[10px] font-mono text-neutral-400 pt-2">
-            © 2026 Yoshi Tsuiji. All Rights Reserved. Follow @tapitaka_119
-          </div>
-        </div>
-      </footer>
+      <Footer lang={lang} visits24h={visits24h} />
 
     </div>
   );

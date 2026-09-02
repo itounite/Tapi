@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, BookOpen, Heart, Eye, Award, ExternalLink, Mail } from 'lucide-react';
 import { Language } from '../types';
+import Footer from './Footer';
 
 // Import Yoshi character avatar illustration
 import yoshiAvatar from '../assets/images/yoshi_avatar.svg';
@@ -10,6 +11,7 @@ interface AboutPageProps {
   lang: Language;
   onBack: () => void;
   onNavigate: (path: string) => void;
+  visits24h?: number | null;
 }
 
 export default function AboutPage(props: AboutPageProps) {
@@ -242,6 +244,9 @@ export default function AboutPage(props: AboutPageProps) {
           </button>
         </div>
       </div>
+
+      {/* Site Footer */}
+      <Footer lang={lang} visits24h={props.visits24h} />
     </div>
   );
 }
