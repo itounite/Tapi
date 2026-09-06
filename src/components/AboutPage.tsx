@@ -11,6 +11,7 @@ interface AboutPageProps {
   lang: Language;
   onBack: () => void;
   onNavigate: (path: string) => void;
+  visits?: number | null;
   visits24h?: number | null;
 }
 
@@ -246,7 +247,7 @@ export default function AboutPage(props: AboutPageProps) {
       </div>
 
       {/* Site Footer */}
-      <Footer lang={lang} visits24h={props.visits24h} />
+      <Footer lang={lang} visits={props.visits ?? props.visits24h} />
     </div>
   );
 }

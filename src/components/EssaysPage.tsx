@@ -7,6 +7,7 @@ import Footer from './Footer';
 interface EssaysPageProps {
   lang: Language;
   onBack: () => void;
+  visits?: number | null;
   visits24h?: number | null;
 }
 
@@ -373,7 +374,7 @@ export default function EssaysPage(props: EssaysPageProps) {
       </div>
 
       {/* Site Footer */}
-      <Footer lang={lang} visits24h={props.visits24h} />
+      <Footer lang={lang} visits={props.visits ?? props.visits24h} />
     </div>
   );
 }

@@ -3,10 +3,13 @@ import { Language } from '../types';
 
 interface FooterProps {
   lang: Language;
+  visits?: number | null;
   visits24h?: number | null;
 }
 
-export default function Footer({ lang, visits24h }: FooterProps) {
+export default function Footer({ lang, visits, visits24h }: FooterProps) {
+  const displayVisits = visits ?? visits24h;
+
   return (
     <footer id="site-footer" className="border-t border-neutral-200 bg-[#F5F3EE] py-12 text-xs text-neutral-500 font-serif">
       <div className="max-w-4xl mx-auto px-6 text-center space-y-4">
@@ -24,14 +27,14 @@ export default function Footer({ lang, visits24h }: FooterProps) {
           © 2026 Yoshi Tsuiji. All Rights Reserved. Follow @tapitaka_119
         </div>
 
-        {/* 24-hour site visit count: very small text, just the number */}
-        {visits24h !== null && visits24h !== undefined && (
+        {/* Total site visit count: very small text, just the number */}
+        {displayVisits !== null && displayVisits !== undefined && (
           <div 
-            id="site-24h-visits-count"
+            id="site-visits-count"
             className="text-[9px] font-mono text-neutral-400/70 select-none tracking-widest pt-1"
-            title={lang === 'en' ? 'Site visits in the last 24 hours' : '過去24時間のサイト訪問数'}
+            title={lang === 'en' ? 'Total site visits' : '累計アクセス数'}
           >
-            {visits24h}
+            {displayVisits}
           </div>
         )}
       </div>

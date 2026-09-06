@@ -26,7 +26,18 @@ import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
 export default function App() {
   const [lang, setLang] = useState<Language>('ja'); // Default to Japanese as requested for Tapi Life audience
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
-  const [visits24h, setVisits24h] = useState<number | null>(null);
+  const [visits, setVisits] = useState<number | null>(() => {
+    try {
+      const cached = localStorage.getItem('tapi_total_visits');
+      if (cached) {
+        const num = parseInt(cached, 10);
+        if (!isNaN(num) && num > 0) return num;
+      }
+    } catch {
+      // ignore
+    }
+    return null;
+  });
   
   // Custom SPA Path Routing State
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
@@ -40,59 +51,43 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Track site visit and retrieve trailing 24-hour visits count
+  // Count visit whenever someone opens the website
   useEffect(() => {
     let isMounted = true;
 
-    const fetchVisits = async () => {
+    const recordSiteVisit = async () => {
       try {
-        let hasRecordedSession = false;
-        try {
-          hasRecordedSession = !!sessionStorage.getItem('tapi_session_visited_24h');
-        } catch {
-          // In case sessionStorage is blocked by browser privacy modes
-        }
-
-        // Use POST if new session to increment count, else GET to just refresh count
-        const method = hasRecordedSession ? 'GET' : 'POST';
         const res = await fetch('/api/visits', {
-          method,
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
         });
 
         if (res.ok) {
           const data = await res.json();
-          if (isMounted && typeof data.visits24h === 'number') {
-            setVisits24h(data.visits24h);
-          }
-          try {
-            sessionStorage.setItem('tapi_session_visited_24h', 'true');
-          } catch {
-            // ignore
+          const count = typeof data.totalVisits === 'number' 
+            ? data.totalVisits 
+            : typeof data.visits === 'number' 
+              ? data.visits 
+              : data.visits24h;
+
+          if (isMounted && typeof count === 'number') {
+            setVisits(count);
+            try {
+              localStorage.setItem('tapi_total_visits', count.toString());
+            } catch {
+              // ignore
+            }
           }
         }
       } catch (err) {
-        console.error('Failed to sync 24h visits:', err);
+        console.error('Failed to record site visit:', err);
       }
     };
 
-    fetchVisits();
-
-    // Periodically sync every 2 minutes
-    const interval = setInterval(() => {
-      fetch('/api/visits')
-        .then((r) => (r.ok ? r.json() : null))
-        .then((data) => {
-          if (isMounted && data && typeof data.visits24h === 'number') {
-            setVisits24h(data.visits24h);
-          }
-        })
-        .catch(() => {});
-    }, 120000);
+    recordSiteVisit();
 
     return () => {
       isMounted = false;
-      clearInterval(interval);
     };
   }, []);
 
@@ -184,11 +179,11 @@ export default function App() {
 
   // Router dispatcher
   if (currentPath === '/essays') {
-    return <EssaysPage lang={lang} onBack={() => navigate('/')} visits24h={visits24h} />;
+    return <EssaysPage lang={lang} onBack={() => navigate('/')} visits={visits} />;
   }
 
   if (currentPath === '/about') {
-    return <AboutPage lang={lang} onBack={() => navigate('/')} onNavigate={navigate} visits24h={visits24h} />;
+    return <AboutPage lang={lang} onBack={() => navigate('/')} onNavigate={navigate} visits={visits} />;
   }
 
   return (
@@ -608,7 +603,7 @@ export default function App() {
       </section>
 
       {/* Elegant Footer */}
-      <Footer lang={lang} visits24h={visits24h} />
+      <Footer lang={lang} visits={visits} />
 
     </div>
   );

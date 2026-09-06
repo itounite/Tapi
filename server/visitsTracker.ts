@@ -2,15 +2,13 @@ import fs from "fs";
 import path from "path";
 
 const DATA_DIR = path.join(process.cwd(), "data");
-const VISITS_FILE = path.join(DATA_DIR, "visits.json");
-const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
-const IP_DEBOUNCE_MS = 5 * 60 * 1000; // 5 minutes debounce per IP
+const COUNTER_FILE = path.join(DATA_DIR, "counter.json");
+const OLD_VISITS_FILE = path.join(DATA_DIR, "visits.json");
 
-let visitTimestamps: number[] = [];
-const recentIps = new Map<string, number>();
+let totalVisits = 1;
 
 /**
- * Initialize visits from disk or seed with natural visits for the past 24h on first run.
+ * Initialize total visit counter from disk.
  */
 export function initVisitsTracker() {
   try {
@@ -18,21 +16,25 @@ export function initVisitsTracker() {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
 
-    if (fs.existsSync(VISITS_FILE)) {
-      const raw = fs.readFileSync(VISITS_FILE, "utf-8");
+    if (fs.existsSync(COUNTER_FILE)) {
+      const raw = fs.readFileSync(COUNTER_FILE, "utf-8");
+      const parsed = JSON.parse(raw);
+      if (typeof parsed.totalVisits === "number" && !isNaN(parsed.totalVisits)) {
+        totalVisits = Math.max(1, parsed.totalVisits);
+      }
+    } else if (fs.existsSync(OLD_VISITS_FILE)) {
+      const raw = fs.readFileSync(OLD_VISITS_FILE, "utf-8");
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        visitTimestamps = parsed.filter((t: unknown) => typeof t === "number");
+        totalVisits = Math.max(1, parsed.length);
       }
+      saveVisits();
+    } else {
+      saveVisits();
     }
   } catch (err) {
-    console.error("Failed to read visits.json:", err);
+    console.error("Failed to read counter file:", err);
   }
-
-  const now = Date.now();
-  const cutoff = now - TWENTY_FOUR_HOURS_MS;
-  visitTimestamps = visitTimestamps.filter((t) => t > cutoff);
-  saveVisits();
 }
 
 function saveVisits() {
@@ -40,49 +42,25 @@ function saveVisits() {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-    fs.writeFileSync(VISITS_FILE, JSON.stringify(visitTimestamps), "utf-8");
+    fs.writeFileSync(COUNTER_FILE, JSON.stringify({ totalVisits }), "utf-8");
   } catch (err) {
-    console.error("Failed to write visits.json:", err);
+    console.error("Failed to write counter.json:", err);
   }
 }
 
 /**
- * Clean up old entries and get count of visits in the trailing 24 hours.
+ * Get current total visits count.
  */
-export function getVisitsInLast24Hours(): number {
-  const now = Date.now();
-  const cutoff = now - TWENTY_FOUR_HOURS_MS;
-  visitTimestamps = visitTimestamps.filter((t) => t > cutoff);
-  return visitTimestamps.length;
+export function getTotalVisits(): number {
+  return totalVisits;
 }
 
 /**
- * Record a visit, debouncing rapid hits from the same IP.
+ * Increment total visits whenever someone opens the website.
  */
-export function recordVisit(ip?: string): number {
-  const now = Date.now();
-  const cutoff = now - TWENTY_FOUR_HOURS_MS;
-
-  // Prune IP tracking map older than debounce window
-  for (const [recordedIp, timestamp] of recentIps.entries()) {
-    if (now - timestamp > IP_DEBOUNCE_MS) {
-      recentIps.delete(recordedIp);
-    }
-  }
-
-  // If valid IP provided and seen within debounce window, return current count without incrementing
-  if (ip && ip !== "unknown") {
-    const lastSeen = recentIps.get(ip);
-    if (lastSeen && now - lastSeen < IP_DEBOUNCE_MS) {
-      return getVisitsInLast24Hours();
-    }
-    recentIps.set(ip, now);
-  }
-
-  // Prune older than 24 hours and append new visit
-  visitTimestamps = visitTimestamps.filter((t) => t > cutoff);
-  visitTimestamps.push(now);
+export function incrementVisits(): number {
+  totalVisits += 1;
   saveVisits();
-
-  return visitTimestamps.length;
+  return totalVisits;
 }
+
