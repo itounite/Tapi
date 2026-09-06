@@ -5,12 +5,10 @@ interface FooterProps {
   lang: Language;
   visits?: number | null;
   visits24h?: number | null;
-  recentFlags?: string[];
 }
 
-export default function Footer({ lang, visits, visits24h, recentFlags = [] }: FooterProps) {
+export default function Footer({ lang, visits, visits24h }: FooterProps) {
   const displayVisits = visits ?? visits24h;
-  const flagsToShow = recentFlags.slice(0, 3);
 
   return (
     <footer id="site-footer" className="border-t border-neutral-200 bg-[#F5F3EE] py-12 text-xs text-neutral-500 font-serif">
@@ -29,30 +27,17 @@ export default function Footer({ lang, visits, visits24h, recentFlags = [] }: Fo
           © 2026 Yoshi Tsuiji. All Rights Reserved. Follow @tapitaka_119
         </div>
 
-        {/* Total site visit count and last three visits country flags: no pop ups */}
+        {/* Total site visit count: very small text, just the number */}
         {displayVisits !== null && displayVisits !== undefined && (
           <div 
             id="site-visits-count"
-            className="pt-2 inline-flex items-center justify-center gap-2 text-neutral-400 font-mono text-[10px] select-none tracking-wider"
-            title={lang === 'en' ? 'Total site visits & last 3 visit country flags' : '累計アクセス数と直近3回の訪問国フラグ'}
+            className="text-[9px] font-mono text-neutral-400/70 select-none tracking-widest pt-1"
+            title={lang === 'en' ? 'Total site visits' : '累計アクセス数'}
           >
-            <span>{displayVisits}</span>
-            {flagsToShow.length > 0 && (
-              <>
-                <span className="text-neutral-300">·</span>
-                <span className="inline-flex items-center gap-1 text-sm leading-none" aria-label="Last 3 visit countries">
-                  {flagsToShow.map((flag, idx) => (
-                    <span key={idx} className="inline-block transition-transform hover:scale-110">
-                      {flag}
-                    </span>
-                  ))}
-                </span>
-              </>
-            )}
+            {displayVisits}
           </div>
         )}
       </div>
     </footer>
   );
 }
-

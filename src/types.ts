@@ -48,28 +48,3 @@ export interface MerchItem {
   imageUrl?: string;
   svgId: string;
 }
-
-export interface CountryVisitStat {
-  code: string;
-  name: string;
-  nameJa: string;
-  flag: string;
-  count: number;
-  percentage: number;
-}
-
-export interface VisitorCountryInfo {
-  code: string;
-  name: string;
-  nameJa: string;
-  flag: string;
-  city?: string;
-}
-
-export interface VisitsData {
-  totalVisits: number;
-  visits?: number;
-  recentFlags?: string[];
-  countries: CountryVisitStat[];
-  visitorCountry?: VisitorCountryInfo;
-}
