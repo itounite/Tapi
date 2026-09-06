@@ -38,6 +38,18 @@ export default function App() {
     }
     return null;
   });
+  const [recentFlags, setRecentFlags] = useState<string[]>(() => {
+    try {
+      const cached = localStorage.getItem('tapi_recent_flags');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // ignore
+    }
+    return [];
+  });
   
   // Custom SPA Path Routing State
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
@@ -51,15 +63,26 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Count visit whenever someone opens the website
+  // Count visit whenever someone opens the website and detect country
   useEffect(() => {
     let isMounted = true;
 
     const recordSiteVisit = async () => {
       try {
+        let clientTimeZone: string | undefined;
+        try {
+          clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        } catch {
+          // ignore
+        }
+
         const res = await fetch('/api/visits', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            timeZone: clientTimeZone,
+            locale: typeof navigator !== 'undefined' ? navigator.language : undefined,
+          }),
         });
 
         if (res.ok) {
@@ -74,6 +97,15 @@ export default function App() {
             setVisits(count);
             try {
               localStorage.setItem('tapi_total_visits', count.toString());
+            } catch {
+              // ignore
+            }
+          }
+
+          if (isMounted && Array.isArray(data.recentFlags)) {
+            setRecentFlags(data.recentFlags);
+            try {
+              localStorage.setItem('tapi_recent_flags', JSON.stringify(data.recentFlags));
             } catch {
               // ignore
             }
@@ -179,11 +211,26 @@ export default function App() {
 
   // Router dispatcher
   if (currentPath === '/essays') {
-    return <EssaysPage lang={lang} onBack={() => navigate('/')} visits={visits} />;
+    return (
+      <EssaysPage 
+        lang={lang} 
+        onBack={() => navigate('/')} 
+        visits={visits} 
+        recentFlags={recentFlags}
+      />
+    );
   }
 
   if (currentPath === '/about') {
-    return <AboutPage lang={lang} onBack={() => navigate('/')} onNavigate={navigate} visits={visits} />;
+    return (
+      <AboutPage 
+        lang={lang} 
+        onBack={() => navigate('/')} 
+        onNavigate={navigate} 
+        visits={visits} 
+        recentFlags={recentFlags}
+      />
+    );
   }
 
   return (
@@ -603,7 +650,11 @@ export default function App() {
       </section>
 
       {/* Elegant Footer */}
-      <Footer lang={lang} visits={visits} />
+      <Footer 
+        lang={lang} 
+        visits={visits} 
+        recentFlags={recentFlags}
+      />
 
     </div>
   );

@@ -13,6 +13,7 @@ interface AboutPageProps {
   onNavigate: (path: string) => void;
   visits?: number | null;
   visits24h?: number | null;
+  recentFlags?: string[];
 }
 
 export default function AboutPage(props: AboutPageProps) {
@@ -247,7 +248,11 @@ export default function AboutPage(props: AboutPageProps) {
       </div>
 
       {/* Site Footer */}
-      <Footer lang={lang} visits={props.visits ?? props.visits24h} />
+      <Footer 
+        lang={lang} 
+        visits={props.visits ?? props.visits24h} 
+        recentFlags={props.recentFlags}
+      />
     </div>
   );
 }

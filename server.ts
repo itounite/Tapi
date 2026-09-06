@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { initVisitsTracker, getTotalVisits, incrementVisits } from "./server/visitsTracker";
+import { initVisitsTracker, getVisitsData, recordSiteVisit, detectVisitorCountry } from "./server/visitsTracker";
 
 async function startServer() {
   const app = express();
@@ -12,21 +12,41 @@ async function startServer() {
 
   app.use(express.json());
 
+  // Helper to resolve client IP and country
+  const resolveVisitor = (req: express.Request) => {
+    const forwarded = req.headers["x-forwarded-for"];
+    const clientIp = typeof forwarded === "string"
+      ? forwarded.split(",")[0].trim()
+      : req.socket.remoteAddress || "";
+
+    const timeZone = (req.body && req.body.timeZone) || (req.query.timeZone as string) || undefined;
+    const locale = (req.body && req.body.locale) || (req.query.locale as string) || (req.headers["accept-language"] as string) || undefined;
+
+    return detectVisitorCountry({
+      ip: clientIp,
+      headers: req.headers,
+      timeZone,
+      locale,
+    });
+  };
+
   // API Health check endpoint
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
   });
 
-  // Get total visits count
+  // Get total visits count and country breakdown
   app.get("/api/visits", (req, res) => {
-    const totalVisits = getTotalVisits();
-    res.json({ totalVisits, visits: totalVisits, visits24h: totalVisits });
+    const visitor = resolveVisitor(req);
+    const data = getVisitsData(visitor);
+    res.json(data);
   });
 
-  // Increment and return total visits whenever someone opens the website
+  // Increment visits and record country whenever someone opens the website
   app.post("/api/visits", (req, res) => {
-    const totalVisits = incrementVisits();
-    res.json({ totalVisits, visits: totalVisits, visits24h: totalVisits });
+    const visitor = resolveVisitor(req);
+    const data = recordSiteVisit(visitor);
+    res.json(data);
   });
 
   // Vite middleware for development
