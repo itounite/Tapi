@@ -19,6 +19,7 @@ import { CHARACTERS } from './data';
 import EssaysPage from './components/EssaysPage';
 import AboutPage from './components/AboutPage';
 import Footer from './components/Footer';
+import { recordVisit, getCachedVisits } from './utils/visitTracker';
 
 // Import path of hero artwork asset
 import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
@@ -26,18 +27,7 @@ import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
 export default function App() {
   const [lang, setLang] = useState<Language>('ja'); // Default to Japanese as requested for Tapi Life audience
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
-  const [visits, setVisits] = useState<number | null>(() => {
-    try {
-      const cached = localStorage.getItem('tapi_total_visits');
-      if (cached) {
-        const num = parseInt(cached, 10);
-        if (!isNaN(num) && num > 0) return num;
-      }
-    } catch {
-      // ignore
-    }
-    return null;
-  });
+  const [visits, setVisits] = useState<number | null>(() => getCachedVisits());
   
   // Custom SPA Path Routing State
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
@@ -51,40 +41,19 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Count visit whenever someone opens the website
+  // Count visit whenever someone opens the website (works in AI Studio, Render Web Service, and Render Static Site)
   useEffect(() => {
     let isMounted = true;
 
-    const recordSiteVisit = async () => {
-      try {
-        const res = await fetch('/api/visits', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          const count = typeof data.totalVisits === 'number' 
-            ? data.totalVisits 
-            : typeof data.visits === 'number' 
-              ? data.visits 
-              : data.visits24h;
-
-          if (isMounted && typeof count === 'number') {
-            setVisits(count);
-            try {
-              localStorage.setItem('tapi_total_visits', count.toString());
-            } catch {
-              // ignore
-            }
-          }
+    recordVisit()
+      .then((count) => {
+        if (isMounted && typeof count === 'number') {
+          setVisits(count);
         }
-      } catch (err) {
+      })
+      .catch((err) => {
         console.error('Failed to record site visit:', err);
-      }
-    };
-
-    recordSiteVisit();
+      });
 
     return () => {
       isMounted = false;

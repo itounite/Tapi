@@ -5,7 +5,9 @@ import { initVisitsTracker, getTotalVisits, incrementVisits } from "./server/vis
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  // Support dynamic PORT in cloud environments like Render while maintaining port 3000 in AI Studio
+  const isAIStudio = Boolean(process.env.APPLET_ID || process.env.DEFAULT_APP_PORT);
+  const PORT = !isAIStudio && process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
   // Initialize total visits tracker
   initVisitsTracker();
