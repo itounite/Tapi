@@ -18,8 +18,9 @@ import { CHARACTERS } from './data';
 // Subcomponents
 import EssaysPage from './components/EssaysPage';
 import AboutPage from './components/AboutPage';
+import MetricsPage from './components/MetricsPage';
 import Footer from './components/Footer';
-import { recordVisit, getCachedVisits } from './utils/visitTracker';
+import { trackPageView } from './utils/visitTracker';
 
 // Import path of hero artwork asset
 import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
@@ -27,7 +28,6 @@ import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
 export default function App() {
   const [lang, setLang] = useState<Language>('ja'); // Default to Japanese as requested for Tapi Life audience
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
-  const [visits, setVisits] = useState<number | null>(() => getCachedVisits());
   
   // Custom SPA Path Routing State
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
@@ -41,24 +41,13 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Count visit whenever someone opens the website (works in AI Studio, Render Web Service, and Render Static Site)
+  // Track pageview, Helsinki time, country, IP, and time spent on current page
   useEffect(() => {
-    let isMounted = true;
-
-    recordVisit()
-      .then((count) => {
-        if (isMounted && typeof count === 'number') {
-          setVisits(count);
-        }
-      })
-      .catch((err) => {
-        console.error('Failed to record site visit:', err);
-      });
-
+    const cleanup = trackPageView(currentPath);
     return () => {
-      isMounted = false;
+      cleanup();
     };
-  }, []);
+  }, [currentPath]);
 
   // Dynamic SEO and Document Title/Meta Sync for SPA routing & AI search
   useEffect(() => {
@@ -147,12 +136,16 @@ export default function App() {
   };
 
   // Router dispatcher
+  if (currentPath === '/metrics' || currentPath === '/metrics/') {
+    return <MetricsPage onBack={() => navigate('/')} />;
+  }
+
   if (currentPath === '/essays') {
-    return <EssaysPage lang={lang} onBack={() => navigate('/')} visits={visits} />;
+    return <EssaysPage lang={lang} onBack={() => navigate('/')} />;
   }
 
   if (currentPath === '/about') {
-    return <AboutPage lang={lang} onBack={() => navigate('/')} onNavigate={navigate} visits={visits} />;
+    return <AboutPage lang={lang} onBack={() => navigate('/')} onNavigate={navigate} />;
   }
 
   return (
@@ -572,7 +565,7 @@ export default function App() {
       </section>
 
       {/* Elegant Footer */}
-      <Footer lang={lang} visits={visits} />
+      <Footer lang={lang} />
 
     </div>
   );

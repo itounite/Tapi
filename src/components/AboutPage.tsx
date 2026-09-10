@@ -247,7 +247,7 @@ export default function AboutPage(props: AboutPageProps) {
       </div>
 
       {/* Site Footer */}
-      <Footer lang={lang} visits={props.visits ?? props.visits24h} />
+      <Footer lang={lang} />
     </div>
   );
 }
