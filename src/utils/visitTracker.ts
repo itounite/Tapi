@@ -6,6 +6,82 @@
 
 const LOCAL_STORAGE_KEY = 'tapi_total_visits';
 const SESSION_STORAGE_KEY = 'tapi_session_id';
+export const CLIENT_ARCHIVE_KEY = 'tapi_metrics_archive';
+
+export interface ClientArchivedVisit {
+  id: string;
+  pageId: string;
+  sessionId: string;
+  ip: string;
+  country: string;
+  countryCode: string;
+  city: string;
+  path: string;
+  referrer: string;
+  device: 'Mobile' | 'Tablet' | 'Desktop' | 'Other';
+  browser: string;
+  os: string;
+  timestamp: number;
+  helsinkiTime: string;
+  durationSeconds: number;
+  lastActive: number;
+}
+
+/**
+ * Get all visits archived in browser localStorage
+ */
+export function getArchivedVisits(): ClientArchivedVisit[] {
+  try {
+    const raw = localStorage.getItem(CLIENT_ARCHIVE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch {
+    // Ignore
+  }
+  return [];
+}
+
+/**
+ * Save / update visits in browser localStorage
+ */
+export function saveArchivedVisits(records: ClientArchivedVisit[]) {
+  try {
+    // Keep max 1000 records in client storage
+    const trimmed = records.slice(0, 1000);
+    localStorage.setItem(CLIENT_ARCHIVE_KEY, JSON.stringify(trimmed));
+  } catch {
+    // Ignore
+  }
+}
+
+/**
+ * Merge new visit records into browser localStorage
+ */
+export function mergeClientArchive(records: ClientArchivedVisit[]) {
+  if (!Array.isArray(records) || records.length === 0) return;
+  const current = getArchivedVisits();
+  const idMap = new Map<string, ClientArchivedVisit>();
+  for (const r of current) idMap.set(r.id, r);
+  for (const r of records) {
+    if (!r || !r.id) continue;
+    const existing = idMap.get(r.id);
+    if (existing) {
+      existing.durationSeconds = Math.max(existing.durationSeconds || 0, r.durationSeconds || 0);
+      existing.lastActive = Math.max(existing.lastActive || 0, r.lastActive || 0);
+    } else {
+      idMap.set(r.id, r);
+    }
+  }
+  const merged = Array.from(idMap.values()).sort((a, b) => b.timestamp - a.timestamp);
+  saveArchivedVisits(merged);
+}
+
+// In-memory guard to prevent duplicate rapid tracking calls (e.g. React StrictMode)
+let lastTrackedPath = '';
+let lastTrackedTime = 0;
+let lastPageId = '';
 
 /**
  * Get or create a unique session ID for the current browser session
@@ -66,7 +142,17 @@ function sendHeartbeat(pageId: string, durationSeconds: number) {
  * Returns a cleanup function to call when navigating away or unmounting
  */
 export function trackPageView(path: string): () => void {
-  const pageId = `p_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const nowMs = Date.now();
+  // Prevent duplicate execution on rapid StrictMode double-mounting
+  if (lastTrackedPath === path && nowMs - lastTrackedTime < 1500 && lastPageId) {
+    return () => {};
+  }
+
+  const pageId = `p_${nowMs}_${Math.random().toString(36).slice(2, 8)}`;
+  lastTrackedPath = path;
+  lastTrackedTime = nowMs;
+  lastPageId = pageId;
+
   const sessionId = getSessionId();
   let durationSeconds = 0;
   let lastActiveTimestamp = Date.now();

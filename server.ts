@@ -8,6 +8,7 @@ import {
   updateHeartbeat,
   getMetricsData,
   clearMetrics,
+  mergeExternalVisits,
   extractClientIp,
   METRICS_PASSWORD,
   TimeRange,
@@ -117,9 +118,24 @@ async function startServer() {
       return res.status(401).json({ error: "Unauthorized. Password 'itowillunite' required." });
     }
 
-    const range = (req.query.range as TimeRange) || "24h";
+    const range = (req.query.range as TimeRange) || "all";
     const data = getMetricsData(range);
     res.json({ success: true, ...data });
+  });
+
+  // Protected sync endpoint to restore/merge archived visits from client storage (e.g. after container restart)
+  app.post("/api/metrics/sync", (req, res) => {
+    const authHeader = req.headers.authorization;
+    const bearerPassword = authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : null;
+    const providedPassword = req.body?.password || bearerPassword;
+
+    if (providedPassword !== METRICS_PASSWORD) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const incomingRecords = req.body?.records;
+    const result = mergeExternalVisits(incomingRecords);
+    res.json({ success: true, ...result });
   });
 
   // Protected clear metrics

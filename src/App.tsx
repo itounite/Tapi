@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Globe, 
@@ -29,17 +29,57 @@ export default function App() {
   const [lang, setLang] = useState<Language>('ja'); // Default to Japanese as requested for Tapi Life audience
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
   
-  // Custom SPA Path Routing State
-  const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
+  // Custom SPA Path Routing State with hash/param support
+  const resolveCurrentPath = useCallback((): string => {
+    if (typeof window === 'undefined') return '/';
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    const search = window.location.search;
 
-  // Sync state with back/forward browser navigation
-  useEffect(() => {
-    const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    if (
+      path === '/metrics' ||
+      path === '/metrics/' ||
+      hash === '#metrics' ||
+      hash === '#/metrics' ||
+      search.includes('metrics')
+    ) {
+      return '/metrics';
+    }
+    if (path === '/about' || hash === '#about' || hash === '#/about') {
+      return '/about';
+    }
+    if (path === '/essays' || hash === '#essays' || hash === '#/essays') {
+      return '/essays';
+    }
+    return path || '/';
   }, []);
+
+  const [currentPath, setCurrentPath] = useState<string>(resolveCurrentPath);
+
+  // Sync state with back/forward browser navigation and hash changes
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setCurrentPath(resolveCurrentPath());
+    };
+    window.addEventListener('popstate', handleRouteChange);
+    window.addEventListener('hashchange', handleRouteChange);
+
+    // Secret shortcut: Alt + M to jump to /metrics
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.altKey && e.key.toLowerCase() === 'm') || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'm')) {
+        e.preventDefault();
+        window.history.pushState({}, '', '/metrics');
+        setCurrentPath('/metrics');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [resolveCurrentPath]);
 
   // Track pageview, Helsinki time, country, IP, and time spent on current page
   useEffect(() => {
@@ -565,7 +605,7 @@ export default function App() {
       </section>
 
       {/* Elegant Footer */}
-      <Footer lang={lang} />
+      <Footer lang={lang} onNavigate={navigate} />
 
     </div>
   );

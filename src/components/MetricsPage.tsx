@@ -26,11 +26,14 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { MetricVisitRecord } from '../../server/metricsTracker';
+import { getArchivedVisits, mergeClientArchive, ClientArchivedVisit } from '../utils/visitTracker';
 
 interface MetricsSummary {
   range: string;
   totalVisits: number;
   uniqueVisitors: number;
+  allTimeTotal?: number;
+  allTimeUniqueVisitors?: number;
   activeNow: number;
   avgDurationSeconds: number;
   currentHelsinkiTime: string;
@@ -82,6 +85,14 @@ interface TimelineBucket {
 interface MetricsApiResponse {
   success: boolean;
   summary: MetricsSummary;
+  countsByRange?: {
+    '12h': number;
+    '24h': number;
+    '7d': number;
+    '30d': number;
+    '90d': number;
+    all: number;
+  };
   topPages: PageStat[];
   topCountries: CountryStat[];
   topDevices: DeviceStat[];
@@ -152,8 +163,8 @@ export default function MetricsPage({ onBack }: MetricsPageProps) {
   const [authError, setAuthError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
-  // Data & Filter states
-  const [timeRange, setTimeRange] = useState<'12h' | '24h' | '7d' | '30d' | '90d' | 'all'>('24h');
+  // Data & Filter states - default to 'all' so all historical and current visits are visible immediately
+  const [timeRange, setTimeRange] = useState<'12h' | '24h' | '7d' | '30d' | '90d' | 'all'>('all');
   const [data, setData] = useState<MetricsApiResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchError, setFetchError] = useState('');
@@ -195,7 +206,7 @@ export default function MetricsPage({ onBack }: MetricsPageProps) {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch metrics data from server
+  // Fetch metrics data from server with local storage fallback
   const fetchMetrics = useCallback(async () => {
     const storedPw = sessionStorage.getItem('tapi_metrics_auth') || password || 'itowillunite';
     setIsLoading(true);
@@ -224,12 +235,101 @@ export default function MetricsPage({ onBack }: MetricsPageProps) {
       if (json.success) {
         setData(json);
         setLastUpdatedTime(new Date().toLocaleTimeString());
+
+        // Cache server visits to browser storage
+        if (Array.isArray(json.recentVisits) && json.recentVisits.length > 0) {
+          mergeClientArchive(json.recentVisits as any);
+
+          // Check if local cache has visits not yet on server (e.g. after a Render container redeploy)
+          const archived = getArchivedVisits();
+          const serverIds = new Set(json.recentVisits.map((v) => v.id));
+          const missingOnServer = archived.filter((v) => !serverIds.has(v.id));
+
+          if (missingOnServer.length > 0) {
+            // Restore missing visits to server automatically
+            fetch('/api/metrics/sync', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${storedPw}`,
+              },
+              body: JSON.stringify({ password: storedPw, records: missingOnServer }),
+            })
+              .then((r) => r.json())
+              .then((res) => {
+                if (res.added && res.added > 0) {
+                  // Re-fetch to display merged data
+                  fetchMetrics();
+                }
+              })
+              .catch(() => {});
+          }
+        }
       } else {
         throw new Error('Failed to load metrics data');
       }
     } catch (err) {
       console.error('Failed to fetch metrics:', err);
-      setFetchError(err instanceof Error ? err.message : 'Network error loading metrics');
+      // Fallback to local archive if server is unreachable
+      const localVisits = getArchivedVisits();
+      if (localVisits.length > 0) {
+        // Build fallback client metrics from archive
+        const now = Date.now();
+        let cutoff = 0;
+        if (timeRange === '12h') cutoff = now - 12 * 3600 * 1000;
+        else if (timeRange === '24h') cutoff = now - 24 * 3600 * 1000;
+        else if (timeRange === '7d') cutoff = now - 7 * 24 * 3600 * 1000;
+        else if (timeRange === '30d') cutoff = now - 30 * 24 * 3600 * 1000;
+        else if (timeRange === '90d') cutoff = now - 90 * 24 * 3600 * 1000;
+
+        const filtered = cutoff === 0 ? localVisits : localVisits.filter((v) => v.timestamp >= cutoff);
+        const uniqueIps = new Set(filtered.map((v) => v.ip));
+        const totalDuration = filtered.reduce((acc, v) => acc + (v.durationSeconds || 0), 0);
+
+        const pageCounts: Record<string, number> = {};
+        for (const v of filtered) {
+          pageCounts[v.path] = (pageCounts[v.path] || 0) + 1;
+        }
+
+        const topPages = Object.entries(pageCounts)
+          .map(([path, count]) => ({ path, count, uniqueVisitors: 1, avgDuration: 0 }))
+          .sort((a, b) => b.count - a.count);
+
+        setData({
+          success: true,
+          summary: {
+            range: timeRange,
+            totalVisits: filtered.length,
+            uniqueVisitors: uniqueIps.size,
+            allTimeTotal: localVisits.length,
+            allTimeUniqueVisitors: new Set(localVisits.map((v) => v.ip)).size,
+            activeNow: 1,
+            avgDurationSeconds: filtered.length > 0 ? Math.round(totalDuration / filtered.length) : 0,
+            currentHelsinkiTime: new Date().toISOString(),
+            topCountry: filtered[0]?.country || 'Unknown',
+            topCountryCode: filtered[0]?.countryCode || '--',
+            topPage: topPages[0]?.path || '/',
+          },
+          countsByRange: {
+            '12h': localVisits.filter((v) => v.timestamp >= now - 12 * 3600 * 1000).length,
+            '24h': localVisits.filter((v) => v.timestamp >= now - 24 * 3600 * 1000).length,
+            '7d': localVisits.filter((v) => v.timestamp >= now - 7 * 24 * 3600 * 1000).length,
+            '30d': localVisits.filter((v) => v.timestamp >= now - 30 * 24 * 3600 * 1000).length,
+            '90d': localVisits.filter((v) => v.timestamp >= now - 90 * 24 * 3600 * 1000).length,
+            all: localVisits.length,
+          },
+          topPages,
+          topCountries: [],
+          topDevices: [],
+          topBrowsers: [],
+          topReferrers: [],
+          timeline: [],
+          recentVisits: filtered as any,
+        });
+        setLastUpdatedTime('Local Offline Cache');
+      } else {
+        setFetchError(err instanceof Error ? err.message : 'Network error loading metrics');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -589,26 +689,38 @@ export default function MetricsPage({ onBack }: MetricsPageProps) {
           <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0">
             {(
               [
-                { id: '12h', label: 'Last 12 Hours' },
-                { id: '24h', label: 'Last 24 Hours' },
-                { id: '7d', label: 'Last 7 Days' },
-                { id: '30d', label: 'Last 30 Days' },
-                { id: '90d', label: 'Last 3 Months' },
+                { id: '12h', label: '12 Hours' },
+                { id: '24h', label: '24 Hours' },
+                { id: '7d', label: '7 Days' },
+                { id: '30d', label: '30 Days' },
+                { id: '90d', label: '3 Months' },
                 { id: 'all', label: 'All Time' },
               ] as const
-            ).map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setTimeRange(tab.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap transition-all cursor-pointer ${
-                  timeRange === tab.id
-                    ? 'bg-emerald-600 text-white font-medium shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+            ).map((tab) => {
+              const count = data?.countsByRange ? data.countsByRange[tab.id] : undefined;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setTimeRange(tab.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+                    timeRange === tab.id
+                      ? 'bg-emerald-600 text-white font-medium shadow-sm'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  {typeof count === 'number' && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
+                        timeRange === tab.id ? 'bg-emerald-800 text-emerald-100' : 'bg-slate-800 text-slate-400'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           <div className="text-[11px] font-mono text-slate-500 px-2 flex items-center gap-2">
@@ -617,6 +729,25 @@ export default function MetricsPage({ onBack }: MetricsPageProps) {
             <span className="text-cyan-400 font-medium">Helsinki Timestamps</span>
           </div>
         </section>
+
+        {/* Empty Window Banner if 0 visits in current range but allTimeTotal > 0 */}
+        {data && data.summary.totalVisits === 0 && (data.summary.allTimeTotal || 0) > 0 && (
+          <div className="p-4 bg-slate-900/90 border border-amber-500/30 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2.5 text-amber-300">
+              <AlertCircle className="w-4 h-4 shrink-0 text-amber-400" />
+              <span>
+                No visits recorded in the selected window ({timeRange === '12h' ? '12 Hours' : timeRange === '24h' ? '24 Hours' : timeRange}).
+                You have <strong>{data.summary.allTimeTotal}</strong> authentic visits logged across <strong>All Time</strong>.
+              </span>
+            </div>
+            <button
+              onClick={() => setTimeRange('all')}
+              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium cursor-pointer shrink-0 transition-colors"
+            >
+              View All Time Visits ({data.summary.allTimeTotal})
+            </button>
+          </div>
+        )}
 
         {/* Error Banner if any */}
         {fetchError && (
@@ -646,8 +777,11 @@ export default function MetricsPage({ onBack }: MetricsPageProps) {
             <div className="text-2xl font-bold font-mono text-white tracking-tight">
               {data?.summary.totalVisits ?? '--'}
             </div>
-            <p className="text-[10px] text-slate-500 font-mono">
-              In selected {timeRange}
+            <p className="text-[10px] text-slate-500 font-mono flex items-center justify-between">
+              <span>In {timeRange}</span>
+              {typeof data?.summary.allTimeTotal === 'number' && (
+                <span className="text-slate-400 font-medium">Total: {data.summary.allTimeTotal}</span>
+              )}
             </p>
           </div>
 
@@ -660,8 +794,11 @@ export default function MetricsPage({ onBack }: MetricsPageProps) {
             <div className="text-2xl font-bold font-mono text-white tracking-tight">
               {data?.summary.uniqueVisitors ?? '--'}
             </div>
-            <p className="text-[10px] text-slate-500 font-mono">
-              Distinct visitor IP origins
+            <p className="text-[10px] text-slate-500 font-mono flex items-center justify-between">
+              <span>In {timeRange}</span>
+              {typeof data?.summary.allTimeUniqueVisitors === 'number' && (
+                <span className="text-slate-400 font-medium">Total: {data.summary.allTimeUniqueVisitors}</span>
+              )}
             </p>
           </div>
 

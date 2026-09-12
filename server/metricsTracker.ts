@@ -22,6 +22,7 @@ export interface MetricVisitRecord {
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const METRICS_FILE = path.join(DATA_DIR, "metrics_log.json");
+const METRICS_BACKUP_FILE = path.join(DATA_DIR, "metrics_backup.json");
 const GEO_CACHE_FILE = path.join(DATA_DIR, "geo_cache.json");
 
 // 90 days retention window in milliseconds
@@ -60,7 +61,50 @@ export function formatHelsinkiTime(timestamp: number | Date = Date.now()): strin
 }
 
 /**
- * Initialize metrics tracker from disk
+ * Clean and deduplicate raw parsed visits (merging rapid StrictMode duplicate mounts)
+ */
+function cleanAndDeduplicateVisits(rawList: any[]): MetricVisitRecord[] {
+  if (!Array.isArray(rawList)) return [];
+  const now = Date.now();
+  const valid = rawList.filter(
+    (v) =>
+      v &&
+      typeof v.timestamp === "number" &&
+      now - v.timestamp <= MAX_RETENTION_MS &&
+      !v.id?.startsWith("v_seed_")
+  ) as MetricVisitRecord[];
+
+  // Sort ascending by timestamp to merge rapid duplicate mounts safely
+  valid.sort((a, b) => a.timestamp - b.timestamp);
+
+  const deduped: MetricVisitRecord[] = [];
+  const sessionPathMap = new Map<string, MetricVisitRecord>();
+
+  for (const v of valid) {
+    const key = `${v.sessionId || v.ip}_${v.path}`;
+    const prev = sessionPathMap.get(key);
+    if (prev && Math.abs(v.timestamp - prev.timestamp) < 15000) {
+      // Merge: keep maximum duration, latest active, and best IP
+      prev.durationSeconds = Math.max(prev.durationSeconds || 0, v.durationSeconds || 0);
+      prev.lastActive = Math.max(prev.lastActive || prev.timestamp, v.lastActive || v.timestamp);
+      if (prev.ip === "127.0.0.1" && v.ip !== "127.0.0.1") {
+        prev.ip = v.ip;
+        prev.country = v.country;
+        prev.countryCode = v.countryCode;
+        prev.city = v.city;
+      }
+    } else {
+      sessionPathMap.set(key, v);
+      deduped.push(v);
+    }
+  }
+
+  // Return sorted descending by timestamp
+  return deduped.sort((a, b) => b.timestamp - a.timestamp);
+}
+
+/**
+ * Initialize metrics tracker from disk and backup
  */
 export function initMetricsTracker() {
   try {
@@ -76,24 +120,43 @@ export function initMetricsTracker() {
       }
     }
 
+    let loaded = false;
+
+    // Try primary log file
     if (fs.existsSync(METRICS_FILE)) {
       try {
         const raw = fs.readFileSync(METRICS_FILE, "utf-8");
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          const now = Date.now();
-          // Filter to maximum 90 days and ensure only real, non-seeded records are loaded
-          visits = parsed.filter(
-            (v) =>
-              typeof v.timestamp === "number" &&
-              now - v.timestamp <= MAX_RETENTION_MS &&
-              !v.id?.startsWith("v_seed_")
-          );
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          visits = cleanAndDeduplicateVisits(parsed);
+          loaded = true;
         }
       } catch (err) {
         console.error("Failed to parse metrics_log.json:", err);
-        visits = [];
       }
+    }
+
+    // Try backup if primary was empty or missing
+    if (!loaded && fs.existsSync(METRICS_BACKUP_FILE)) {
+      try {
+        const rawBackup = fs.readFileSync(METRICS_BACKUP_FILE, "utf-8");
+        const parsedBackup = JSON.parse(rawBackup);
+        if (Array.isArray(parsedBackup) && parsedBackup.length > 0) {
+          visits = cleanAndDeduplicateVisits(parsedBackup);
+          loaded = true;
+          // Restore primary immediately
+          saveMetricsNow();
+        }
+      } catch (err) {
+        console.error("Failed to parse metrics_backup.json:", err);
+      }
+    }
+
+    if (!loaded && visits.length === 0) {
+      visits = [];
+    } else {
+      // Sync backup copy immediately
+      saveMetricsNow();
     }
   } catch (err) {
     console.error("Error initializing metrics tracker:", err);
@@ -108,25 +171,44 @@ function saveGeoCache() {
   }
 }
 
+/**
+ * Write metrics synchronously and immediately to both primary and backup storage
+ */
+export function saveMetricsNow() {
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    const now = Date.now();
+    const pruned = visits.filter(
+      (v) => now - v.timestamp <= MAX_RETENTION_MS && !v.id?.startsWith("v_seed_")
+    );
+    const content = JSON.stringify(pruned, null, 2);
+    fs.writeFileSync(METRICS_FILE, content, "utf-8");
+    fs.writeFileSync(METRICS_BACKUP_FILE, content, "utf-8");
+  } catch (err) {
+    console.error("Failed to write metrics files:", err);
+  }
+}
+
 let saveTimeout: NodeJS.Timeout | null = null;
 function debouncedSaveMetrics() {
   if (saveTimeout) clearTimeout(saveTimeout);
   saveTimeout = setTimeout(() => {
-    try {
-      if (!fs.existsSync(DATA_DIR)) {
-        fs.mkdirSync(DATA_DIR, { recursive: true });
-      }
-      const now = Date.now();
-      // Keep strictly authentic real visits within 90 days
-      const pruned = visits.filter(
-        (v) => now - v.timestamp <= MAX_RETENTION_MS && !v.id?.startsWith("v_seed_")
-      );
-      fs.writeFileSync(METRICS_FILE, JSON.stringify(pruned), "utf-8");
-    } catch (err) {
-      console.error("Failed to write metrics_log.json:", err);
-    }
-  }, 1000);
+    saveMetricsNow();
+  }, 300);
 }
+
+// Ensure flush on process exit
+process.on("exit", () => saveMetricsNow());
+process.on("SIGINT", () => {
+  saveMetricsNow();
+  process.exit(0);
+});
+process.on("SIGTERM", () => {
+  saveMetricsNow();
+  process.exit(0);
+});
 
 /**
  * Detect device type from user agent
@@ -254,6 +336,24 @@ export async function trackVisit(params: {
   const userAgent = params.userAgent || "";
   const pageId = params.pageId || `p_${timestamp}_${Math.random().toString(36).slice(2, 7)}`;
   const sessionId = params.sessionId || `s_${timestamp}_${Math.random().toString(36).slice(2, 7)}`;
+  const pathVisited = params.path || "/";
+
+  // Check for recent matching visit within 15 seconds to eliminate duplicate mounts
+  const existingRecent = visits.find(
+    (v) =>
+      v.path === pathVisited &&
+      (v.sessionId === sessionId || (v.ip === params.ip && timestamp - v.timestamp < 15000)) &&
+      timestamp - v.timestamp < 15000
+  );
+
+  if (existingRecent) {
+    existingRecent.lastActive = timestamp;
+    if (params.pageId) {
+      existingRecent.pageId = params.pageId;
+    }
+    debouncedSaveMetrics();
+    return existingRecent;
+  }
 
   // Determine geo
   const geo = await resolveIpGeo(params.ip, params.clientHint);
@@ -266,7 +366,7 @@ export async function trackVisit(params: {
     country: geo.country,
     countryCode: geo.countryCode,
     city: geo.city,
-    path: params.path || "/",
+    path: pathVisited,
     referrer: params.referrer || "Direct",
     device: parseDevice(userAgent),
     browser: parseBrowser(userAgent),
@@ -284,7 +384,7 @@ export async function trackVisit(params: {
     visits = visits.slice(0, 20000);
   }
 
-  debouncedSaveMetrics();
+  saveMetricsNow();
   return newRecord;
 }
 
@@ -308,7 +408,7 @@ export type TimeRange = "12h" | "24h" | "7d" | "30d" | "90d" | "all";
 /**
  * Get aggregated metrics and raw logs for a specified time window
  */
-export function getMetricsData(range: TimeRange = "24h") {
+export function getMetricsData(range: TimeRange = "all") {
   const now = Date.now();
   let cutoff = 0;
 
@@ -320,6 +420,14 @@ export function getMetricsData(range: TimeRange = "24h") {
   else cutoff = 0;
 
   const filtered = cutoff === 0 ? visits : visits.filter((v) => v.timestamp >= cutoff);
+
+  // Compute breakdown counts across each time window
+  const count12h = visits.filter((v) => v.timestamp >= now - 12 * 60 * 60 * 1000).length;
+  const count24h = visits.filter((v) => v.timestamp >= now - 24 * 60 * 60 * 1000).length;
+  const count7d = visits.filter((v) => v.timestamp >= now - 7 * 24 * 60 * 60 * 1000).length;
+  const count30d = visits.filter((v) => v.timestamp >= now - 30 * 24 * 60 * 60 * 1000).length;
+  const count90d = visits.filter((v) => v.timestamp >= now - 90 * 24 * 60 * 60 * 1000).length;
+  const countAll = visits.length;
 
   // Calculate Unique Visitors by IP
   const uniqueIpSet = new Set<string>();
@@ -427,17 +535,29 @@ export function getMetricsData(range: TimeRange = "24h") {
   // Build timeline in Helsinki Time
   const timeline = generateHelsinkiTimeline(filtered, range, now);
 
+  const allTimeUniqueVisitors = new Set(visits.map((v) => v.ip)).size;
+
   return {
     summary: {
       range,
       totalVisits,
       uniqueVisitors,
+      allTimeTotal: countAll,
+      allTimeUniqueVisitors,
       activeNow,
       avgDurationSeconds,
       currentHelsinkiTime: formatHelsinkiTime(now),
       topCountry: topCountries[0]?.country || (totalVisits > 0 ? "Unknown" : "None"),
       topCountryCode: topCountries[0]?.countryCode || "--",
       topPage: topPages[0]?.path || (totalVisits > 0 ? "/" : "None"),
+    },
+    countsByRange: {
+      "12h": count12h,
+      "24h": count24h,
+      "7d": count7d,
+      "30d": count30d,
+      "90d": count90d,
+      all: countAll,
     },
     topPages,
     topCountries,
@@ -535,5 +655,53 @@ function generateHelsinkiTimeline(records: MetricVisitRecord[], range: TimeRange
  */
 export function clearMetrics() {
   visits = [];
-  debouncedSaveMetrics();
+  saveMetricsNow();
 }
+
+/**
+ * Merge archived visits (e.g. synced from client cache after server redeploy)
+ */
+export function mergeExternalVisits(incoming: MetricVisitRecord[]): { added: number; total: number } {
+  if (!Array.isArray(incoming) || incoming.length === 0) {
+    return { added: 0, total: visits.length };
+  }
+  let added = 0;
+  const existingIds = new Set(visits.map((v) => v.id));
+  const existingSignatures = new Set(visits.map((v) => `${v.timestamp}_${v.ip}_${v.path}`));
+
+  for (const r of incoming) {
+    if (!r || typeof r.timestamp !== "number" || !r.ip) continue;
+    const sig = `${r.timestamp}_${r.ip}_${r.path}`;
+    if (!existingIds.has(r.id) && !existingSignatures.has(sig)) {
+      existingIds.add(r.id);
+      existingSignatures.add(sig);
+      visits.push({
+        id: r.id || `v_${r.timestamp}_${Math.random().toString(36).slice(2, 7)}`,
+        pageId: r.pageId || `p_${r.timestamp}`,
+        sessionId: r.sessionId || `s_${r.timestamp}`,
+        ip: r.ip,
+        country: r.country || "International",
+        countryCode: r.countryCode || "--",
+        city: r.city || "",
+        path: r.path || "/",
+        referrer: r.referrer || "Direct",
+        device: r.device || "Desktop",
+        browser: r.browser || "Browser",
+        os: r.os || "OS",
+        timestamp: r.timestamp,
+        helsinkiTime: r.helsinkiTime || formatHelsinkiTime(r.timestamp),
+        durationSeconds: Number(r.durationSeconds) || 0,
+        lastActive: r.lastActive || r.timestamp,
+      });
+      added++;
+    }
+  }
+
+  if (added > 0) {
+    visits = cleanAndDeduplicateVisits(visits);
+    saveMetricsNow();
+  }
+
+  return { added, total: visits.length };
+}
+
