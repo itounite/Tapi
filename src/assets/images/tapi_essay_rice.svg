@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 230" width="100%" height="100%">
+  <defs>
+    <style>
+      .onaka-text {
+        font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', 'IPAGothic', 'Noto Sans CJK JP', sans-serif;
+        font-weight: 900;
+        font-size: 26px;
+        fill: #111111;
+        letter-spacing: 2px;
+      }
+      .tapi-stroke {
+        stroke: #111111;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+  </defs>
+
+  <!-- Clean Background -->
+  <rect width="260" height="230" fill="#FFFFFF" fill-opacity="0" />
+
+  <!-- Top Title: お腹いっぱい -->
+  <!-- We render both stylized paths/text for optimal rendering across all environments -->
+  <text x="130" y="68" text-anchor="middle" class="onaka-text">お腹いっぱい</text>
+
+  <!-- King Tapioka Lying Down, Full Belly -->
+  <g class="tapi-stroke">
+    <!-- Main Gray Body Mass (lying horizontally) -->
+    <!-- Head on left, arm crease, lower body under belly, hips and feet on right -->
+    <path d="M 16 196
+             C 12 182, 10 152, 22 134
+             C 32 120, 50 124, 56 142
+             C 62 155, 62 168, 62 176
+             C 74 172, 88 168, 105 166
+             C 140 166, 172 168, 186 172
+             C 196 172, 206 168, 218 160
+             C 225 154, 230 162, 234 165
+             C 240 155, 246 150, 248 158
+             C 250 168, 246 186, 238 196
+             Z"
+          fill="#4E5057"
+          stroke="#111111"
+          stroke-width="4.5" />
+
+    <!-- Left whisker / hair mark -->
+    <path d="M 12 126 L 18 133" stroke="#111111" stroke-width="2.5" fill="none" />
+
+    <!-- Eyes: Satisfied squinting lines >< -->
+    <path d="M 25 145 L 32 150 L 26 156" stroke="#111111" stroke-width="3" fill="none" />
+    <path d="M 36 142 L 43 147 L 37 153" stroke="#111111" stroke-width="3" fill="none" />
+
+    <!-- Open Happy Mouth: Red triangular wedge -->
+    <path d="M 33 164 L 43 154 L 47 165 Z" fill="#D82323" stroke="#111111" stroke-width="2.5" />
+
+    <!-- Left Arm resting gently on the side of the belly -->
+    <path d="M 52 176
+             C 52 150, 62 130, 78 135
+             C 88 140, 86 156, 74 172"
+          fill="#4E5057"
+          stroke="#111111"
+          stroke-width="4.5" />
+
+    <!-- Huge Swollen Belly: Warm creamy beige dome -->
+    <path d="M 68 158
+             C 64 128, 86 102, 126 100
+             C 156 100, 182 118, 185 156
+             C 160 174, 108 176, 68 158 Z"
+          fill="#F2DFBA"
+          stroke="#111111"
+          stroke-width="4.5" />
+
+    <!-- Right Hindquarters & Feet Curves -->
+    <path d="M 185 156
+             C 195 168, 204 172, 218 165
+             C 226 160, 234 168, 244 164
+             C 248 175, 244 190, 236 196"
+          fill="none"
+          stroke="#111111"
+          stroke-width="4.5" />
+
+    <!-- Foot definition creases -->
+    <path d="M 226 168 C 228 178, 235 186, 242 190" fill="none" stroke="#111111" stroke-width="3.5" />
+
+    <!-- Flat Ground Support Line -->
+    <path d="M 12 196 L 244 196" stroke="#111111" stroke-width="4.5" />
+  </g>
+</svg>

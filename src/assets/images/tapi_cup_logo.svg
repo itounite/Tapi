@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 250" width="100%" height="100%">
+  <!-- King Tapioka Body (peeking behind cup) -->
+  <path d="M 28 116 C 26 48, 40 36, 70 36 C 100 36, 112 48, 111 116 Z" 
+        fill="#4A4C57" 
+        stroke="#18181B" 
+        stroke-width="3.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Tiny Gold Crown on head -->
+  <polygon points="61,36 60,24 67,29 71,23 75,29 82,24 81,36" 
+           fill="#FCD34D" 
+           stroke="#18181B" 
+           stroke-width="2.2" 
+           stroke-linejoin="round" />
+  <!-- '王' character on crown -->
+  <path d="M 67 27 L 75 27 M 71 27 L 71 33 M 68 30 L 74 30 M 66 34 L 76 34" 
+        stroke="#18181B" stroke-width="1.2" stroke-linecap="round" />
+
+  <!-- King Tapioka Eyes (horizontal sleepy slits) -->
+  <line x1="43" y1="72" x2="57" y2="71" stroke="#18181B" stroke-width="3.5" stroke-linecap="round" />
+  <line x1="81" y1="70" x2="95" y2="69" stroke="#18181B" stroke-width="3.5" stroke-linecap="round" />
+
+  <!-- King Tapioka Zigzag Mouth (www) -->
+  <path d="M 55 84 L 60 80 L 65 84 L 70 80 L 75 84 L 80 80 L 85 84" 
+        fill="none" 
+        stroke="#18181B" 
+        stroke-width="2.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Red Bowtie ribbon -->
+  <polygon points="62,91 73,99 62,107" fill="#E11D48" stroke="#18181B" stroke-width="2" stroke-linejoin="round" />
+  <polygon points="84,91 73,99 84,107" fill="#E11D48" stroke="#18181B" stroke-width="2" stroke-linejoin="round" />
+  <circle cx="73" cy="99" r="2.8" fill="#BE123C" stroke="#18181B" stroke-width="1.8" />
+
+  <!-- Red Boba Straw sticking up from the right -->
+  <polygon points="118,66 150,68 147,135 115,135" 
+           fill="#E11D48" 
+           stroke="#18181B" 
+           stroke-width="3.5" 
+           stroke-linejoin="round" />
+
+  <!-- Milk Tea Cup Body -->
+  <path d="M 26 114 L 157 114 L 149 238 L 27 238 Z" 
+        fill="#FDF0B5" 
+        stroke="#18181B" 
+        stroke-width="4.5" 
+        stroke-linejoin="round" 
+        stroke-linecap="round" />
+
+  <!-- 4 Black Tapioca Pearls inside the cup -->
+  <!-- Upper Left -->
+  <circle cx="62" cy="154" r="14" fill="#18181B" />
+  <!-- Upper Right -->
+  <circle cx="120" cy="160" r="14" fill="#18181B" />
+  <!-- Lower Left -->
+  <circle cx="64" cy="204" r="14" fill="#18181B" />
+  <!-- Lower Right -->
+  <circle cx="106" cy="214" r="14" fill="#18181B" />
+
+  <!-- Vectorized Japanese text: じー ......... -->
+  <!-- 'し' part of じ -->
+  <path d="M 124 40 L 124 55 C 124 64, 134 65, 140 60" 
+        fill="none" stroke="#18181B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+  <!-- dakuten mark for じ -->
+  <line x1="135" y1="41" x2="139" y2="45" stroke="#18181B" stroke-width="2.8" stroke-linecap="round" />
+  <line x1="139" y1="38" x2="143" y2="42" stroke="#18181B" stroke-width="2.8" stroke-linecap="round" />
+
+  <!-- 'ー' prolonged sound mark -->
+  <line x1="147" y1="52" x2="169" y2="52" stroke="#18181B" stroke-width="3.5" stroke-linecap="round" />
+
+  <!-- dots ......... -->
+  <circle cx="178" cy="53" r="1.8" fill="#18181B" />
+  <circle cx="184" cy="53" r="1.8" fill="#18181B" />
+  <circle cx="190" cy="53" r="1.8" fill="#18181B" />
+  <circle cx="196" cy="53" r="1.8" fill="#18181B" />
+  <circle cx="202" cy="53" r="1.8" fill="#18181B" />
+  <circle cx="208" cy="53" r="1.8" fill="#18181B" />
+  <circle cx="214" cy="53" r="1.8" fill="#18181B" />
+  <circle cx="220" cy="53" r="1.8" fill="#18181B" />
+  <circle cx="226" cy="53" r="1.8" fill="#18181B" />
+</svg>

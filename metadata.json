@@ -1,6 +1,6 @@
 {
   "name": "Tapi Life",
-  "description": "Playful bilingual website (Japanese & English) for Tapi Life (King Tapioca and friends) with illustrations, games, and videos.",
+  "description": "Trilingual website (Japanese, English & Finnish) for Tapi Life (King Tapioca and friends) featuring original hand-drawn illustrations, character catalog, and essays by Yoshi Tsuiji.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

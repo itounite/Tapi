@@ -1,37 +1,60 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ChevronLeft, BookOpen, Clock, ArrowRight, CornerDownRight, Globe } from 'lucide-react';
+import { BookOpen, Clock, ArrowRight, ArrowLeft } from 'lucide-react';
 import { Language } from '../types';
-import Footer from './Footer';
+
+import tapiSupportImg from '../assets/images/tapi_essay_support.png';
+import tapiRiceImg from '../assets/images/tapi_essay_rice.png';
+import tapiDanceImg from '../assets/images/tapi_essay_dance.png';
+import turtleStickerImg from '../assets/images/turtle_sticker.jpg';
 
 interface EssaysPageProps {
   lang: Language;
-  onBack: () => void;
-  visits?: number | null;
-  visits24h?: number | null;
+  onNavigate: (path: string) => void;
+}
+
+interface EssayImage {
+  src: string;
+  alt: string;
+  captionJa?: string;
+  captionEn?: string;
+  captionFi?: string;
+  credit?: {
+    text: string;
+    url: string;
+  };
 }
 
 interface Essay {
   id: number;
   tagEn: string;
   tagJa: string;
+  tagFi: string;
   titleEn: string;
   titleJa: string;
+  titleFi: string;
   readTimeEn: string;
   readTimeJa: string;
+  readTimeFi: string;
+  image?: EssayImage;
   contentJa: string[];
   contentEn: string[];
+  contentFi: string[];
 }
 
-export default function EssaysPage(props: EssaysPageProps) {
-  const { lang, onBack } = props;
-  
-  // View mode can be 'bilingual' | 'ja' | 'en'
-  const [viewMode, setViewMode] = useState<'bilingual' | 'ja' | 'en'>('bilingual');
+export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
+  // View mode can be 'ja' | 'en' | 'fi' | 'bilingual'
+  const [viewMode, setViewMode] = useState<'ja' | 'en' | 'fi' | 'bilingual'>('bilingual');
 
-  // Synchronize viewMode with the outer lang when lang changes, but allow manual toggle
+  // Sync initial view mode when outer lang changes
   useEffect(() => {
-    setViewMode(lang === 'en' ? 'en' : 'ja');
+    if (lang === 'fi') {
+      setViewMode('fi');
+    } else if (lang === 'en') {
+      setViewMode('en');
+    } else {
+      setViewMode('ja');
+    }
   }, [lang]);
 
   const essays: Essay[] = [
@@ -39,10 +62,24 @@ export default function EssaysPage(props: EssaysPageProps) {
       id: 1,
       tagEn: 'Scientific Adaptation',
       tagJa: '科学的考察',
+      tagFi: 'Tieteellinen sopeutuminen',
       titleEn: 'Environmental Adaptation of Deep Sea Organisms',
       titleJa: '自然界における環境変化と深海生物の進化・適応能力',
+      titleFi: 'Syvänmeren eliöiden evoluutio ja ympäristöön sopeutuminen',
       readTimeEn: '5 min read',
       readTimeJa: '読了時間 約5分',
+      readTimeFi: 'Lukuajaksi n. 5 min',
+      image: {
+        src: turtleStickerImg,
+        alt: 'Jockomo Nature Sea Turtle Sticker',
+        captionJa: '自然界の適応と進化を象徴するウミガメのインレイステッカー',
+        captionEn: 'Sea turtle inlay sticker symbolizing marine life adaptation and evolution',
+        captionFi: 'Merikilpikonnan helmiäiskuviointi kuvaamassa merieliöiden sopeutumista ja evoluutiota',
+        credit: {
+          text: 'Jockomo Nature Sea Turtle Sticker',
+          url: 'https://www.thomann.fi/jockomo_nature_sea_turtle_sticker.htm'
+        }
+      },
       contentJa: [
         '自然界では、環境の変化が生物に与える影響は非常に大きい。生物は、どのような環境でも生存期間に、絶えず適応し進化してきた。その過程で、生命は極めて適切な適応能力を発揮し、過酷な環境でも生き抜くための工夫をしている。まず、環境の変化が生物にどのような影響を与えるかを考えることが重要だ。',
         '例えば、海洋の深さによる水圧の影響は、生物にとって大きな挑戦となる。このように、水圧の変化に対して生物がどのように適応してきたかが、深海生物の進化のカギを握っている。',
@@ -64,16 +101,46 @@ export default function EssaysPage(props: EssaysPageProps) {
         'The adaptation of the spider crab exemplifies the resilient adaptive power of living organisms. It possesses the flexibility to survive not only in marine environments but also on land. Evolution is a process in which individuals with traits best suited to their environment survive, passing those genes to the next generation, thereby adapting the entire species.',
         'The unique characteristics of deep-sea fish and the Japanese spider crab are the results of millions of years of evolution. Genetic mutations play a vital role in this process. To cope with environmental shifts, random genetic mutations occasionally offer favorable advantages, eventually spreading through the population to form new adaptations.',
         'Environmental variations have a profound impact, and whether organisms can successfully adapt defines their survival. Deep-sea fish and spider crabs have evolved precisely to thrive in these extreme environments, developing their own remarkable characteristics.'
+      ],
+      contentFi: [
+        'Luonnossa ympäristönmuutokset vaikuttavat eliöihin valtavasti. Koko olemassaolonsa ajan organismit ovat jatkuvasti sopeutuneet ja kehittyneet selviytyäkseen mitä erilaisimmissa olosuhteissa. Tässä prosessissa elämä osoittaa hämmästyttävää kekseliäisyyttä ja sopeutumiskykyä vaativimmissakin ympäristöissä. Ensin on ymmärrettävä, kuinka nämä muutokset vaikuttavat elollisiin järjestelmiin.',
+        'Esimerkiksi valtameren syvyyden aiheuttama musertava vedenpaine on eliöille ankara haaste. Kuinka organismit ovat sopeutuneet näihin paineen vaihteluihin, onkin syvänmeren elämän evoluution ehdoton avainkysymys.',
+        'Syvänmeren kaloilla on erittäin erikoistuneita piirteitä äärimmäisissä elinympäristöissä selviytymiseen: täydellinen pimeys, valtava paine, jäätävä kylmyys ja hapenpuute. Selviytyäkseen ne ovat kehittäneet paineensietokykyä, jättikasvua ja valoa hohtavia elimiä.',
+        'Valoa tuottavat kalat käyttävät valoelimiään houkutellakseen saalista pilkkopimeässä. Toisaalta monet lajit säätelevät nostettaan rasvan avulla välttääkseen uimarakon vaarallisen repeämisen vedenpaineen vaihdellessa.',
+        'Myös syvänmeren kalojen luusto on aivan erilainen. Paineen kestämiseksi kehojen on oltava joustavia, joten monilta puuttuu kova luuranko. Pehmeät ja kimmoisat luut estävät kehoa murtumasta paineen alla. Erityisen kiehtova esimerkki on japanilainen jättiläistaskurapu (Takaashigani).',
+        'Jättiläistaskurapu sietää paitsi valtavaa syvyyksien vedenpainetta, se voi selviytyä jopa kuivalle maalle tuotuna. Tämä johtuu siitä, ettei sillä ole kaasulla täytettyjä elimiä kuten uimarakkoa tai keuhkoja. Ilman kaasutaskuja paineenvaihtelut eivät vahingoita sitä.',
+        'Taskuravun sopeutuminen kuvastaa elävien organismien sitkeää elinvoimaa. Sillä on kyky selviytyä meressä ja joustavuutta elää maalla. Evoluutio on prosessi, jossa ympäristöön parhaiten sopeutuvat yksilöt selviytyvät ja siirtävät geeninsä seuraavalle sukupolvelle.',
+        'Syvänmeren kalojen ja jättiläistaskuravun poikkeukselliset ominaisuudet ovat miljoonien vuosien evoluution hedelmää, jossa hyödylliset geneettiset mutaatiot vakiintuvat osaksi lajin perimää.',
+        'Ympäristönmuutokset ovat voimakkaita, ja kyky sopeutua ratkaisee elämän jatkumisen. Syvänmeren eliöt ovat kehittyneet loistamaan äärimmäisissä oloissa omilla ainutlaatuisilla tavoillaan.'
       ]
     },
     {
       id: 2,
       tagEn: 'Philosophy & Imagination',
       tagJa: '創作とイマジネーション',
+      tagFi: 'Luovuus ja mielikuvitus',
       titleEn: 'Dance',
       titleJa: 'ダンス',
+      titleFi: 'Tanssi (Dance)',
       readTimeEn: '4 min read',
       readTimeJa: '読了時間 約4分',
+      readTimeFi: 'Lukuajaksi n. 4 min',
+      image: {
+        src: tapiDanceImg,
+        alt: 'King Tapioka Smiling and Dancing (ニコ〜)',
+        captionJa: '『ニコ〜』— 陽気な音楽に合わせてペン先で踊る笑顔のたぴおか王',
+        captionEn: '“Niko~ (Beaming Smile)” — King Tapioka smiling and dancing at the tip of the pen to cheerful music',
+        captionFi: '”Niko~ (Hymy)” – Kuningas Tapioka tanssimassa ja hymyilemässä iloisen musiikin tahtiin'
+      },
+      contentJa: [
+        '自分が一番得意なことは何かと聞かれたら、それはおそらく「想像力」だと思う。',
+        '小学2年生のとき、僕は学年で一番足が速かった。しかし3年生になってから、自分のオリジナルキャラクターの漫画を描くことに没頭するあまり、それまで掛け持ちしていたバスケットボールと野球のスポーツチームを両方とも辞めてしまった。これはおそらく、僕の小学校生活における最大の失敗だった。スポーツをやめたことで足はすっかり鈍くなり、走る速さも平均レベルまで落ちてしまった。しかし、その代わりに僕の手元には、絵を描くための豊かな想像力だけが残った。',
+        '先生は「君のユーモアと想像力はみんなを笑顔にするね！（ユーモアのセンスが抜群だ）」と言ってくれた。また、海外の人からも、スポーツを諦めた代わりに抜群の想像力を手に入れたんだね、と言われたことがある。確かに、学校の国語の授業で詩を書いたときも、「山田君の書く詩は、日常が描かれていて面白い」と褒められた。だから、想像力こそが僕の1番の強みだと思っている。',
+        '僕の想像力から生まれたキャラクター「たぴおか王」は、最初はノートの隅の落書きにすぎなかった。しかし描いているうちに、まるで自分の子供のように思えてきて、親心のようなものが芽生えてきた。そこでタブレットを購入し、それからはずっと絵を描き続けている。',
+        '今回のフィンランド旅行に向けて、僕は過去3ヶ月間、たぴおか王のオリジナルグッズ制作に励んできた。それらを作った理由は、フィンランドで販売するためだ。朝の9時、賑やかな公園で机を運び、ディスプレイを設置し、つたない英語で接客を始めた。僕はこのような生き方がとても好きだ。想像力があれば、できることは無限にある。今書いているこのエッセイもそうだ。絵を描くだけでなく、ストーリーの途中にギャグを挟んだり、新しい料理に挑戦したりするのにも想像力を使っている。人間にとって頭をよく使うことは大切だ。考え、考え、考え抜くこと。',
+        '絵を描くときは、いつも「エンターテイナー」のような陽気な音楽をかけながら描いている。僕は決して絵が上手なわけではないけれど、デザインにおいて自分なりの工夫を凝らし、全力でクリエイティブであろうとしている。タブレットにペンを置き、どっかと腰を下ろす。すると、僕のキャラクターたちがペン先とともに動き、踊り出す。彼らは走り、笑い、泣く。僕には彼らを止めることはできないし、止めるつもりもない。',
+        'それが、僕の頭の中の想像の世界だ。みんな、僕の頭の中に生きている。誰かに怒られて落ち込んでいるときも、嬉しくてワクワクしているときも、彼らはいつも僕のそばにいてくれる。まるで運命共同体だ。そうやって考え、悩み、笑い、泣きながら、今という瞬間を駆け抜けている。誰よりも早く自分の世界に入り込めるということを、今の僕は誇りに思っている。'
+      ],
       contentEn: [
         'If I had to say what I am best at, it would probably be imagination.',
         'In the second grade, I was the fastest runner in my grade, but from the third grade on, I spent so much time drawing cartoons of my characters that I dropped both the basketball and baseball sports teams I had been taking concurrently. This was probably the biggest mistake I made in my elementary school life. My legs had become sluggish from quitting my sports, and I had dropped to about medium speed. But instead, I only had the imagination to draw.',
@@ -83,24 +150,34 @@ export default function EssaysPage(props: EssaysPageProps) {
         'Whenever I paint, I always write while playing cheerful music like “Entertainer.” I may not be a good artist, but I can be creative in my designs, so I try my best to be creative in my own way. I put the pen on the tablet and sit down with a thud. Then my characters move and dance with the pen. They run, laugh, and cry. I can\'t stop them, and I have no desire to stop them.',
         'That\'s how I imagine it in my head. Everyone is in my head. They are with me when I am depressed because someone is mad at me, or when I am happy and excited. It\'s like a community of fate. I think, worry, laugh, cry, and run through the present like that. I am proud now that I think that I am entering my own world faster than anyone else.'
       ],
-      contentJa: [
-        '自分が一番得意なことは何かと聞かれたら、それはおそらく「想像力」だと思う。',
-        '小学2年生のとき、僕は学年で一番足が速かった。しかし3年生になってから、自分のオリジナルキャラクターの漫画を描くことに没頭するあまり、それまで掛け持ちしていたバスケットボールと野球のスポーツチームを両方とも辞めてしまった。これはおそらく、僕の小学校生活における最大の失敗だった。スポーツをやめたことで足はすっかり鈍くなり、走る速さも平均レベルまで落ちてしまった。しかし、その代わりに僕の手元には、絵を描くための豊かな想像力だけが残った。',
-        '先生は「君のユーモアと想像力はみんなを笑顔にするね！（ユーモアのセンスが抜群だ）」と言ってくれた。また、海外の人からも、スポーツを諦めた代わりに抜群の想像力を手に入れたんだね、と言われたことがある。確かに、学校の国語の授業で詩を書いたときも、「山田君の書く詩は、日常が描かれていて面白い」と褒められた。だから、想像力こそが僕の1番の強みだと思っている。',
-        '僕の想像力から生まれたキャラクター「たぴおか王」は、最初はノートの隅の落書きにすぎなかった。しかし描いているうちに、まるで自分の子供のように思えてきて、親心のようなものが芽生えてきた。そこでタブレットを購入し、それからはずっと絵を描き続けている。',
-        '今回のフィンランド旅行に向けて、僕は過去3ヶ月間、たぴおか王のオリジナルグッズ制作に励んできた。それらを作った理由は、フィンランドで販売するためだ。朝の9時、賑やかな公園で机を運び、ディスプレイを設置し、つたない英語で接客を始めた。僕はこのような生き方がとても好きだ。想像力があれば、できることは無限にある。今書いているこのエッセイもそうだ。絵を描くだけでなく、ストーリーの途中にギャグを挟んだり、新しい料理に挑戦したりするのにも想像力を使っている。人間にとって頭をよく使うことは大切だ。考え、考え、考え抜くこと。',
-        '絵を描くときは、いつも「エンターテイナー」のような陽気な音楽をかけながら描いている。僕は決して絵が上手なわけではないけれど、デザインにおいて自分なりの工夫を凝らし、全力でクリエイティブであろうとしている。タブレットにペンを置き、どっかと腰を下ろす。すると、僕のキャラクターたちがペン先とともに動き、踊り出す。彼らは走り、笑い、泣く。僕には彼らを止めることはできないし、止めるつもりもない。',
-        'それが、僕の頭の中の想像の世界だ。みんな、僕の頭の中に生きている。誰かに怒られて落ち込んでいるときも、嬉しくてワクワクしているときも、彼らはいつも僕のそばにいてくれる。まるで運命共同体だ。そうやって考え、悩み、笑い、泣きながら、今という瞬間を駆け抜けている。誰よりも早く自分の世界に入り込めるということを、今の僕は誇りに思っている。'
+      contentFi: [
+        'Jos minun pitäisi sanoa, missä olen paras, se olisi luultavasti mielikuvitus.',
+        'Toisella luokalla olin ikäluokkani nopein juoksija. Kolmannelta luokalta alkaen kuitenkin vietin niin paljon aikaa omien hahmojeni sarjakuvien piirtämiseen, että jätin sekä koripallo- että baseball-joukkueet. Se oli ehkä alakouluvuosieni suurin erehdys: jalkani hidastuivat keskitasolle. Mutta sen sijaan minulle jäi ehtymätön mielikuvitus piirtämiseen.',
+        'Opettajani sanoi: ”Huumorisi ja mielikuvituksesi saavat ihmiset hymyilemään!” Myös ulkomaalaiset ovat sanoneet minulle, että mielikuvitukseni on vertaansa vailla vastineeksi urheilusta luopumisesta. Koulun japanin tunneilla runojani kehuttiin siitä, kuinka ne kuvaavat arkea hauskasti. Siksi uskon, että mielikuvitus on suurin vahvuuteni.',
+        'Mielikuvituksestani syntynyt hahmo ”Kuningas Tapioka” oli aluksi vain pelkkä luonnos vihon kulmassa. Piirtäessäni aloin kuitenkin tuntea hänet kuin omaksi lapsekseni. Niinpä hankin tabletin ja olen siitä asti piirtänyt lakkaamatta.',
+        'Tätä Suomen-matkaa varten työskentelin edeltävät kolme kuukautta ahkerasti luodakseni Kuningas Tapiokan alkuperäisiä tuotteita myytäväksi Suomessa! Aloitin aamuyhdeksältä vilkkaassa puistossa kantamalla pöytiä, pystyttämällä esillepanon ja palvelemalla asiakkaita haparoivalla englannilla. Nautin tällaisesta elämästä suunnattomasti. Mielikuvituksella voin tehdä mitä vain: piirtää, keksiä vitsejä tai kokeilla uutta ruokalajia. Ihmiselle on tärkeää käyttää aivojaan. Ajatella, pohtia ja luoda.',
+        'Maalatessani soitan aina taustalla iloista musiikkia, kuten ”The Entertainer”. En ehkä ole teknisesti mestarillinen piirtäjä, mutta panostan kekseliäisyyteen ja suunnitteluun omalla tavallani. Asetan kynän tabletille ja istahdan alas. Silloin hahmoni heräävät eloon ja tanssivat kynän kärjessä. Ne juoksevat, nauravat ja itkevät. En voi pysäyttää niitä, enkä edes haluaisi.',
+        'Sellainen on mielikuvitukseni maailma. Kaikki hahmot asuvat päässäni. He ovat kanssani silloin kun minua harmittaa, ja silloin kun olen innoissani. Olemme kuin erottamaton yhteisö. Ajattelen, pohdin, nauran, itken ja kuljen tämän hetken läpi. Olen ylpeä siitä, että pääsen omaan maailmaani nopeammin kuin kukaan muu.'
       ]
     },
     {
       id: 3,
       tagEn: 'Culture & Food',
       tagJa: '食と文化',
+      tagFi: 'Ruokakulttuuri ja perinne',
       titleEn: 'Japanese Rice (日本米)',
       titleJa: '日本米 (Japanese Rice)',
+      titleFi: 'Japanilainen riisi (Nihonmai)',
       readTimeEn: '4 min read',
       readTimeJa: '読了時間 約4分',
+      readTimeFi: 'Lukuajaksi n. 4 min',
+      image: {
+        src: tapiRiceImg,
+        alt: 'King Tapioka Full Stomach (お腹いっぱい)',
+        captionJa: '『お腹いっぱい』— 美味しいお米をお腹いっぱいに食べた満足げなたぴおか王',
+        captionEn: '“Full Stomach (Onaka Ippai)” — King Tapioka resting happily after enjoying delicious rice',
+        captionFi: '”Vatsa täynnä (Onaka Ippai)” – Kuningas Tapioka lepäämässä herkullisen riisiaterian jälkeen'
+      },
       contentJa: [
         '欧米で大ヒットしたホットケーキミックスは、電気釜で作れるように改良し日本市場に進出したが完全な失敗に終わった。理由はライス・カルチャー（お米の文化）といわれる日本文化の中で、ごはんをたくのと同じ器でケーキを作ると、バニラやチョコレートに汚染されてしまうのではないか―という懸念とわかり、問題がそこまで民族的な伝統に根ざしている以上、手の打ちようがないと日本市場から引き上げる結果となった。',
         '僕は米が好きだ。たぶん、日本人の多くがそうだろう。だが、米が単に「おいしい」だけでなく、先人たちの知恵や工夫、歴史によって支えられていることを、もっと意識する必要があると思う。',
@@ -122,16 +199,37 @@ export default function EssaysPage(props: EssaysPageProps) {
         'Applying salt to your hands when shaping onigiri is also a technique for seasoning and preservation. It allows one to taste the flavor clearly with only a small amount of salt. Each of these small details represents an accumulated wisdom that has protected rice and deepened its flavor over generations.',
         'The rice we eat every day is not merely a staple food. Whenever I reflect on the growth of the rice stalks I saw in my grandmother\'s field, or the cultural rejection of baking cakes in rice cookers that my mother mentioned, I feel that rice holds a truly special place for Japanese people.',
         'For humans, rice is "sustenance," but at the same time, it is "history," "culture," and "a way of life" itself.'
+      ],
+      contentFi: [
+        'Länsimaissa suosittu pannukakkujauheseos sovitettiin sähköisissä riisinkeittimissä leivottavaksi ja lanseerattiin Japanissa, mutta se epäonnistui täysin. Syynä oli Japanin syvä riisikulttuuri: ihmiset pelkäsivät, että kakun leipominen samassa astiassa, jossa päivittäinen riisi keitetään, saastuttaisi riisin vaniljan tai suklaan tuoksulla. Koska asia liittyi kansalliseen identiteettiin, valmistajan oli lopulta vetäydyttävä markkinoilta.',
+        'Rakastan riisiä, kuten luultavasti useimmat japanilaiset. Meidän on kuitenkin syytä muistaa, että riisi ei ole vain ”herkullista”, vaan sitä kannattelee esivanhempiemme viisaus ja vuosisatainen perinne.',
+        'Vaikka nykyään kaupoissa myydään pääasiassa valkoista riisiä, kiillotettu valkoinen riisi oli aikoinaan suuri ylellisyys. Vasta Edo-kaudella kaupunkilaiset saivat sitä säännöllisesti ruokapöytiinsä, mistä alkoi lukemattomien reseptien kukoistus.',
+        'Tiedätkö, miksi japanilainen suolaluumu (umeboshi) on perinteisin riisipallojen (onigiri) täyte? Edo-kaudella turskanmäti oli harvinaista, merilevä kallista ja majoneesia ei luonnollisesti tunnettu. Suolaluumu sen sijaan oli edullinen, säilyvä ja sopi riisin makuun loistavasti. Lisäksi sen sitruunahappo suojasi riisiä pilaantumiselta helteessä.',
+        'Riisinviljelyn historia alkoi Jomon-kauden lopulla ja vakiintui Yayoi-kaudella. Aikanaan riisiä käytettiin jopa verona ja valuuttana, ja feodaaliherrojen varallisuus mitattiin riisin satomäärissä.',
+        'Isoäitini kotitalon edessä on riisipelto. Muistan riisintaimien istutuksen keväällä, kesän vehreyden, syksyn kultaiset sävyt ja mutaiset leikit pellolla sadonkorjuun jälkeen. Isoäitini on seurannut tätä kiertoa koko elämänsä. Yhdestä korresta saatava riisimäärä on pieni, minkä vuoksi hän ymmärsi jokaisen yksittäisen riisinjyvän suuren arvon.',
+        'Myös kämmenten suolaaminen onigireja muotoiltaessa on ikivanhaa säilöntä- ja maustamisviisautta.',
+        'Riisi, jota syömme päivittäin, ei ole vain ravintoa. Se on japanilaisille elävä yhteys luontoon, perheeseen ja sukupolvien ketjuun.',
+        'Riisi on ravintoa, mutta samalla se on historiaa, kulttuuria ja elämäntapa itsessään.'
       ]
     },
     {
       id: 4,
       tagEn: 'Family & Collaboration',
       tagJa: '家族と協力',
+      tagFi: 'Perhe ja yhteistyö',
       titleEn: 'Support (援護)',
       titleJa: '援護 (Support)',
+      titleFi: 'Tuki (Support - 援護)',
       readTimeEn: '3 min read',
       readTimeJa: '読了時間 約3分',
+      readTimeFi: 'Lukuajaksi n. 3 min',
+      image: {
+        src: tapiSupportImg,
+        alt: 'King Tapioka Saying Thank You (ありがとう)',
+        captionJa: '『ありがとう』— 家族への深い感謝と相互扶助を描いたたぴおか王',
+        captionEn: '“Arigatou (Thank you)” — King Tapioka expressing gratitude for family support and mutual aid',
+        captionFi: '”Arigatou (Kiitos)” – Kuningas Tapioka kiittämässä perheen tuesta ja yhteistyöstä'
+      },
       contentJa: [
         '僕の家族は、それぞれの役割がはっきりしている。集団で物事を進めるうえで、役割分担は欠かせない。役割を明確にすることで、各自が自分の責任に集中でき、作業の効率が上がる。',
         'また、それぞれの得意分野や能力を活かすことができ、全体の成果にもつながる。誰が何をするのかがはっきりしていれば、誤解や混乱も起こりにくいし、無駄な重複作業も避けられる。つまり、役割分担は集団の中で協力し合うための基本であり、目的を達成するために、とても大切なものだと思う。そしてそれを家族の中で自然に補い合えているというのは、それぞれにとっても、とてもありがたいことだ。',
@@ -152,229 +250,343 @@ export default function EssaysPage(props: EssaysPageProps) {
         'My mother backs me up with all her heart. Rather than simply getting through her daily work, she watches over each family member carefully and extends a helping hand exactly when it is needed. Watching her, I feel a growing desire to become someone who can support others in return.',
         'For human beings, family is the ultimate emotional and structural support in life. Our strengths and weaknesses vary, but that is precisely why we can lift each other up. They are the ones who lend a hand when we are in trouble, and share our happiness when we succeed.',
         'True to the spirit of mutual aid, my family operates like a cohesive team. Despite our differing personalities, our structure works beautifully because everyone fulfills their respective roles. Moving forward, I hope to continue finding and playing my part within this wonderful team.'
+      ],
+      contentFi: [
+        'Perheessämme jokaisen rooli on selkeä. Kun ryhmä etenee yhdessä, tehtävien jakaminen on välttämätöntä. Selkeät roolit auttavat meitä keskittymään omiin vastuisiimme ja lisäävät tehokkuutta.',
+        'Lisäksi voimme hyödyntää jokaisen vahvuuksia koko perheen hyväksi. Kun tiedetään kuka tekee mitäkin, väärinkäsityksiltä vältytään ja turhat päällekkäisyydet karsiutuvat. Toistemme luonnollinen tukeminen perheen sisällä on asia, josta olemme kaikki syvästi kiitollisia.',
+        'Äitini tekee etätöitä lähes joka päivä ja on usein kiireinen verkkokokouksissaan. Vaikka itse loikoilisin vuoteessa, kuulen näppäimistön naputuksen ja äitini keskittyneen äänen. Se saa minut tuntemaan pientä syyllisyyttä ahkeruuteensa verrattuna. Silti, kun minut palkittiin koulun polttopalloturnauksessa, hän järjesti aikaa tullakseen paikan päälle kannustamaan minua.',
+        'Eikä siinä kaikki. Kun äitini osallistui kansainväliseen työseminaariin, pääsin hänen mukaansa matkalle. Hänen rohkaisustaan teimme alkuperäisiä tuotteita piirtämistäni kuvituksista – ja myimme niitä Suomessa! Vaikka minua jännitti, oli sanoin kuvaamattoman hienoa nähdä ihmisten tutustuvan teoksiini. Se, että äitini uskoi kykyihini ja tuki minua, oli minulle valtava voimanlähde.',
+        'Äitini tukee minua koko sydämestään. Pelkän työnteon lisäksi hän pitää huolta jokaisesta meistä ja auttaa aina tarvittaessa. Häntä seuratessani minussa kasvaa halu tulla ihmiseksi, joka voi vastavuoroisesti tukea muita.',
+        'Perhe on ihmiselle elämän suurin henkinen ja arjen tukipilari. Vahvuutemme ja heikkoutemme ovat erilaisia, ja juuri siksi täydennämme toisiamme.',
+        'Keskinäisen avunannon mukaisesti perheemme toimii kuin yhtenäinen joukkue. Erilaisista luonteistamme huolimatta kokonaisuus toimii kauniisti, kun jokainen kantaa kortensa kekoon. Haluan jatkossakin löytää ja täyttää oman roolini tässä mahtavassa tiimissä.'
       ]
     }
   ];
 
-  return (
-    <div id="essays-page-container" className="min-h-screen bg-[#FBF9F6] text-neutral-800 pb-24 selection:bg-neutral-200 select-none">
-      {/* Essays Header */}
-      <header className="border-b border-neutral-200 bg-[#FBF9F6]/80 backdrop-blur-md py-6 px-6 sm:px-10 sticky top-0 z-30 flex items-center justify-between">
-        <button
-          onClick={onBack}
-          className="px-4 py-2 hover:bg-neutral-100 text-neutral-800 rounded-lg text-xs transition-all flex items-center gap-1.5 border border-neutral-300 font-medium cursor-pointer"
+  const getPageTitle = () => {
+    if (lang === 'fi') return 'YOSHI TSUIJIN ESSEET & TEKSTIT';
+    if (lang === 'en') return 'ESSAYS & WRITINGS BY YOSHI TSUIJI';
+    return '辻 義のエッセイ・文集';
+  };
+
+  const getPageIntro = () => {
+    if (lang === 'fi') {
+      return 'Tutustu Yoshi Tsuijin henkilökohtaisiin esseisiin. Hän pohtii syvänmeren elämää, mielikuvituksen merkitystä ja matkaansa Suomeen, jossa hän myi itse suunnittelemiaan Kuningas Tapioka -tuotteita!';
+    }
+    if (lang === 'en') {
+      return 'Explore reflective personal essays written by Yoshi Tsuiji. From the evolutionary adaptations of deep-sea creatures to his joyful journey selling King Tapioca designs in Finland.';
+    }
+    return 'タピ・ライフ原作者・辻義による書き下ろしエッセイ・文集。深海生物の知恵から、日本のお米文化、そしてフィンランドで自身のオリジナルグッズを販売した心温まる思い出までを掲載。';
+  };
+
+  const getEssayTitle = (essay: Essay) => {
+    if (viewMode === 'fi') return essay.titleFi;
+    if (viewMode === 'en') return essay.titleEn;
+    return essay.titleJa;
+  };
+
+  const getEssayTag = (essay: Essay) => {
+    if (viewMode === 'fi') return essay.tagFi;
+    if (viewMode === 'en') return essay.tagEn;
+    return essay.tagJa;
+  };
+
+  const getReadTime = (essay: Essay) => {
+    if (viewMode === 'fi') return essay.readTimeFi;
+    if (viewMode === 'en') return essay.readTimeEn;
+    return essay.readTimeJa;
+  };
+
+  const renderStickerThumb = (essay: Essay, size: 'normal' | 'compact' = 'normal') => {
+    if (!essay.image) return null;
+    const isCompact = size === 'compact';
+    return (
+      <div
+        className={`float-left ${
+          isCompact
+            ? 'mr-4 mb-2.5 max-w-[110px] sm:max-w-[125px]'
+            : 'mr-5 mb-3 sm:mr-6 sm:mb-4 max-w-[118px] sm:max-w-[145px]'
+        } shrink-0 flex flex-col items-center select-none`}
+      >
+        <div
+          className={`${
+            isCompact ? 'w-24 h-24 sm:w-28 sm:h-28 p-1.5' : 'w-28 h-28 sm:w-36 sm:h-36 p-2'
+          } rounded-xl bg-neutral-50 border border-neutral-200/80 shadow-2xs flex items-center justify-center overflow-hidden`}
         >
-          <ChevronLeft className="w-4 h-4 text-neutral-700" />
-          <span>{lang === 'en' ? 'Back' : '戻る'}</span>
+          <img
+            src={essay.image.src}
+            alt={essay.image.alt}
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-contain"
+          />
+        </div>
+        {essay.image.credit && (
+          <div className="mt-1.5 text-center px-0.5 w-full">
+            <p className="text-[9px] sm:text-[10px] leading-tight text-neutral-500 font-sans">
+              <span className="text-neutral-400 block text-[8px] uppercase tracking-wider">picture credits:</span>
+              <a
+                href={essay.image.credit.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-700 underline underline-offset-2 hover:text-amber-800 transition-colors font-medium break-words inline-block mt-0.5"
+              >
+                {essay.image.credit.text} ↗
+              </a>
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div id="essays-page-container" className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-12">
+      
+      {/* Top back navigation link */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => onNavigate('/')}
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-neutral-600 hover:text-neutral-950 transition-colors py-1.5 px-3 rounded-md bg-white border border-neutral-200 shadow-xs cursor-pointer"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>
+            {lang === 'fi' ? 'Takaisin etusivulle' : lang === 'en' ? 'Back to Home' : 'ホームに戻る'}
+          </span>
         </button>
 
-        <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-neutral-600" />
-          <span className="font-mono tracking-widest text-xs font-bold text-neutral-900">YOSHI TSUIJI WRITINGS</span>
-        </div>
+        <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase font-semibold">
+          {lang === 'fi' ? 'LUKUSALI' : lang === 'en' ? 'READING ROOM' : '読書空間'}
+        </span>
+      </div>
 
-        <div className="text-[10px] border border-neutral-300 text-neutral-600 px-2.5 py-0.5 rounded-full font-mono uppercase tracking-wider">
-          {lang === 'en' ? 'BILINGUAL PROSE' : '日英対訳エッセイ・文集'}
-        </div>
-      </header>
+      {/* Page Title & Intro */}
+      <div className="space-y-4 text-center sm:text-left border-b border-neutral-200 pb-8">
+        <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase font-bold block">
+          {lang === 'fi' ? 'KIRJOITUKSET & AJATUKSET' : lang === 'en' ? 'COLLECTED ESSAYS' : '原作者書き下ろし文集'}
+        </span>
+        <h1 className="text-2xl sm:text-4xl font-serif text-neutral-950 font-medium">
+          {getPageTitle()}
+        </h1>
+        <p className="text-xs sm:text-sm text-neutral-600 font-serif leading-relaxed max-w-2xl">
+          {getPageIntro()}
+        </p>
+      </div>
 
-      <div className="max-w-3xl mx-auto px-6 pt-16 space-y-12">
-        {/* Intro Section */}
-        <div className="space-y-4 pb-8 border-b border-neutral-200">
-          <h1 className="text-2xl sm:text-3xl font-serif text-neutral-950 tracking-tight font-medium">
-            {lang === 'en' ? 'Essays & Reflections' : '辻義（Yoshi Tsuiji）寄稿エッセイ・文集'}
-          </h1>
-          <p className="text-sm text-neutral-500 leading-relaxed font-sans max-w-xl">
-            {lang === 'en' 
-              ? 'A collection of four creative and reflective essays written by Yoshi Tsuiji, completely presented in both Japanese and English. Choose your preferred reading language layout below.'
-              : '辻 義（Yoshi Tsuiji）が執筆した4つのエッセイ（日本語・英語の完全対訳）。深海生物の生態から、創作の想像力、お米の文化史、そして家族の協力体制まで、多岐にわたる独自の視点を日英二ヶ国語でお楽しみいただけます。'}
-          </p>
-
-          {/* View Mode Segmented Selector */}
-          <div className="pt-4 flex flex-wrap gap-2 items-center">
-            <span className="text-[10px] font-mono tracking-wider text-neutral-400 uppercase font-bold mr-2">
-              {lang === 'en' ? 'DISPLAY LAYOUT' : '表示言語'}
-            </span>
-            <div className="inline-flex rounded-lg border border-neutral-300 bg-neutral-100/50 p-0.5 shadow-xs">
-              <button
-                onClick={() => setViewMode('bilingual')}
-                className={`px-3 py-1 rounded-md text-[11px] font-mono font-medium transition-all cursor-pointer ${
-                  viewMode === 'bilingual'
-                    ? 'bg-white text-neutral-950 shadow-xs'
-                    : 'text-neutral-500 hover:text-neutral-800'
-                }`}
-              >
-                {lang === 'en' ? 'Bilingual (Side-by-Side)' : '日英対訳'}
-              </button>
-              <button
-                onClick={() => setViewMode('ja')}
-                className={`px-3 py-1 rounded-md text-[11px] font-mono font-medium transition-all cursor-pointer ${
-                  viewMode === 'ja'
-                    ? 'bg-white text-neutral-950 shadow-xs'
-                    : 'text-neutral-500 hover:text-neutral-800'
-                }`}
-              >
-                日本語 (JP)
-              </button>
-              <button
-                onClick={() => setViewMode('en')}
-                className={`px-3 py-1 rounded-md text-[11px] font-mono font-medium transition-all cursor-pointer ${
-                  viewMode === 'en'
-                    ? 'bg-white text-neutral-950 shadow-xs'
-                    : 'text-neutral-500 hover:text-neutral-800'
-                }`}
-              >
-                English (EN)
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Essay Index Table of Contents */}
-        <div className="p-6 bg-neutral-50 rounded-xl border border-neutral-250/65 space-y-4 shadow-2xs">
-          <div className="text-[11px] font-mono uppercase tracking-widest text-neutral-400 font-bold flex items-center gap-1.5">
-            <span>{lang === 'en' ? 'ESSAY INDEX' : '収録エッセイ目次'}</span>
-            <CornerDownRight className="w-3.5 h-3.5" />
-          </div>
-          <div className="divide-y divide-neutral-200">
-            {essays.map((essay, index) => (
-              <button
-                key={essay.id}
-                onClick={() => {
-                  const element = document.getElementById(`essay-${essay.id}`);
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                }}
-                className="w-full text-left py-3.5 group flex items-center justify-between text-xs sm:text-sm font-sans hover:text-neutral-950 transition-colors cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-neutral-400">0{index + 1}.</span>
-                  <span className="text-neutral-700 group-hover:text-neutral-950 group-hover:underline transition-all font-serif">
-                    {lang === 'en' ? essay.titleEn : essay.titleJa}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-neutral-400 group-hover:text-neutral-600">
-                  <span className="font-mono text-[10px]">{lang === 'en' ? essay.readTimeEn : essay.readTimeJa}</span>
-                  <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Essays list */}
-        <div className="space-y-24 pt-8">
-          {essays.map((essay, index) => (
-            <motion.article 
-              key={essay.id}
-              id={`essay-${essay.id}`}
-              className="space-y-8 scroll-mt-24 pb-12 border-b border-neutral-200/80 last:border-b-0"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6 }}
-            >
-              <header className="space-y-4 pb-6 border-b border-neutral-200">
-                <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
-                  <span className="text-neutral-400">0{index + 1}</span>
-                  <span className="text-neutral-300">/</span>
-                  <span className="text-neutral-500 tracking-wider uppercase">
-                    {lang === 'en' ? essay.tagEn : essay.tagJa}
-                  </span>
-                  <span className="text-neutral-300">/</span>
-                  <span className="bg-neutral-100 text-neutral-600 px-2 py-0.5 rounded text-[10px] font-medium font-sans">
-                    {viewMode === 'bilingual' ? 'JP & EN' : viewMode.toUpperCase()}
-                  </span>
-                </div>
-                
-                <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 leading-tight">
-                  {viewMode === 'en' ? essay.titleEn : essay.titleJa}
-                  {viewMode === 'bilingual' && (
-                    <span className="block text-sm sm:text-base text-neutral-500 font-serif font-normal mt-2 leading-snug">
-                      {essay.titleEn}
-                    </span>
-                  )}
-                </h2>
-
-                <div className="flex items-center gap-2 text-[11px] font-mono text-neutral-400">
-                  <Clock className="w-3.5 h-3.5 text-neutral-300" />
-                  <span>{lang === 'en' ? essay.readTimeEn : essay.readTimeJa}</span>
-                </div>
-              </header>
-
-              {/* Essay Content Area */}
-              <div className="space-y-8 font-serif">
-                {/* 1. Japanese Only */}
-                {viewMode === 'ja' && (
-                  <div className="text-neutral-800 text-sm sm:text-[15px] leading-relaxed space-y-6 text-justify">
-                    {essay.contentJa.map((paragraph, pIdx) => (
-                      <p key={pIdx} className="indent-4 leading-loose tracking-wide">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                {/* 2. English Only */}
-                {viewMode === 'en' && (
-                  <div className="text-neutral-800 text-sm sm:text-[15px] leading-relaxed space-y-6 text-justify">
-                    {essay.contentEn.map((paragraph, pIdx) => (
-                      <p key={pIdx} className="indent-4 leading-loose tracking-wide">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                {/* 3. Bilingual Side-by-Side or Stacked */}
-                {viewMode === 'bilingual' && (
-                  <div className="space-y-8">
-                    {essay.contentJa.map((paragraphJa, pIdx) => {
-                      const paragraphEn = essay.contentEn[pIdx] || '';
-                      return (
-                        <div key={pIdx} className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-neutral-100/60 last:border-b-0 last:pb-0">
-                          {/* JP Left */}
-                          <div className="space-y-2">
-                            <span className="text-[9px] font-mono text-neutral-300 tracking-wider font-bold block uppercase">JP</span>
-                            <p className="text-neutral-800 text-[14px] sm:text-[15px] leading-loose text-justify font-serif tracking-wide">
-                              {paragraphJa}
-                            </p>
-                          </div>
-                          {/* EN Right */}
-                          <div className="space-y-2 bg-neutral-50/50 p-4 md:p-0 md:bg-transparent rounded-lg md:rounded-none">
-                            <span className="text-[9px] font-mono text-neutral-400 tracking-wider font-bold block uppercase">EN</span>
-                            <p className="text-neutral-600 text-[13px] sm:text-[14px] leading-relaxed text-justify font-serif">
-                              {paragraphEn}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-
-              <div className="pt-6 flex justify-end">
-                <span className="font-serif italic text-xs text-neutral-400">■ Yoshi Tsuiji</span>
-              </div>
-            </motion.article>
-          ))}
-        </div>
-
-        {/* Back to Home button at the end */}
-        <div className="flex justify-center pt-12 border-t border-neutral-200">
+      {/* Reading Mode Selector Buttons */}
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-white rounded-xl border border-neutral-200">
+        <span className="text-xs font-mono text-neutral-500 font-medium">
+          {lang === 'fi' ? 'Valitse lukukieli:' : lang === 'en' ? 'Reading language:' : '表示言語モード:'}
+        </span>
+        <div className="flex items-center gap-1.5 text-xs font-mono">
           <button
-            onClick={onBack}
-            className="px-8 py-3 bg-neutral-900 hover:bg-neutral-950 text-white rounded-lg text-xs tracking-widest transition-all active:scale-95 font-mono cursor-pointer"
+            type="button"
+            onClick={() => setViewMode('ja')}
+            className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+              viewMode === 'ja'
+                ? 'bg-neutral-900 text-white font-medium'
+                : 'text-neutral-600 hover:bg-neutral-100'
+            }`}
           >
-            {lang === 'en' ? 'RETURN TO MAIN PAGE' : 'メインページに戻る'}
+            日本語
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('en')}
+            className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+              viewMode === 'en'
+                ? 'bg-neutral-900 text-white font-medium'
+                : 'text-neutral-600 hover:bg-neutral-100'
+            }`}
+          >
+            English
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('fi')}
+            className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+              viewMode === 'fi'
+                ? 'bg-neutral-900 text-white font-medium'
+                : 'text-neutral-600 hover:bg-neutral-100'
+            }`}
+          >
+            Suomi
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('bilingual')}
+            className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+              viewMode === 'bilingual'
+                ? 'bg-neutral-900 text-white font-medium'
+                : 'text-neutral-600 hover:bg-neutral-100'
+            }`}
+          >
+            {lang === 'fi' ? 'Rinnakkaislukutila' : lang === 'en' ? 'Bilingual' : '日英対訳'}
           </button>
         </div>
       </div>
 
-      {/* Site Footer */}
-      <Footer lang={lang} />
+      {/* Essay Index Table of Contents */}
+      <div className="bg-neutral-50/80 p-5 rounded-xl border border-neutral-200/80 space-y-3">
+        <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase font-semibold block">
+          {lang === 'fi' ? 'SISÄLLYSLUETTELO' : lang === 'en' ? 'ESSAYS INDEX' : '目次一覧'}
+        </span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-serif">
+          {essays.map((essay, index) => (
+            <a
+              key={essay.id}
+              href={`#essay-${essay.id}`}
+              className="flex items-center justify-between p-2.5 rounded-lg hover:bg-white hover:shadow-xs transition-all text-neutral-700 hover:text-neutral-950 border border-transparent hover:border-neutral-200/60"
+            >
+              <div className="flex items-center gap-2.5 truncate">
+                <span className="font-mono text-neutral-400">0{index + 1}.</span>
+                {essay.image && (
+                  <div className="w-8 h-8 rounded bg-white border border-neutral-200/80 p-0.5 shrink-0 flex items-center justify-center overflow-hidden">
+                    <img
+                      src={essay.image.src}
+                      alt={essay.image.alt}
+                      className="w-full h-full object-contain"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                )}
+                <span className="truncate">{getEssayTitle(essay)}</span>
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 shrink-0 text-neutral-400 ml-1" />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Essays Articles List */}
+      <div className="space-y-16 pt-4">
+        {essays.map((essay, index) => (
+          <motion.article 
+            key={essay.id}
+            id={`essay-${essay.id}`}
+            className="space-y-6 scroll-mt-24 pb-12 border-b border-neutral-200 last:border-b-0"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <header className="space-y-3 pb-5 border-b border-neutral-200">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+                <span className="text-neutral-400">0{index + 1}</span>
+                <span className="text-neutral-300">/</span>
+                <span className="text-neutral-600 tracking-wider uppercase">
+                  {getEssayTag(essay)}
+                </span>
+                <span className="text-neutral-300">/</span>
+                <span className="bg-neutral-100 text-neutral-600 px-2 py-0.5 rounded text-[10px] font-medium font-sans">
+                  {viewMode === 'bilingual' ? 'JP & EN' : viewMode.toUpperCase()}
+                </span>
+              </div>
+              
+              <h2 className="text-xl sm:text-2xl font-serif text-neutral-900 leading-tight">
+                {getEssayTitle(essay)}
+                {viewMode === 'bilingual' && (
+                  <span className="block text-sm sm:text-base text-neutral-500 font-serif font-normal mt-1.5 leading-snug">
+                    {essay.titleEn}
+                  </span>
+                )}
+              </h2>
+
+              <div className="flex items-center gap-2 text-[11px] font-mono text-neutral-400">
+                <Clock className="w-3.5 h-3.5 text-neutral-300" />
+                <span>{getReadTime(essay)}</span>
+              </div>
+            </header>
+
+            {/* Essay Content Area with Blended Initial Sticker */}
+            <div className="font-serif">
+              {/* 1. Japanese Only */}
+              {viewMode === 'ja' && (
+                <div className="text-neutral-800 text-sm sm:text-[15px] leading-relaxed space-y-5 text-justify">
+                  {renderStickerThumb(essay)}
+                  {essay.contentJa.map((paragraph, pIdx) => (
+                    <p key={pIdx} className="indent-4 leading-loose tracking-wide">
+                      {paragraph}
+                    </p>
+                  ))}
+                  <div className="clear-both" />
+                </div>
+              )}
+
+              {/* 2. English Only */}
+              {viewMode === 'en' && (
+                <div className="text-neutral-800 text-sm sm:text-[15px] leading-relaxed space-y-5 text-justify">
+                  {renderStickerThumb(essay)}
+                  {essay.contentEn.map((paragraph, pIdx) => (
+                    <p key={pIdx} className="leading-relaxed">
+                      {paragraph}
+                    </p>
+                  ))}
+                  <div className="clear-both" />
+                </div>
+              )}
+
+              {/* 3. Finnish Only */}
+              {viewMode === 'fi' && (
+                <div className="text-neutral-800 text-sm sm:text-[15px] leading-relaxed space-y-5 text-justify">
+                  {renderStickerThumb(essay)}
+                  {essay.contentFi.map((paragraph, pIdx) => (
+                    <p key={pIdx} className="leading-relaxed">
+                      {paragraph}
+                    </p>
+                  ))}
+                  <div className="clear-both" />
+                </div>
+              )}
+
+              {/* 4. Bilingual (Side-by-side or stacked) */}
+              {viewMode === 'bilingual' && (
+                <div className="space-y-8">
+                  {essay.contentJa.map((paragraphJa, pIdx) => {
+                    const paragraphEn = essay.contentEn[pIdx] || '';
+                    return (
+                      <div key={pIdx} className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-neutral-100 last:border-b-0 last:pb-0">
+                        {/* JP Left */}
+                        <div className="space-y-2">
+                          <span className="text-[9px] font-mono text-neutral-400 tracking-wider font-bold block uppercase">JP</span>
+                          <div className="text-neutral-800 text-[14px] sm:text-[15px] leading-loose text-justify font-serif tracking-wide">
+                            {pIdx === 0 && renderStickerThumb(essay, 'compact')}
+                            <p className="indent-4">
+                              {paragraphJa}
+                            </p>
+                            <div className="clear-both" />
+                          </div>
+                        </div>
+                        {/* EN Right */}
+                        <div className="space-y-2 bg-neutral-50/70 p-4 md:p-0 md:bg-transparent rounded-lg md:rounded-none">
+                          <span className="text-[9px] font-mono text-neutral-400 tracking-wider font-bold block uppercase">EN</span>
+                          <p className="text-neutral-600 text-[13px] sm:text-[14px] leading-relaxed text-justify font-serif">
+                            {paragraphEn}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="pt-4 flex justify-end">
+              <span className="font-serif italic text-xs text-neutral-400">■ Yoshi Tsuiji</span>
+            </div>
+          </motion.article>
+        ))}
+      </div>
+
+      {/* Back to Home button at the end */}
+      <div className="flex justify-center pt-8 border-t border-neutral-200">
+        <button
+          onClick={() => onNavigate('/')}
+          className="px-8 py-3 bg-neutral-900 hover:bg-neutral-950 text-white rounded-lg text-xs tracking-widest transition-all active:scale-95 font-mono cursor-pointer"
+        >
+          {lang === 'fi' ? 'PALAA ETUSIVULLE' : lang === 'en' ? 'RETURN TO MAIN PAGE' : 'メインページに戻る'}
+        </button>
+      </div>
+
     </div>
   );
 }
