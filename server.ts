@@ -12,6 +12,12 @@ async function startServer() {
   // Initialize total visits tracker
   initVisitsTracker();
 
+  // Global header to forbid indexing, archiving, and AI crawler extraction
+  app.use((req, res, next) => {
+    res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet, noimageindex");
+    next();
+  });
+
   // Support JSON and URL-encoded body
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
