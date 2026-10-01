@@ -7,6 +7,7 @@ import tapiSupportImg from '../assets/images/tapi_essay_support.png';
 import tapiRiceImg from '../assets/images/tapi_essay_rice.png';
 import tapiDanceImg from '../assets/images/tapi_essay_dance.png';
 import turtleStickerImg from '../assets/images/turtle_sticker.jpg';
+import macrovectorPollutionImg from '../assets/images/macrovector_pollution_1790877055707.jpg';
 
 interface EssaysPageProps {
   lang: Language;
@@ -259,6 +260,50 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
         'Äitini tukee minua koko sydämestään. Pelkän työnteon lisäksi hän pitää huolta jokaisesta meistä ja auttaa aina tarvittaessa. Häntä seuratessani minussa kasvaa halu tulla ihmiseksi, joka voi vastavuoroisesti tukea muita.',
         'Perhe on ihmiselle elämän suurin henkinen ja arjen tukipilari. Vahvuutemme ja heikkoutemme ovat erilaisia, ja juuri siksi täydennämme toisiamme.',
         'Keskinäisen avunannon mukaisesti perheemme toimii kuin yhtenäinen joukkue. Erilaisista luonteistamme huolimatta kokonaisuus toimii kauniisti, kun jokainen kantaa kortensa kekoon. Haluan jatkossakin löytää ja täyttää oman roolini tässä mahtavassa tiimissä.'
+      ]
+    },
+    {
+      id: 5,
+      tagEn: 'Nature & Environment',
+      tagJa: '自然と環境倫理',
+      tagFi: 'Luonto ja ympäristö',
+      titleEn: 'Essay #5: Coexistence with Nature and Choices for the Future',
+      titleJa: 'Essay #5: 自然との共存と未来への選択',
+      titleFi: 'Essee #5: Rinnakkaiselo luonnon kanssa ja valinnat tulevaisuutta varten',
+      readTimeEn: '5 min read',
+      readTimeJa: '読了時間 約5分',
+      readTimeFi: 'Lukuajaksi n. 5 min',
+      image: {
+        src: macrovectorPollutionImg,
+        alt: 'Environmental destruction and industrial deforestation',
+        captionJa: '自然破壊と文明の発展が生み出す矛盾を描いたイラスト',
+        captionEn: 'Illustration depicting deforestation, industrial pollution, and environmental impact',
+        captionFi: 'Kuvitus ihmisen aiheuttamasta metsäkadosta ja luonnon saastumisesta',
+        credit: {
+          text: 'Designed by Macrovector - Magnific.com',
+          url: 'https://magnific.com'
+        }
+      },
+      contentJa: [
+        '私たちの生活は、便利さを追い求め続けることで格段に向上してきた。しかし、その裏で自然環境は静かに、しかし確実に失われつつある。人間は自然の恵みから多くを受け取っているにもかかわらず、時としてその存在を疎ましく扱い、自らの利益を優先してしまう。自然とともに暮らしているという事実を忘れ、無意識のうちに自然を傷つけていることに、私自身は強い危機感を覚えている。',
+        '僕がインドネシアを訪れたとき、その思いはより鮮明になった。車で移動中、窓の外に広がる光景に息をのんだ。かつて森であったであろう一帯は、無造作に伐採され、茶色い土がむき出しになっていた。まるで自然の息遣いを奪われたかのように、残されているのはか細い雑草が数本揺れているだけの、広大なのに空虚な空き地であった。その光景は、自然が人の都合で容赦なく姿を変えさせられているという現実を突きつけ、胸に深く刺さった。緑が失われた土地は、どれほどの時間をかければ再び生命力を取り戻せるのだろうか。人間の行為が一度自然を壊してしまうと、それを元に戻すには計り知れないほどの努力と時間が必要になるのだと痛感した。',
+        '自然を軽視した結果が、災害として跳ね返ってくることもある。母が高校生だった頃、豪雨が続いたある夏の日、家の前の山で起きた出来事はその典型例である。山の上には伐採された木が大量に積み上げられていた。連日の雨で地盤が緩み、ついに土砂崩れが発生し、濁流とともに丸太が音を立てて住宅地へ押し寄せてきたという。水に乗った丸太は想像を超える速さで流れ込み、その迫力に誰もが恐怖を感じたそうだ。しかし、本当に大変だったのは水が引いた後である。濡れて重くなった丸太を撤去する作業は人力ではどうにもならず、自然の力がいかに強大で、人間の制御を簡単に超えてしまう存在であるかを思い知らされたと母は語っていた。自然への配慮を欠く行為は、巡り巡って人間自身に被害をもたらすのだ。',
+        '一方で、環境によいとされる取り組みが、別の形で自然破壊を生み出してしまう場合もある。たとえば近年普及している太陽光発電は、再生可能エネルギーとして注目されているが、そのパネルを設置するために広大な森林が伐採されている現状がある。環境を守るための方法が、結果として別の自然破壊を招いているという矛盾は、まさに本末転倒である。本当に人間は自然と向き合う覚悟を持っているのか、改めて問われているように感じる。',
+        '人間にとって自然とは、単なる背景や資源にとどまるものではない。空気や水の循環、季節の変化がもたらす豊かさ、そして生命の連なりといった、私たちが生きるうえで欠かせない存在である。自然は人間が利用するためだけにあるわけではなく、長い時間をかけて築かれてきた世界そのものなのだ。人間はその中の一部にすぎず、自然に対して謙虚であるべきである。私たちが自然を傷つけ続ければ、最終的に困難に直面するのは私たち自身であることを忘れてはならない。だからこそ、自然と人間が調和しながら生きていく未来を目指し、共存共栄の精神を胸に、慎重居士のように一つ一つの選択を丁寧に考えていく必要がある。自然を大切にする姿勢こそが、人間の未来を守る唯一の道であると強く感じている。'
+      ],
+      contentEn: [
+        'Our lives have dramatically improved through the relentless pursuit of convenience. Yet behind the scenes, the natural environment is quietly, steadily slipping away. Even though human beings receive immense blessings from nature, we sometimes treat its existence with indifference or irritation, prioritizing our own immediate gain. We forget the fundamental truth that we live alongside nature, and I feel a profound sense of crisis regarding how we unconsciously cause it harm.',
+        'This feeling became starkly vivid when I visited Indonesia. While traveling by car, the scenery outside my window took my breath away. What had once been a lush forest had been carelessly clear-cut, leaving bare brown earth exposed to the sky. As if stripped of nature’s breath, all that remained across that vast, hollow expanse was a scattering of slender weeds fluttering in the breeze. That sight pierced my heart, confronting me with the harsh reality that nature is ruthlessly altered solely for human convenience. How many years, or centuries, will it take for land stripped of its greenery to regain its vitality? I realized with striking clarity that once human action destroys nature, restoring it demands unimaginable time and effort.',
+        'Neglecting nature often recoils back upon us in the form of disasters. A summer day during my mother\'s high school years, following torrential rains, offered a textbook example on the mountain behind her home. A massive volume of felled logs had been stacked high atop the slopes. Relentless rainfall destabilized the ground, triggering a severe landslide that sent a muddy torrent and rumbling logs surging into the residential area below. Borne by rushing water, the logs raced forward with terrifying speed, striking fear into everyone. Yet the true ordeal began after the waters receded: moving waterlogged, heavy logs by hand was nearly impossible. My mother recounted how this drove home the terrifying power of nature—a force that easily overwhelms human control. Carelessness toward nature inevitably circles back as disaster for humanity.',
+        'Conversely, initiatives ostensibly intended to help the environment can inadvertently inflict new forms of destruction. For example, solar power generation has gained widespread attention as renewable energy, yet vast swaths of forest are being cleared today merely to install those solar panels. The contradiction of protecting the environment by causing another ecological devastation is utterly counterproductive. It makes me question whether humanity truly possesses the genuine resolve to confront and respect nature.',
+        'For human beings, nature is far more than a mere backdrop or consumable resource. The circulation of air and water, the richness brought by the shifting seasons, and the profound web of living things are indispensable to our very existence. Nature does not exist merely for human exploitation; it is the living world itself, forged over immense spans of time. Humans are merely one small part of that tapestry, and we must remain humble before it. If we persist in harming nature, we must never forget that it is we who will ultimately face ruin. Therefore, as we strive toward a future where humans and nature live in harmony, carrying the spirit of coexistence and mutual prosperity, we must deliberate each choice with deep, meticulous care—like a cautious sage. I firmly believe that cherishing and protecting nature is the only path that ensures the future of humanity.'
+      ],
+      contentFi: [
+        'Elämämme on parantunut huomattavasti mukavuuden ja helppouden tavoittelun myötä. Tämän kehityksen taustalla luonto kuitenkin häviää hiljaa mutta vääjäämättä. Vaikka ihmiset saavat luonnolta mittaamattoman paljon, kohtelemme sen olemassaoloa toisinaan välinpitämättömästi asettaen omat välittömät etumme etusijalle. Unohdamme elävämme yhdessä luonnon kanssa, ja tunnen syvää huolta siitä, kuinka vahingoitamme luontoa usein täysin tiedostamattamme.',
+        'Tämä ajatus kirkastui minulle erityisen selvästi vieraillessani Indonesiassa. Matkustaessani autolla ikkunasta avautuva näkymä salpasi hengitykseni. Alue, joka oli kerran ollut rehevää metsää, oli hakattu huolettomasti matalaksi, ja jäljellä oli vain paljasta, ruskeaa maata. Aivan kuin luonnon henki olisi riistetty pois – vain muutama hento rikkaruoho huojui tuulessa tuolla valtavalla, tyhjällä aukiolla. Tuo näky kosketti minua syvästi, sillä se toi eteeni karun todellisuuden siitä, kuinka luontoa muovataan armottomasti ihmisten mukavuudenhalun vuoksi. Kuinka kauan kestää, ennen kuin vehreytensä menettänyt maa saa elinvoimansa takaisin? Ymmärsin tuskallisen selvästi, että kun ihminen kerran tuhoaa luonnon, sen ennalleen palauttaminen vaatii käsittämättömän määrän aikaa ja vaivaa.',
+        'Luonnon laiminlyönti heijastuu usein takaisin ihmisiin luonnonkatastrofeina. Äitini lukiovuosina eräänä rankkasateisena kesäpäivänä hänen kotitalonsa takana olevalla vuorella tapahtunut tapaus on tästä selkeä esimerkki. Vuoren rinteelle oli kasattu valtavat määrät kaadettuja tukkeja. Jatkuva sade pehmensi maaperän, mikä laukaisi maanvyörymän: mutavellin mukana syöksyi tukkeja kolisten kohti asuinaluetta. Veden mukana liikkuvat tukit virtasivat uskomattomalla vauhdilla, ja tilanteen rajuus herätti pelkoa kaikissa. Todellinen koettelemus alkoi kuitenkin veden laskettua: litimärkien, painavien tukkien raivaaminen käsin oli mahdotonta. Äitini kertoi tämän opettaneen, kuinka valtava luonnon voima on ja kuinka se ylittää ihmisen hallinnan hetkessä. Luonnon kunnioittamatta jättäminen kostautuu lopulta aina ihmiselle itselleen.',
+        'Toisaalta toimet, joiden uskotaan olevan hyväksi ympäristölle, voivat toisinaan aiheuttaa uudenlaista luontokatoa. Esimerkiksi viime vuosina yleistynyt aurinkoenergia on saanut huomiota uusiutuvana energiana, mutta usein valtavia metsäalueita raivataan vain aurinkopaneelien tieltä. Se, että luonnon suojeluun tarkoitettu keino johtaakin toisaalla luonnon tuhoamiseen, on täysin ristiriitaista. Se saa minut pohtimaan, onko ihmiskunnalla todellista valmiutta kohdata luonto rehellisesti ja vastuullisesti.',
+        'Ihmiselle luonto on paljon enemmän kuin pelkkä tausta tai hyödynnettävä resurssi. Ilman ja veden kiertokulku, vuodenaikojen rikkaus ja elämän katkeamaton ketju ovat olemassaolomme perusta. Luonto ei ole olemassa vain ihmisen käyttöä varten, vaan se on itsessään pitkän ajan kuluessa syntynyt elävä maailma. Ihminen on vain pieni osa tätä kokonaisuutta, ja meidän tulee suhtautua luontoon nöyryydellä. Jos jatkamme luonnon vahingoittamista, meidän on muistettava, että lopulta me itse kohtaamme seuraukset. Siksi meidän on tavoiteltava tulevaisuutta, jossa ihminen ja luonto elävät sopusoinnussa, vaalien rinnakkaiselon henkeä ja harkiten jokaisen valintamme huolellisesti. Luonnon vaaliminen on ainoa tie, jolla voimme turvata ihmiskunnan tulevaisuuden.'
       ]
     }
   ];

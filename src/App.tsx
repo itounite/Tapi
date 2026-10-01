@@ -318,10 +318,10 @@ export default function App() {
                     </h3>
                     <p className="text-[11px] text-neutral-500 leading-relaxed">
                       {lang === 'fi'
-                        ? 'Lue Yoshin omakohtaisia esseitä luonnosta, mielikuvituksesta ja Kuningas Tapioka -tuotteiden myynnistä Suomessa.'
+                        ? 'Lue Yoshin omakohtaisia esseitä luonnosta, ympäristöstä, mielikuvituksesta ja perheen tuesta.'
                         : lang === 'en' 
-                        ? 'Explore original essays on biology, imagination, Japanese rice, and family team collaboration.' 
-                        : '自然科学、想像力、お米、そして家族の協力。執筆された4つのエッセイを日英対訳で掲載。'}
+                        ? 'Explore original essays on biology, environmental coexistence, imagination, Japanese rice, and family collaboration.' 
+                        : '自然科学、環境との共存、想像力、お米、そして家族の協力。執筆された5つのエッセイを多言語で掲載。'}
                     </p>
                   </div>
                 </button>
