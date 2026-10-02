@@ -267,9 +267,9 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
       tagEn: 'Nature & Environment',
       tagJa: '自然と環境倫理',
       tagFi: 'Luonto ja ympäristö',
-      titleEn: 'Essay #5: Coexistence with Nature and Choices for the Future',
-      titleJa: 'Essay #5: 自然との共存と未来への選択',
-      titleFi: 'Essee #5: Rinnakkaiselo luonnon kanssa ja valinnat tulevaisuutta varten',
+      titleEn: 'Coexistence with Nature',
+      titleJa: '自然との共存',
+      titleFi: 'Rinnakkaiselo luonnon kanssa',
       readTimeEn: '5 min read',
       readTimeJa: '読了時間 約5分',
       readTimeFi: 'Lukuajaksi n. 5 min',
@@ -311,7 +311,7 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
   const getPageTitle = () => {
     if (lang === 'fi') return 'YOSHI TSUIJIN ESSEET & TEKSTIT';
     if (lang === 'en') return 'ESSAYS & WRITINGS BY YOSHI TSUIJI';
-    return '辻 義のエッセイ・文集';
+    return '辻義のエッセイ・文集';
   };
 
   const getPageIntro = () => {

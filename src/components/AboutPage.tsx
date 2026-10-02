@@ -21,7 +21,7 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
   const getFamilyLine = () => {
     if (lang === 'fi') return 'Hiromi Tsuijin (äiti) poika & Miori Tsuijin (pikkusisko) isoveli';
     if (lang === 'en') return 'Son of Hiromi Tsuiji & Brother of Miori Tsuiji';
-    return '辻 裕美（母）の息子、そして 辻 美織（妹）の兄';
+    return '辻裕美（母）の息子、そして 辻美織（妹）の兄';
   };
 
   const getBioP1 = () => {
@@ -31,7 +31,7 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
     if (lang === 'en') {
       return 'All the designs, characters, and intricate world-building of Tapi Life are the original creation of Yoshi Tsuiji. He is a young, exceptionally talented creative mind who is profoundly passionate about life, visual arts, creative essay writing, and the quiet beauty of literature.';
     }
-    return '「TAPI LIFE」の可愛らしくてどこか哀愁漂う世界観、キャラクター、ストーリーのすべては、辻 義（Yoshi Tsuiji）の手によって創り出されています。日々の生活を愛し、絵を描くこと、エッセイを執筆すること、そして本を読むことに深い情熱を注ぐ、豊かな才能に溢れた若きクリエイターです。';
+    return '「TAPI LIFE」の可愛らしくてどこか哀愁漂う世界観、キャラクター、ストーリーのすべては、辻義（Yoshi Tsuiji）の手によって創り出されています。日々の生活を愛し、絵を描くこと、エッセイを執筆すること、そして本を読むことに深い情熱を注ぐ、豊かな才能に溢れた若きクリエイターです。';
   };
 
   const getBioP2 = () => {
@@ -51,7 +51,7 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
     if (lang === 'en') {
       return 'To Yoshi, imagination is the ultimate human capability. Through Tapi Life, he aims to share the joy of hand-drawn art, reminding us to slow down, notice the small details of our daily routines, and appreciate the warm connections of family and community.';
     }
-    return '辻 義にとって、想像力とは人間が持つ最も気高く、幸福な能力です。手書きのアートを通じて、慌ただしい現代社会を少しだけスローダウンさせ、日常の些細な美しさや、家族やコミュニティとの温かい絆の大切さを、世界中のみんなに伝えていくことを目指しています。';
+    return '辻義にとって、想像力とは人間が持つ最も気高く、幸福な能力です。手書きのアートを通じて、慌ただしい現代社会を少しだけスローダウンさせ、日常の些細な美しさや、家族やコミュニティとの温かい絆の大切さを、世界中のみんなに伝えていくことを目指しています。';
   };
 
   return (
@@ -94,8 +94,8 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
               />
             </div>
             <div className="mt-4 text-center space-y-1">
-              <p className="font-serif text-sm font-bold text-neutral-900">
-                {lang === 'ja' ? '辻 義 (Yoshi Tsuiji)' : 'Yoshi Tsuiji'}
+              <p className="font-serif text-sm font-bold text-neutral-900 notranslate" translate="no">
+                {lang === 'ja' ? '辻義 (Yoshi Tsuiji)' : 'Yoshi Tsuiji'}
               </p>
               <p className="font-mono text-[10px] text-neutral-400">
                 {lang === 'fi' ? 'Alkuperäinen luoja & taiteilijahahmo' : lang === 'en' ? 'Original Character & Artist Persona' : '原作者公式キャラクター・アバター'}
@@ -109,7 +109,7 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
                 ? '✨ Yoshi Tsuijin alkuperäinen hahmokuvitus: silinterihattunsa, punaisen rusetin ja leikkisän luovuuden kera.' 
                 : lang === 'en' 
                 ? '✨ Original character illustration by Yoshi Tsuiji. Dressed with a signature top hat, red bow tie, and sparkling creative spirit.' 
-                : '✨ 辻 義によるオリジナルキャラクターイラスト。トレードマークのシルクハットと赤い蝶ネクタイでおめかしした、ユーモアあふれる創作のシンボル。'}
+                : '✨ 辻義によるオリジナルキャラクターイラスト。トレードマークのシルクハットと赤い蝶ネクタイでおめかしした、ユーモアあふれる創作のシンボル。'}
             </p>
           </div>
         </div>
@@ -120,8 +120,8 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
             <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase font-bold block">
               {getSubhead()}
             </span>
-            <h1 className="text-3xl sm:text-4xl font-serif text-neutral-950 font-medium tracking-tight">
-              {lang === 'ja' ? '辻 義 (Yoshi Tsuiji)' : 'Yoshi Tsuiji'}
+            <h1 className="text-3xl sm:text-4xl font-serif text-neutral-950 font-medium tracking-tight notranslate" translate="no">
+              {lang === 'ja' ? '辻義 (Yoshi Tsuiji)' : 'Yoshi Tsuiji'}
             </h1>
             <div className="space-y-1.5">
               <p className="text-xs font-mono text-neutral-500">

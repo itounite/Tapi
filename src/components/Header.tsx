@@ -65,7 +65,7 @@ export default function Header({ lang, onLanguageChange, currentPath, onNavigate
             <span className="font-serif tracking-widest text-lg sm:text-xl font-bold text-neutral-900 uppercase leading-tight group-hover:text-amber-800 transition-colors">
               TAPI LIFE
             </span>
-            <span className="text-[9px] font-mono tracking-wider text-neutral-400 font-medium px-1.5 py-0.2 sm:py-0.5 border border-neutral-200 rounded w-fit bg-white/60">
+            <span className="text-[9px] font-mono tracking-wider text-neutral-400 font-medium px-1.5 py-0.2 sm:py-0.5 border border-neutral-200 rounded w-fit bg-white/60 notranslate" translate="no">
               辻義 / YOSHI TSUIJI
             </span>
           </div>

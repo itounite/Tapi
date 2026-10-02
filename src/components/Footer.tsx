@@ -22,7 +22,7 @@ export default function Footer({ lang }: FooterProps) {
         <div className="flex justify-center items-center gap-2">
           <span className="tracking-widest text-neutral-900 font-medium uppercase text-sm">TAPI LIFE</span>
           <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-          <span className="text-[10px] text-neutral-400 uppercase font-mono">辻義 / YOSHI TSUIJI</span>
+          <span className="text-[10px] text-neutral-400 uppercase font-mono notranslate" translate="no">辻義 / YOSHI TSUIJI</span>
         </div>
         <p className="max-w-md mx-auto text-[11px] leading-relaxed text-neutral-500">
           {getCopyrightNote()}

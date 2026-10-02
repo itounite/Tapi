@@ -24,8 +24,24 @@ import { trackPageView } from './utils/visitTracker';
 import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
 
 export default function App() {
-  const [lang, setLang] = useState<Language>('ja'); // Default to Japanese for Tapi Life core identity
+  const [lang, setLang] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('tapi_lang');
+      if (saved === 'en' || saved === 'fi' || saved === 'ja') return saved;
+    }
+    return 'ja'; // Default to Japanese for Tapi Life core identity
+  });
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
+
+  // Sync html lang attribute and persist to localStorage
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = lang;
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tapi_lang', lang);
+    }
+  }, [lang]);
   
   // Custom SPA Path Routing State with hash/param support
   const resolveCurrentPath = useCallback((): string => {
@@ -82,8 +98,8 @@ export default function App() {
         description = 'Meet Yoshi Tsuiji, the creative artist behind Tapi Life. Son of Hiromi Tsuiji, brother of Miori Tsuiji. Discover his background, artwork, voracious reading, and stories.';
         keywords = 'Yoshi Tsuiji, About Yoshi, Tapi Life creator, Hiromi Tsuiji, Miori Tsuiji, biography, artist, King Tapioca';
       } else {
-        title = '辻 義について | タピ・ライフ原作者プロフィール';
-        description = 'タピ・ライフ原作者、辻 義（Yoshi Tsuiji）の公式プロフィール。家族である母の裕美、妹の美織とのあたたかいエピソードや、創作にかける情熱について。';
+        title = '辻義について | タピ・ライフ原作者プロフィール';
+        description = 'タピ・ライフ原作者、辻義（Yoshi Tsuiji）の公式プロフィール。家族である母の裕美、妹の美織とのあたたかいエピソードや、創作にかける情熱について。';
         keywords = '辻義, 辻義 プロフィール, タピライフ 作者, 辻裕美, 辻美織, 原作者, イラストレーター, まつざかクリニック';
       }
     } else if (currentPath === '/essays') {
@@ -97,7 +113,7 @@ export default function App() {
         keywords = 'Tapi Life Essays, stories, Yoshi Tsuiji essays, creative writing, boba stories, family reflections';
       } else {
         title = 'エッセイ・文集 | タピ・ライフ原作者コラム';
-        description = 'タピ・ライフの作者・辻 義によるエッセイ、コラム、文集。深海生物の知恵から、日本米の歴史、そしてフィンランドでのオリジナルグッズ販売体験記まで。';
+        description = 'タピ・ライフの作者・辻義によるエッセイ、コラム、文集。深海生物の知恵から、日本米の歴史、そしてフィンランドでのオリジナルグッズ販売体験記まで。';
         keywords = 'タピライフ エッセイ, 辻義 エッセイ, 辻義 文集, コラム, 読み物, 家族エピソード, フィンランド';
       }
     } else {
