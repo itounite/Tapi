@@ -12,15 +12,22 @@ async function startServer() {
   // Initialize total visits tracker
   initVisitsTracker();
 
-  // Global header to forbid indexing, archiving, and AI crawler extraction
+  // Global header to set X-Robots-Tag: noindex, nofollow on all responses
   app.use((req, res, next) => {
-    res.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive, nosnippet, noimageindex");
+    res.setHeader("X-Robots-Tag", "noindex, nofollow");
     next();
   });
 
   // Support JSON and URL-encoded body
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // Ensure robots.txt is accessible from the root domain
+  const publicDir = path.join(process.cwd(), "public");
+  app.get("/robots.txt", (req, res) => {
+    res.type("text/plain");
+    res.sendFile(path.join(publicDir, "robots.txt"));
+  });
 
   // API Health check endpoint
   app.get("/api/health", (req, res) => {
@@ -39,7 +46,6 @@ async function startServer() {
   });
 
   // Serve static assets from public directory (favicons, icons, webmanifest)
-  const publicDir = path.join(process.cwd(), "public");
   app.use(express.static(publicDir));
 
   // Vite middleware for development
