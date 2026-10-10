@@ -10,7 +10,12 @@ interface HeaderProps {
   onNavigate: (path: string) => void;
 }
 
-export default function Header({ lang, onLanguageChange, currentPath, onNavigate }: HeaderProps) {
+export default function Header({ 
+  lang, 
+  onLanguageChange, 
+  currentPath, 
+  onNavigate
+}: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const getNavLabel = (key: 'about' | 'essays' | 'stickers' | 'home') => {
@@ -62,9 +67,71 @@ export default function Header({ lang, onLanguageChange, currentPath, onNavigate
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
-            <span className="font-serif tracking-widest text-lg sm:text-xl font-bold text-neutral-900 uppercase leading-tight group-hover:text-amber-800 transition-colors">
-              TAPI LIFE
-            </span>
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <span className="font-serif tracking-widest text-lg sm:text-xl font-bold text-neutral-900 uppercase leading-tight group-hover:text-amber-800 transition-colors">
+                TAPI
+              </span>
+
+              {/* Bright and Lighted Pumpkin between TAPI and LIFE */}
+              <div 
+                className="inline-flex items-center justify-center self-center" 
+                title="Happy Halloween! 🎃"
+              >
+                <svg 
+                  viewBox="0 0 32 32" 
+                  className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_8px_rgba(245,158,11,0.95)]"
+                  style={{
+                    filter: 'drop-shadow(0 0 4px #FFA000) drop-shadow(0 0 10px #FFD54F) drop-shadow(0 0 16px rgba(255,160,0,0.7))'
+                  }}
+                >
+                  <defs>
+                    <radialGradient id="brightPumpkinLight" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="#FFFFFF" />
+                      <stop offset="35%" stopColor="#FFF9A6" />
+                      <stop offset="70%" stopColor="#FFB300" />
+                      <stop offset="100%" stopColor="#FF6D00" />
+                    </radialGradient>
+                    <linearGradient id="pumpkinSkinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#FFB020" />
+                      <stop offset="45%" stopColor="#FF7A00" />
+                      <stop offset="100%" stopColor="#E65100" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Stem */}
+                  <path d="M15 5.5 Q16 1.5 19 1.5 Q18 4.5 16.5 6.5 Z" fill="#2E7D32" stroke="#1B5E20" strokeWidth="0.8" />
+                  
+                  {/* Outer & middle lobes */}
+                  <ellipse cx="9.5" cy="18" rx="6.2" ry="8.5" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
+                  <ellipse cx="22.5" cy="18" rx="6.2" ry="8.5" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
+                  <ellipse cx="12.5" cy="18" rx="5.8" ry="9.5" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
+                  <ellipse cx="19.5" cy="18" rx="5.8" ry="9.5" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
+                  <ellipse cx="16" cy="18" rx="5.4" ry="10" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
+
+                  {/* Lit Carved Eyes (Luminous yellow-white) */}
+                  <polygon points="10.5,14 14,16 10.5,17" fill="url(#brightPumpkinLight)" stroke="#FFF9C4" strokeWidth="0.5" />
+                  <polygon points="21.5,14 18,16 21.5,17" fill="url(#brightPumpkinLight)" stroke="#FFF9C4" strokeWidth="0.5" />
+
+                  {/* Lit Carved Nose */}
+                  <polygon points="16,16 15,18.5 17,18.5" fill="url(#brightPumpkinLight)" stroke="#FFF9C4" strokeWidth="0.4" />
+
+                  {/* Lit Smiling Jack-o'-lantern Mouth */}
+                  <path 
+                    d="M10 20 Q16 26.5 22 20 Q19 22.8 16 21.5 Q13 22.8 10 20 Z" 
+                    fill="url(#brightPumpkinLight)" 
+                    stroke="#FFF9C4" 
+                    strokeWidth="0.5" 
+                  />
+                  <rect x="13.2" y="20.8" width="1.4" height="1.5" fill="#FFE082" />
+                  <rect x="17.4" y="21.8" width="1.4" height="1.4" fill="#FFE082" />
+                </svg>
+              </div>
+
+              <span className="font-serif tracking-widest text-lg sm:text-xl font-bold text-neutral-900 uppercase leading-tight group-hover:text-amber-800 transition-colors">
+                LIFE
+              </span>
+            </div>
+
             <span className="text-[9px] font-mono tracking-wider text-neutral-400 font-medium px-1.5 py-0.2 sm:py-0.5 border border-neutral-200 rounded w-fit bg-white/60 notranslate" translate="no">
               辻義 / YOSHI TSUIJI
             </span>
@@ -132,7 +199,6 @@ export default function Header({ lang, onLanguageChange, currentPath, onNavigate
 
         {/* Right Section: Language Switcher (JA / EN / FI) */}
         <div className="flex items-center gap-2 sm:gap-3">
-          
           {/* 3-Way Language Selector */}
           <div className="inline-flex items-center p-0.5 rounded-lg border border-neutral-300/80 bg-neutral-100/80 text-xs font-mono">
             <button

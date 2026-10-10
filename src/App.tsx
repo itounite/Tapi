@@ -18,6 +18,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import EssaysPage from './components/EssaysPage';
 import AboutPage from './components/AboutPage';
+import HalloweenAtmosphere from './components/HalloweenAtmosphere';
 import { trackPageView } from './utils/visitTracker';
 
 // Import path of hero artwork asset
@@ -239,7 +240,7 @@ export default function App() {
         lang={lang} 
         onLanguageChange={setLang} 
         currentPath={currentPath} 
-        onNavigate={navigate} 
+        onNavigate={navigate}
       />
 
       {/* Main View Router Container */}
@@ -254,7 +255,7 @@ export default function App() {
             {/* Hero Section */}
             <section className="py-12 sm:py-20 max-w-5xl mx-auto px-6 space-y-10">
               <div className="text-center space-y-5 max-w-2xl mx-auto">
-                <div className="inline-block px-3 py-1 border border-neutral-300 rounded-full text-[10px] font-mono tracking-widest text-neutral-500 uppercase">
+                <div className="inline-block px-3 py-1 border border-neutral-300 rounded-full text-[10px] font-mono tracking-widest uppercase text-neutral-500 bg-white/60">
                   {getHeroBadge()}
                 </div>
 
@@ -423,7 +424,7 @@ export default function App() {
                     className="bg-white border border-neutral-200 hover:border-neutral-300 rounded-lg p-5 text-center cursor-pointer transition-all flex flex-col justify-between shadow-xs"
                   >
                     {/* Clean SVG Rendering of character */}
-                    <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                    <div className="w-16 h-16 mx-auto mb-3 flex items-center justify-center">
                       <svg viewBox="0 0 100 100" className="w-full h-full opacity-90">
                         {char.id === 'tapioka_king' && (
                           <>
@@ -605,6 +606,9 @@ export default function App() {
 
       {/* Constant Footer across ALL pages */}
       <Footer lang={lang} />
+
+      {/* Ambient Minimalist Halloween Atmosphere: Translucent Background Ghost, Blinking Bottom Lights, Left & Right Extremes */}
+      <HalloweenAtmosphere />
 
     </div>
   );

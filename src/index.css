@@ -40,6 +40,54 @@ body {
   animation: marquee-scroll 22s linear infinite;
 }
 
+/* Halloween Minimalist Atmosphere Keyframes */
+@keyframes blink-orange-light {
+  0%, 100% {
+    opacity: 0.18;
+    filter: drop-shadow(0 0 1px rgba(255, 122, 0, 0.2));
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.52;
+    filter: drop-shadow(0 0 4px rgba(255, 122, 0, 0.45)) drop-shadow(0 0 8px rgba(255, 170, 0, 0.3));
+    transform: scale(1.03);
+  }
+}
+
+@keyframes blink-white-light {
+  0%, 100% {
+    opacity: 0.18;
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.2));
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.52;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.45)) drop-shadow(0 0 8px rgba(255, 248, 220, 0.3));
+    transform: scale(1.03);
+  }
+}
+
+@keyframes sway-gentle {
+  0%, 100% {
+    transform: rotate(-3.5deg);
+  }
+  50% {
+    transform: rotate(3.5deg);
+  }
+}
+
+.animate-blink-orange {
+  animation: blink-orange-light 2.2s ease-in-out infinite;
+}
+
+.animate-blink-white {
+  animation: blink-white-light 2.6s ease-in-out infinite;
+}
+
+.animate-sway-gentle {
+  animation: sway-gentle 3.5s ease-in-out infinite;
+}
+
 /* Polished scrollbars for the store blocks and custom lists */
 ::-webkit-scrollbar {
   width: 6.5px;
