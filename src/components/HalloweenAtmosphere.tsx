@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { ThemeMode } from '../types';
+import CenterDescendingSpider from './CenterDescendingSpider';
 
 interface HalloweenAtmosphereProps {
   theme?: ThemeMode;
@@ -124,49 +125,74 @@ export default function HalloweenAtmosphere({ theme = 'dark' }: HalloweenAtmosph
       </div>
 
       {/* ========================================================= */}
-      {/* 2. RIGHT AND LEFT EXTREMES (PERIPHERAL ACCENTS)            */}
+      {/* 2. CENTER DESCENDING SPIDER (APPEARS EVERY 45 SECONDS)    */}
+      {/* ========================================================= */}
+      <CenterDescendingSpider theme={theme} />
+
+      {/* ========================================================= */}
+      {/* 3. RIGHT AND LEFT EXTREMES (PERIPHERAL ACCENTS)            */}
       {/* ========================================================= */}
       
-      {/* LEFT EXTREME: Corner Cobweb, Dangling Spider & Edge Fairy Accents */}
+      {/* LEFT EXTREME: Corner Spiderweb WITH Dangling Boba Spider SEAMLESSLY CONNECTED */}
       <div 
-        className="fixed top-14 left-0 bottom-0 pointer-events-none z-10 select-none"
+        className="fixed top-14 left-0 pointer-events-none z-10 select-none"
         aria-hidden="true"
       >
-        {/* Subtle Peripheral Spiderweb below Header */}
-        <div className={`absolute top-0 left-0 w-20 h-20 sm:w-26 sm:h-26 transition-opacity ${
-          isDark ? 'opacity-25' : 'opacity-18'
+        <div className={`w-28 h-64 sm:w-36 sm:h-72 transition-opacity ${
+          isDark ? 'opacity-85' : 'opacity-70'
         }`}>
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <line x1="0" y1="0" x2="100" y2="0" stroke="#A8A29E" strokeWidth="0.8" strokeDasharray="3,2" />
-            <line x1="0" y1="0" x2="0" y2="100" stroke="#A8A29E" strokeWidth="0.8" strokeDasharray="3,2" />
-            <line x1="0" y1="0" x2="95" y2="35" stroke="#A8A29E" strokeWidth="0.6" />
-            <line x1="0" y1="0" x2="80" y2="70" stroke="#A8A29E" strokeWidth="0.6" />
-            <line x1="0" y1="0" x2="45" y2="92" stroke="#A8A29E" strokeWidth="0.6" />
+          <svg viewBox="0 0 120 260" className="w-full h-full overflow-visible">
+            {/* Corner spiderweb radial threads */}
+            <g stroke="#A8A29E" strokeWidth="0.8" opacity={isDark ? 0.35 : 0.25}>
+              <line x1="0" y1="0" x2="115" y2="0" strokeDasharray="3,2" />
+              <line x1="0" y1="0" x2="0" y2="115" strokeDasharray="3,2" />
+              <line x1="0" y1="0" x2="105" y2="35" strokeWidth="0.7" />
+              <line x1="0" y1="0" x2="85" y2="72" strokeWidth="0.7" />
+              <line x1="0" y1="0" x2="45" y2="100" strokeWidth="0.7" />
 
-            <path d="M22 0 Q18 18 0 22" fill="none" stroke="#A8A29E" strokeWidth="0.6" />
-            <path d="M45 0 Q38 38 0 45" fill="none" stroke="#A8A29E" strokeWidth="0.6" />
-            <path d="M70 0 Q58 58 0 70" fill="none" stroke="#A8A29E" strokeWidth="0.6" />
-            <path d="M95 0 Q78 78 0 95" fill="none" stroke="#A8A29E" strokeWidth="0.6" />
+              {/* Spiderweb concentric arches */}
+              <path d="M25 0 Q20 20 0 25" fill="none" />
+              <path d="M52 0 Q42 42 0 52" fill="none" />
+              <path d="M82 0 Q66 66 0 82" fill="none" />
+              <path d="M110 0 Q90 90 0 110" fill="none" />
+            </g>
+
+            {/* Seamless Dangling Unit: Silk Thread connects directly to Web Knot at (32, 75) */}
+            <g style={{ transformOrigin: '32px 75px' }} className="animate-sway-gentle">
+              {/* Knot anchor at the web intersection */}
+              <circle cx="32" cy="75" r="1.6" fill={isDark ? '#E2E8F0' : '#78716C'} opacity="0.8" />
+              
+              {/* Continuous Silk Thread dropping straight down from web to spider */}
+              <line 
+                x1="32" 
+                y1="75" 
+                x2="32" 
+                y2="190" 
+                stroke={isDark ? '#CBD5E1' : '#78716C'} 
+                strokeWidth="0.9" 
+                strokeOpacity={isDark ? 0.75 : 0.65} 
+              />
+
+              {/* Cute Boba Spider at the end of the thread */}
+              <g transform="translate(32, 190)">
+                {/* Spider Legs */}
+                <g stroke="#44403C" strokeWidth="1.1" fill="none" strokeLinecap="round">
+                  <path d="M-8 -5 Q-13 -8 -15 -4" />
+                  <path d="M-8 -1 Q-15 -1 -17 4" />
+                  <path d="M-8 4 Q-14 9 -15 13" />
+                  <path d="M8 -5 Q13 -8 15 -4" />
+                  <path d="M8 -1 Q15 -1 17 4" />
+                  <path d="M8 4 Q14 9 15 13" />
+                </g>
+
+                {/* Boba Round Body */}
+                <circle cx="0" cy="0" r="6.5" fill="#292524" stroke="#1C1917" strokeWidth="0.9" />
+                {/* Cute White Dot Eyes */}
+                <circle cx="-2.2" cy="-1.2" r="1.0" fill="#FFFFFF" />
+                <circle cx="2.2" cy="-1.2" r="1.0" fill="#FFFFFF" />
+              </g>
+            </g>
           </svg>
-        </div>
-
-        {/* Delicate Dangling Boba Spider hanging along outer left margin */}
-        <div className="absolute top-24 sm:top-32 left-2 sm:left-3 flex flex-col items-center opacity-70">
-          <div className="w-[1px] h-8 sm:h-12 bg-stone-400/40" />
-          
-          <div className="animate-sway-gentle origin-top -mt-0.5 flex flex-col items-center">
-            <svg viewBox="0 0 32 32" className="w-3.5 h-3.5 sm:w-4 sm:h-4 drop-shadow-xs">
-              <path d="M8 12 Q4 8 2 12" fill="none" stroke="#44403C" strokeWidth="1" strokeLinecap="round" />
-              <path d="M8 16 Q2 16 1 20" fill="none" stroke="#44403C" strokeWidth="1" strokeLinecap="round" />
-              <path d="M8 20 Q3 24 2 28" fill="none" stroke="#44403C" strokeWidth="1" strokeLinecap="round" />
-              <path d="M24 12 Q28 8 30 12" fill="none" stroke="#44403C" strokeWidth="1" strokeLinecap="round" />
-              <path d="M24 16 Q30 16 31 20" fill="none" stroke="#44403C" strokeWidth="1" strokeLinecap="round" />
-              <path d="M24 20 Q29 24 30 28" fill="none" stroke="#44403C" strokeWidth="1" strokeLinecap="round" />
-              <circle cx="16" cy="18" r="6" fill="#292524" stroke="#1C1917" strokeWidth="0.8" />
-              <circle cx="14" cy="17" r="0.9" fill="#FFFFFF" />
-              <circle cx="18" cy="17" r="0.9" fill="#FFFFFF" />
-            </svg>
-          </div>
         </div>
 
         {/* Faint vertical edge accents along left border */}
@@ -177,45 +203,62 @@ export default function HalloweenAtmosphere({ theme = 'dark' }: HalloweenAtmosph
         </div>
       </div>
 
-      {/* RIGHT EXTREME: Corner Cobweb, Hanging Mini-Lantern & Edge Fairy Accents */}
+      {/* RIGHT EXTREME: Corner Spiderweb WITH Dangling Mini-Lantern SEAMLESSLY CONNECTED */}
       <div 
-        className="fixed top-14 right-0 bottom-0 pointer-events-none z-10 select-none"
+        className="fixed top-14 right-0 pointer-events-none z-10 select-none"
         aria-hidden="true"
       >
-        {/* Subtle Peripheral Spiderweb below Header */}
-        <div className={`absolute top-0 right-0 w-20 h-20 sm:w-26 sm:h-26 transition-opacity ${
-          isDark ? 'opacity-25' : 'opacity-18'
+        <div className={`w-28 h-64 sm:w-36 sm:h-72 transition-opacity ${
+          isDark ? 'opacity-85' : 'opacity-70'
         }`}>
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <line x1="100" y1="0" x2="0" y2="0" stroke="#A8A29E" strokeWidth="0.8" strokeDasharray="3,2" />
-            <line x1="100" y1="0" x2="100" y2="100" stroke="#A8A29E" strokeWidth="0.8" strokeDasharray="3,2" />
-            <line x1="100" y1="0" x2="5" y2="35" stroke="#A8A29E" strokeWidth="0.6" />
-            <line x1="100" y1="0" x2="20" y2="70" stroke="#A8A29E" strokeWidth="0.6" />
-            <line x1="100" y1="0" x2="55" y2="92" stroke="#A8A29E" strokeWidth="0.6" />
+          <svg viewBox="0 0 120 260" className="w-full h-full overflow-visible">
+            {/* Corner spiderweb radial threads */}
+            <g stroke="#A8A29E" strokeWidth="0.8" opacity={isDark ? 0.35 : 0.25}>
+              <line x1="120" y1="0" x2="5" y2="0" strokeDasharray="3,2" />
+              <line x1="120" y1="0" x2="120" y2="115" strokeDasharray="3,2" />
+              <line x1="120" y1="0" x2="15" y2="35" strokeWidth="0.7" />
+              <line x1="120" y1="0" x2="35" y2="72" strokeWidth="0.7" />
+              <line x1="120" y1="0" x2="75" y2="100" strokeWidth="0.7" />
 
-            <path d="M78 0 Q82 18 100 22" fill="none" stroke="#A8A29E" strokeWidth="0.6" />
-            <path d="M55 0 Q62 38 100 45" fill="none" stroke="#A8A29E" strokeWidth="0.6" />
-            <path d="M30 0 Q42 58 100 70" fill="none" stroke="#A8A29E" strokeWidth="0.6" />
-            <path d="M5 0 Q22 78 100 95" fill="none" stroke="#A8A29E" strokeWidth="0.6" />
+              {/* Spiderweb concentric arches */}
+              <path d="M95 0 Q100 20 120 25" fill="none" />
+              <path d="M68 0 Q78 42 120 52" fill="none" />
+              <path d="M38 0 Q54 66 120 82" fill="none" />
+              <path d="M10 0 Q30 90 120 110" fill="none" />
+            </g>
+
+            {/* Seamless Dangling Unit: Silk Thread connects directly to Web Knot at (88, 75) */}
+            <g style={{ transformOrigin: '88px 75px' }} className="animate-sway-gentle">
+              {/* Knot anchor at the web intersection */}
+              <circle cx="88" cy="75" r="1.6" fill={isDark ? '#E2E8F0' : '#78716C'} opacity="0.8" />
+              
+              {/* Continuous Silk Thread dropping straight down from web to lantern */}
+              <line 
+                x1="88" 
+                y1="75" 
+                x2="88" 
+                y2="190" 
+                stroke={isDark ? '#CBD5E1' : '#78716C'} 
+                strokeWidth="0.9" 
+                strokeOpacity={isDark ? 0.75 : 0.65} 
+              />
+
+              {/* Glowing Mini-Lantern at the end of the thread */}
+              <g transform="translate(88, 190)" className="drop-shadow-[0_0_8px_rgba(245,158,11,0.85)]">
+                {/* Lantern suspension ring */}
+                <ellipse cx="0" cy="-14" rx="2" ry="2.5" fill="none" stroke="#44403C" strokeWidth="0.8" />
+                {/* Lantern cap */}
+                <polygon points="0,-13 -6,-7 6,-7" fill="#44403C" />
+                {/* Glowing body */}
+                <rect x="-5" y="-7" width="10" height="13" rx="2.5" fill="#F59E0B" stroke="#D97706" strokeWidth="0.7" />
+                {/* Inner bright flame */}
+                <ellipse cx="0" cy="-0.5" rx="3" ry="3.5" fill="#FEF3C7" />
+                <ellipse cx="0" cy="0" rx="1.5" ry="1.8" fill="#FFFFFF" />
+                {/* Bottom base */}
+                <rect x="-3.5" y="6" width="7" height="1.8" rx="0.5" fill="#44403C" />
+              </g>
+            </g>
           </svg>
-        </div>
-
-        {/* Delicate Dangling Glowing Mini Lantern along outer right margin */}
-        <div className="absolute top-24 sm:top-32 right-2 sm:right-3 flex flex-col items-center opacity-75">
-          <div className="w-[1px] h-8 sm:h-12 bg-stone-400/40" />
-
-          <div className="animate-sway-gentle origin-top -mt-0.5 flex flex-col items-center">
-            <svg 
-              viewBox="0 0 24 32" 
-              className="w-3.5 h-4.5 sm:w-4.5 sm:h-5.5 drop-shadow-[0_0_5px_rgba(245,158,11,0.7)]"
-            >
-              <polygon points="12,2 5,8 19,8" fill="#44403C" />
-              <rect x="6" y="8" width="12" height="15" rx="3" fill="#F59E0B" stroke="#D97706" strokeWidth="0.7" />
-              <ellipse cx="12" cy="15.5" rx="3" ry="4" fill="#FEF3C7" />
-              <ellipse cx="12" cy="16" rx="1.6" ry="2" fill="#FFFFFF" />
-              <rect x="8" y="23" width="8" height="2" rx="0.5" fill="#44403C" />
-            </svg>
-          </div>
         </div>
 
         {/* Faint vertical edge accents along right border */}
@@ -228,3 +271,4 @@ export default function HalloweenAtmosphere({ theme = 'dark' }: HalloweenAtmosph
     </>
   );
 }
+
