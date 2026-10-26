@@ -1,4 +1,5 @@
 export type Language = 'en' | 'ja' | 'fi';
+export type ThemeMode = 'dark' | 'light';
 
 export interface CharacterItem {
   id: string;

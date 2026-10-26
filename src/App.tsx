@@ -10,7 +10,7 @@ import {
   User
 } from 'lucide-react';
 
-import { Language, CharacterItem } from './types';
+import { Language, CharacterItem, ThemeMode } from './types';
 import { CHARACTERS } from './data';
 
 // Shared Components
@@ -19,19 +19,81 @@ import Footer from './components/Footer';
 import EssaysPage from './components/EssaysPage';
 import AboutPage from './components/AboutPage';
 import HalloweenAtmosphere from './components/HalloweenAtmosphere';
+import KatanaPumpkinIntro from './components/KatanaPumpkinIntro';
 import { trackPageView } from './utils/visitTracker';
 
 // Import path of hero artwork asset
 import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
 
 export default function App() {
+  // Default language is Japanese ('ja') for Tapi Life core identity
   const [lang, setLang] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('tapi_lang');
-      if (saved === 'en' || saved === 'fi' || saved === 'ja') return saved;
+      try {
+        // 1. Check explicit URL query param (?lang=ja|en|fi)
+        const params = new URLSearchParams(window.location.search);
+        const urlLang = params.get('lang');
+        if (urlLang === 'ja' || urlLang === 'en' || urlLang === 'fi') {
+          return urlLang;
+        }
+      } catch {}
+
+      // 2. Check if user explicitly chose a language during this active session
+      const sessionChoice = sessionStorage.getItem('tapi_user_chosen_lang');
+      if (sessionChoice === 'en' || sessionChoice === 'fi' || sessionChoice === 'ja') {
+        return sessionChoice;
+      }
+
+      // Clear any stale cached language that was defaulting to English
+      try {
+        localStorage.removeItem('tapi_lang');
+      } catch {}
     }
-    return 'ja'; // Default to Japanese for Tapi Life core identity
+    // Default strictly to Japanese
+    return 'ja';
   });
+
+  const handleLanguageChange = (newLang: Language) => {
+    setLang(newLang);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('tapi_user_chosen_lang', newLang);
+      localStorage.setItem('tapi_lang', newLang);
+    }
+  };
+
+  // Default theme is 'dark' with orange pumpkin as requested!
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('tapi_theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+    }
+    return 'dark'; // Dark mode default
+  });
+
+  // Opening Katana Pumpkin Slash Intro Gatekeeper
+  const [showSlashIntro, setShowSlashIntro] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const alreadySlashed = sessionStorage.getItem('tapi_slashed_pumpkin');
+      return !alreadySlashed;
+    }
+    return true;
+  });
+
+  const handleCompleteSlash = () => {
+    setShowSlashIntro(false);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('tapi_slashed_pumpkin', 'true');
+    }
+  };
+
+  const handleReplaySlash = () => {
+    setShowSlashIntro(true);
+  };
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
 
   // Sync html lang attribute and persist to localStorage
@@ -39,10 +101,18 @@ export default function App() {
     if (typeof document !== 'undefined') {
       document.documentElement.lang = lang;
     }
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('tapi_lang', lang);
-    }
   }, [lang]);
+
+  // Sync theme attribute on document.body and persist to localStorage
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('theme-dark', 'theme-light');
+      document.body.classList.add(`theme-${theme}`);
+    }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tapi_theme', theme);
+    }
+  }, [theme]);
   
   // Custom SPA Path Routing State with hash/param support
   const resolveCurrentPath = useCallback((): string => {
@@ -183,12 +253,18 @@ export default function App() {
     return '辻義（Yoshi Tsuiji）手書きの世界観';
   };
 
+  const isDark = theme === 'dark';
+
   const getHeroTitle = () => {
+    const brandClass = isDark 
+      ? "font-extrabold text-amber-400 drop-shadow-[0_0_16px_rgba(255,140,0,0.45)]" 
+      : "font-extrabold text-neutral-950";
+
     if (lang === 'fi') {
       return (
         <>
           Kuningas Tapiokan lämmin ja lempeä <br />
-          <span className="font-extrabold text-neutral-950">TAPI LIFE</span>
+          <span className={brandClass}>TAPI LIFE</span>
         </>
       );
     }
@@ -196,14 +272,14 @@ export default function App() {
       return (
         <>
           The Quiet & Warm World of <br />
-          <span className="font-extrabold text-neutral-950">Tapi Life</span>
+          <span className={brandClass}>Tapi Life</span>
         </>
       );
     }
     return (
       <>
         ゆるかわ可愛い手書きアート <br />
-        <span className="font-extrabold text-neutral-950">TAPI LIFE</span>
+        <span className={brandClass}>TAPI LIFE</span>
       </>
     );
   };
@@ -229,49 +305,73 @@ export default function App() {
   };
 
   return (
-    <div id="app-root" className="min-h-screen bg-[#FBF9F6] text-[#2E2E2E] font-sans selection:bg-neutral-200 flex flex-col justify-between">
-      
+    <div 
+      id="app-root" 
+      className={`min-h-screen font-sans flex flex-col justify-between transition-colors duration-300 ${
+        isDark 
+          ? 'bg-[#0d0c14] text-[#F5F3EC] selection:bg-amber-900/60 selection:text-amber-100' 
+          : 'bg-[#FBF9F6] text-[#2E2E2E] selection:bg-neutral-200'
+      }`}
+    >
       {/* 
         Unified Constant Header across ALL pages!
         Includes: Logo at top left next to TAPI LIFE, responsive navigation, 
+        theme switcher (Dark with pumpkin orange default <-> Light mode),
         and 3-way language switcher (JP / EN / FI).
       */}
       <Header 
         lang={lang} 
-        onLanguageChange={setLang} 
+        onLanguageChange={handleLanguageChange} 
         currentPath={currentPath} 
         onNavigate={navigate}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onReplaySlash={handleReplaySlash}
       />
 
       {/* Main View Router Container */}
       <main className="flex-1">
         {currentPath === '/about' ? (
-          <AboutPage lang={lang} onNavigate={navigate} />
+          <AboutPage lang={lang} onNavigate={navigate} theme={theme} />
         ) : currentPath === '/essays' ? (
-          <EssaysPage lang={lang} onNavigate={navigate} />
+          <EssaysPage lang={lang} onNavigate={navigate} theme={theme} />
         ) : (
           /* Home Page View */
           <div>
             {/* Hero Section */}
             <section className="py-12 sm:py-20 max-w-5xl mx-auto px-6 space-y-10">
               <div className="text-center space-y-5 max-w-2xl mx-auto">
-                <div className="inline-block px-3 py-1 border border-neutral-300 rounded-full text-[10px] font-mono tracking-widest uppercase text-neutral-500 bg-white/60">
+                <div className={`inline-block px-3 py-1 border rounded-full text-[10px] font-mono tracking-widest uppercase transition-colors ${
+                  isDark 
+                    ? 'border-amber-500/40 bg-amber-950/40 text-amber-300 shadow-[0_0_12px_rgba(255,140,0,0.2)]' 
+                    : 'border-neutral-300 bg-white/60 text-neutral-500'
+                }`}>
                   {getHeroBadge()}
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-neutral-900 leading-tight tracking-tight font-medium">
+                <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-serif leading-tight tracking-tight font-medium ${
+                  isDark ? 'text-neutral-100' : 'text-neutral-900'
+                }`}>
                   {getHeroTitle()}
                 </h1>
 
-                <p className="text-sm text-neutral-600 leading-relaxed max-w-xl mx-auto font-serif">
+                <p className={`text-sm leading-relaxed max-w-xl mx-auto font-serif ${
+                  isDark ? 'text-neutral-300' : 'text-neutral-600'
+                }`}>
                   {getHeroIntro()}
                 </p>
               </div>
 
               {/* Framed Artwork Display */}
               <div className="max-w-3xl mx-auto">
-                <div className="bg-white p-3.5 sm:p-4 border border-neutral-200 rounded-xl shadow-xs space-y-3">
-                  <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-neutral-200 bg-[#757575]">
+                <div className={`p-3.5 sm:p-4 border rounded-xl transition-colors ${
+                  isDark 
+                    ? 'bg-[#181622] border-neutral-800 shadow-[0_8px_30px_rgba(0,0,0,0.6)]' 
+                    : 'bg-white border-neutral-200 shadow-xs'
+                } space-y-3`}>
+                  <div className={`relative aspect-[16/10] overflow-hidden rounded-lg border ${
+                    isDark ? 'border-neutral-750 bg-[#252233]' : 'border-neutral-200 bg-[#757575]'
+                  }`}>
                     <img 
                       src={heroBanner} 
                       alt="まちがいさがし - を見つけろ！" 
@@ -281,11 +381,17 @@ export default function App() {
                   </div>
                   
                   {/* Artwork Quote Caption */}
-                  <div className="pt-2 border-t border-neutral-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-1">
-                    <p className="font-serif text-xs sm:text-sm text-neutral-800 tracking-wide font-medium">
+                  <div className={`pt-2 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-1 ${
+                    isDark ? 'border-neutral-800' : 'border-neutral-100'
+                  }`}>
+                    <p className={`font-serif text-xs sm:text-sm tracking-wide font-medium ${
+                      isDark ? 'text-neutral-200' : 'text-neutral-800'
+                    }`}>
                       {getQuoteText()}
                     </p>
-                    <span className="text-[10px] font-mono text-neutral-400 shrink-0 uppercase">
+                    <span className={`text-[10px] font-mono shrink-0 uppercase ${
+                      isDark ? 'text-amber-400/80' : 'text-neutral-400'
+                    }`}>
                       YOSHI TSUIJI — TAPI LIFE
                     </span>
                   </div>
@@ -294,23 +400,41 @@ export default function App() {
             </section>
 
             {/* Core Navigation Hub — Minimalist Callouts */}
-            <section className="bg-white border-t border-b border-neutral-200 py-14">
+            <section className={`border-t border-b py-14 transition-colors ${
+              isDark ? 'bg-[#12111b] border-neutral-800/80' : 'bg-white border-neutral-200'
+            }`}>
               <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
                 {/* About Yoshi Callout */}
                 <button 
                   onClick={() => navigate('/about')}
-                  className="group text-left p-6 border border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all space-y-4 cursor-pointer"
+                  className={`group text-left p-6 border rounded-xl transition-all space-y-4 cursor-pointer ${
+                    isDark 
+                      ? 'border-neutral-800 bg-[#181622] hover:bg-[#201d2e] hover:border-amber-500/50' 
+                      : 'border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-300'
+                  }`}
                 >
-                  <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 group-hover:bg-neutral-200 transition-colors">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                    isDark 
+                      ? 'bg-amber-950/40 text-amber-400 group-hover:bg-amber-900/50' 
+                      : 'bg-neutral-100 text-neutral-600 group-hover:bg-neutral-200'
+                  }`}>
                     <User className="w-5 h-5" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-serif text-base font-medium text-neutral-900 flex items-center justify-between">
+                    <h3 className={`font-serif text-base font-medium flex items-center justify-between ${
+                      isDark ? 'text-neutral-100' : 'text-neutral-900'
+                    }`}>
                       <span>{lang === 'fi' ? 'Tietoa Yoshista' : lang === 'en' ? 'About Yoshi' : '辻義について'}</span>
-                      <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                      <ArrowUpRight className={`w-4 h-4 transition-all ${
+                        isDark 
+                          ? 'text-neutral-500 group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5' 
+                          : 'text-neutral-400 group-hover:text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                      }`} />
                     </h3>
-                    <p className="text-[11px] text-neutral-500 leading-relaxed">
+                    <p className={`text-[11px] leading-relaxed ${
+                      isDark ? 'text-neutral-400' : 'text-neutral-500'
+                    }`}>
                       {lang === 'fi' 
                         ? 'Tutustu taiteilija Yoshi Tsuijin tarinaan, hänen perheeseensä ja ehtymättömään intohimoonsa kirjoja kohtaan.'
                         : lang === 'en' 
@@ -323,17 +447,33 @@ export default function App() {
                 {/* Essays Callout */}
                 <button 
                   onClick={() => navigate('/essays')}
-                  className="group text-left p-6 border border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all space-y-4 cursor-pointer"
+                  className={`group text-left p-6 border rounded-xl transition-all space-y-4 cursor-pointer ${
+                    isDark 
+                      ? 'border-neutral-800 bg-[#181622] hover:bg-[#201d2e] hover:border-amber-500/50' 
+                      : 'border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-300'
+                  }`}
                 >
-                  <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 group-hover:bg-neutral-200 transition-colors">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                    isDark 
+                      ? 'bg-amber-950/40 text-amber-400 group-hover:bg-amber-900/50' 
+                      : 'bg-neutral-100 text-neutral-600 group-hover:bg-neutral-200'
+                  }`}>
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-serif text-base font-medium text-neutral-900 flex items-center justify-between">
+                    <h3 className={`font-serif text-base font-medium flex items-center justify-between ${
+                      isDark ? 'text-neutral-100' : 'text-neutral-900'
+                    }`}>
                       <span>{lang === 'fi' ? 'Esseet & Tarinat' : lang === 'en' ? 'Bilingual Essays' : 'エッセイ・文集'}</span>
-                      <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                      <ArrowUpRight className={`w-4 h-4 transition-all ${
+                        isDark 
+                          ? 'text-neutral-500 group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5' 
+                          : 'text-neutral-400 group-hover:text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                      }`} />
                     </h3>
-                    <p className="text-[11px] text-neutral-500 leading-relaxed">
+                    <p className={`text-[11px] leading-relaxed ${
+                      isDark ? 'text-neutral-400' : 'text-neutral-500'
+                    }`}>
                       {lang === 'fi'
                         ? 'Lue Yoshin omakohtaisia esseitä luonnosta, ympäristöstä, mielikuvituksesta ja perheen tuesta.'
                         : lang === 'en' 
@@ -348,17 +488,33 @@ export default function App() {
                   href="https://store.line.me/stickershop/author/4712842/en" 
                   target="_blank" 
                   rel="noreferrer"
-                  className="group p-6 border border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all space-y-4 block"
+                  className={`group p-6 border rounded-xl transition-all space-y-4 block ${
+                    isDark 
+                      ? 'border-neutral-800 bg-[#181622] hover:bg-[#201d2e] hover:border-amber-500/50' 
+                      : 'border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-300'
+                  }`}
                 >
-                  <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 group-hover:bg-neutral-200 transition-colors">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                    isDark 
+                      ? 'bg-amber-950/40 text-amber-400 group-hover:bg-amber-900/50' 
+                      : 'bg-neutral-100 text-neutral-600 group-hover:bg-neutral-200'
+                  }`}>
                     <MessageSquare className="w-5 h-5" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-serif text-base font-medium text-neutral-900 flex items-center justify-between">
+                    <h3 className={`font-serif text-base font-medium flex items-center justify-between ${
+                      isDark ? 'text-neutral-100' : 'text-neutral-900'
+                    }`}>
                       <span>{lang === 'fi' ? 'LINE-tarrat' : lang === 'en' ? 'LINE Stickers' : '公式スタンプ'}</span>
-                      <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                      <ArrowUpRight className={`w-4 h-4 transition-all ${
+                        isDark 
+                          ? 'text-neutral-500 group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5' 
+                          : 'text-neutral-400 group-hover:text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                      }`} />
                     </h3>
-                    <p className="text-[11px] text-neutral-500 leading-relaxed">
+                    <p className={`text-[11px] leading-relaxed ${
+                      isDark ? 'text-neutral-400' : 'text-neutral-500'
+                    }`}>
                       {lang === 'fi'
                         ? 'Lataa Kuningas Tapiokan, Okomen ja muiden kavereiden viralliset digitaaliset tarrat viesteihisi!'
                         : lang === 'en' 
@@ -373,17 +529,33 @@ export default function App() {
                   href="https://www.instagram.com/tapitaka_119/" 
                   target="_blank" 
                   rel="noreferrer"
-                  className="group p-6 border border-neutral-200 rounded-xl hover:bg-neutral-50 hover:border-neutral-300 transition-all space-y-4 block"
+                  className={`group p-6 border rounded-xl transition-all space-y-4 block ${
+                    isDark 
+                      ? 'border-neutral-800 bg-[#181622] hover:bg-[#201d2e] hover:border-amber-500/50' 
+                      : 'border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-300'
+                  }`}
                 >
-                  <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 group-hover:bg-neutral-200 transition-colors">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                    isDark 
+                      ? 'bg-amber-950/40 text-amber-400 group-hover:bg-amber-900/50' 
+                      : 'bg-neutral-100 text-neutral-600 group-hover:bg-neutral-200'
+                  }`}>
                     <Instagram className="w-5 h-5" />
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-serif text-base font-medium text-neutral-900 flex items-center justify-between">
+                    <h3 className={`font-serif text-base font-medium flex items-center justify-between ${
+                      isDark ? 'text-neutral-100' : 'text-neutral-900'
+                    }`}>
                       <span>{lang === 'fi' ? 'Instagram' : lang === 'en' ? 'Instagram Feed' : '公式インスタグラム'}</span>
-                      <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                      <ArrowUpRight className={`w-4 h-4 transition-all ${
+                        isDark 
+                          ? 'text-neutral-500 group-hover:text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5' 
+                          : 'text-neutral-400 group-hover:text-neutral-900 group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                      }`} />
                     </h3>
-                    <p className="text-[11px] text-neutral-500 leading-relaxed">
+                    <p className={`text-[11px] leading-relaxed ${
+                      isDark ? 'text-neutral-400' : 'text-neutral-500'
+                    }`}>
                       {lang === 'fi'
                         ? 'Seuraa tiliä @tapitaka_119 nähdäksesi Yoshin päivittäisiä käsinpiirrettyjä kuvituksia ja luonnoksia.'
                         : lang === 'en' 
@@ -402,10 +574,10 @@ export default function App() {
                 <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase">
                   {lang === 'fi' ? 'HAHMOGALLERIA' : lang === 'en' ? 'THE CHARACTER CATALOG' : 'キャラクターの紹介'}
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-serif font-medium text-neutral-950">
+                <h2 className={`text-2xl sm:text-3xl font-serif font-medium ${isDark ? 'text-neutral-100' : 'text-neutral-950'}`}>
                   {lang === 'fi' ? 'Tapioka-valtakunnan ystävät' : lang === 'en' ? 'Meet the Boba Buddies' : 'タピオカ王国の静かな仲間たち'}
                 </h2>
-                <p className="text-xs text-neutral-500 max-w-md mx-auto">
+                <p className={`text-xs max-w-md mx-auto ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
                   {lang === 'fi'
                     ? 'Klikkaa hahmokorttia lukeaksesi salaisen profiilin, tarinan ja lempiruoat.'
                     : lang === 'en' 
@@ -421,7 +593,11 @@ export default function App() {
                     key={char.id}
                     whileHover={{ y: -4 }}
                     onClick={() => setSelectedCharacter(char)}
-                    className="bg-white border border-neutral-200 hover:border-neutral-300 rounded-lg p-5 text-center cursor-pointer transition-all flex flex-col justify-between shadow-xs"
+                    className={`border rounded-lg p-5 text-center cursor-pointer transition-all flex flex-col justify-between ${
+                      isDark 
+                        ? 'bg-[#181622] border-neutral-800 hover:border-amber-500/60 shadow-[0_4px_16px_rgba(0,0,0,0.4)]' 
+                        : 'bg-white border-neutral-200 hover:border-neutral-300 shadow-xs'
+                    }`}
                   >
                     {/* Clean SVG Rendering of character */}
                     <div className="w-16 h-16 mx-auto mb-3 flex items-center justify-center">
@@ -470,7 +646,7 @@ export default function App() {
                     </div>
 
                     <div>
-                      <h3 className="text-neutral-900 font-serif font-medium text-sm">
+                      <h3 className={`font-serif font-medium text-sm ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
                         {lang === 'fi' ? char.nameFi : lang === 'en' ? char.nameEn : char.nameJa}
                       </h3>
                       <span className="text-[10px] text-neutral-400 font-mono block mt-0.5">
@@ -478,10 +654,12 @@ export default function App() {
                       </span>
                     </div>
 
-                    <div className="mt-4 pt-2 border-t border-neutral-100 flex items-center justify-center gap-1 text-[10px] text-neutral-400 font-mono">
+                    <div className={`mt-4 pt-2 border-t flex items-center justify-center gap-1 text-[10px] font-mono ${
+                      isDark ? 'border-neutral-800 text-neutral-400' : 'border-neutral-100 text-neutral-400'
+                    }`}>
                       <span>{char.emoji}</span>
                       <span>{lang === 'fi' ? 'Profiili' : lang === 'en' ? 'Profile' : 'プロファイル'}</span>
-                      <ChevronRight className="w-3 h-3 text-neutral-300" />
+                      <ChevronRight className="w-3 h-3 text-neutral-400" />
                     </div>
                   </motion.div>
                 ))}
@@ -494,25 +672,38 @@ export default function App() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 bg-[#2e2e2e]/40 backdrop-blur-xs flex items-center justify-center p-4"
+                    className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${
+                      isDark ? 'bg-black/75 backdrop-blur-md' : 'bg-[#2e2e2e]/40 backdrop-blur-xs'
+                    }`}
                   >
                     <motion.div 
                       initial={{ scale: 0.98, y: 10 }}
                       animate={{ scale: 1, y: 0 }}
                       exit={{ scale: 0.98, y: 10 }}
-                      className="bg-white border border-neutral-300 rounded-xl max-w-md w-full p-6 relative shadow-lg overflow-hidden"
+                      className={`border rounded-xl max-w-md w-full p-6 relative overflow-hidden transition-colors ${
+                        isDark 
+                          ? 'bg-[#181622] border-neutral-750 text-neutral-100 shadow-[0_0_35px_rgba(0,0,0,0.8)]' 
+                          : 'bg-white border-neutral-300 text-neutral-900 shadow-lg'
+                      }`}
                     >
                       {/* Close Button */}
                       <button 
                         onClick={() => setSelectedCharacter(null)}
-                        className="absolute top-5 right-5 p-1.5 hover:bg-neutral-100 rounded-full transition cursor-pointer text-neutral-500"
+                        className={`absolute top-5 right-5 p-1.5 rounded-full transition cursor-pointer ${
+                          isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800/60' : 'text-neutral-500 hover:bg-neutral-100'
+                        }`}
+                        aria-label="Close dialog"
                       >
                         <X className="w-4 h-4" />
                       </button>
 
                       {/* Header Profile */}
-                      <div className="flex gap-4 items-center mb-6 border-b border-neutral-200 pb-4">
-                        <div className="w-16 h-16 shrink-0 bg-neutral-50 rounded-lg border border-neutral-200 p-1 flex items-center justify-center">
+                      <div className={`flex gap-4 items-center mb-6 border-b pb-4 ${
+                        isDark ? 'border-neutral-800' : 'border-neutral-200'
+                      }`}>
+                        <div className={`w-16 h-16 shrink-0 rounded-lg border p-1 flex items-center justify-center ${
+                          isDark ? 'bg-[#201d2d] border-neutral-750' : 'bg-neutral-50 border-neutral-200'
+                        }`}>
                           <svg viewBox="0 0 100 100" className="w-full h-full">
                             {selectedCharacter.id === 'tapioka_king' && (
                               <>
@@ -557,7 +748,7 @@ export default function App() {
                           </svg>
                         </div>
                         <div>
-                          <h3 className="text-lg font-serif font-medium text-neutral-900">
+                          <h3 className={`text-lg font-serif font-medium ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
                             {lang === 'fi' ? selectedCharacter.nameFi : lang === 'en' ? selectedCharacter.nameEn : selectedCharacter.nameJa}
                           </h3>
                           <span className="text-xs text-neutral-400 font-mono block">
@@ -572,25 +763,33 @@ export default function App() {
                           <span className="text-[10px] text-neutral-400 uppercase font-mono tracking-widest block">
                             {lang === 'fi' ? 'ESITTELY & HISTORIA' : lang === 'en' ? 'BIO / BACKGROUND' : '経歴・プロフィール'}
                           </span>
-                          <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed">
+                          <p className={`text-xs sm:text-sm leading-relaxed ${isDark ? 'text-neutral-300' : 'text-neutral-700'}`}>
                             {lang === 'fi' ? selectedCharacter.descFi : lang === 'en' ? selectedCharacter.descEn : selectedCharacter.descJa}
                           </p>
                         </div>
 
-                        <div className="p-3 bg-neutral-50 rounded-lg border border-neutral-200">
+                        <div className={`p-3 rounded-lg border ${
+                          isDark ? 'bg-[#14121d] border-neutral-800' : 'bg-neutral-50 border-neutral-200'
+                        }`}>
                           <span className="text-[9px] text-neutral-400 uppercase font-mono tracking-widest block">
                             {lang === 'fi' ? 'LEMPIRUOKA' : lang === 'en' ? 'FAVORITE FOOD' : '大好物'}
                           </span>
-                          <p className="text-xs font-medium text-neutral-800 mt-1">
+                          <p className={`text-xs font-medium mt-1 ${isDark ? 'text-amber-300' : 'text-neutral-800'}`}>
                             {lang === 'fi' ? selectedCharacter.likesFi : lang === 'en' ? selectedCharacter.likesEn : selectedCharacter.likesJa}
                           </p>
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-4 border-t border-neutral-200 flex justify-end">
+                      <div className={`mt-6 pt-4 border-t flex justify-end ${
+                        isDark ? 'border-neutral-800' : 'border-neutral-200'
+                      }`}>
                         <button 
                           onClick={() => setSelectedCharacter(null)}
-                          className="px-4 py-2 border border-neutral-300 hover:bg-neutral-100 rounded text-xs font-mono transition-colors cursor-pointer"
+                          className={`px-4 py-2 border rounded text-xs font-mono transition-colors cursor-pointer ${
+                            isDark 
+                              ? 'border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-neutral-200' 
+                              : 'border-neutral-300 hover:bg-neutral-100 text-neutral-700'
+                          }`}
                         >
                           {lang === 'fi' ? 'Sulje' : lang === 'en' ? 'Close' : '閉じる'}
                         </button>
@@ -605,10 +804,25 @@ export default function App() {
       </main>
 
       {/* Constant Footer across ALL pages */}
-      <Footer lang={lang} />
+      <Footer lang={lang} theme={theme} />
 
       {/* Ambient Minimalist Halloween Atmosphere: Translucent Background Ghost, Blinking Bottom Lights, Left & Right Extremes */}
-      <HalloweenAtmosphere />
+      <HalloweenAtmosphere theme={theme} />
+
+      {/* 
+        Opening Katana Pumpkin Slash Gatekeeper Experience
+        "when someone opens the page - first thing they need to do is slash the pumpkin - with japanese sword -
+        say it in japanese cut the pumpkin and the pumpking should bright bling orange - at the centre and everything
+        is opaque behind, but tranclucent - when they cut then the page appears"
+      */}
+      <AnimatePresence>
+        {showSlashIntro && (
+          <KatanaPumpkinIntro 
+            lang={lang} 
+            onComplete={handleCompleteSlash} 
+          />
+        )}
+      </AnimatePresence>
 
     </div>
   );

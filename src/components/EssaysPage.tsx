@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { BookOpen, Clock, ArrowRight, ArrowLeft } from 'lucide-react';
-import { Language } from '../types';
-
 import tapiSupportImg from '../assets/images/tapi_essay_support.png';
 import tapiRiceImg from '../assets/images/tapi_essay_rice.png';
 import tapiDanceImg from '../assets/images/tapi_essay_dance.png';
 import turtleStickerImg from '../assets/images/turtle_sticker.jpg';
 import macrovectorPollutionImg from '../assets/images/macrovector_pollution_1790877055707.jpg';
 
+import { Language, ThemeMode } from '../types';
+
 interface EssaysPageProps {
   lang: Language;
   onNavigate: (path: string) => void;
+  theme?: ThemeMode;
 }
 
 interface EssayImage {
@@ -43,7 +44,8 @@ interface Essay {
   contentFi: string[];
 }
 
-export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
+export default function EssaysPage({ lang, onNavigate, theme = 'dark' }: EssaysPageProps) {
+  const isDark = theme === 'dark';
   // View mode can be 'ja' | 'en' | 'fi' | 'bilingual'
   const [viewMode, setViewMode] = useState<'ja' | 'en' | 'fi' | 'bilingual'>('bilingual');
 
@@ -391,7 +393,11 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
       <div className="flex items-center justify-between">
         <button
           onClick={() => onNavigate('/')}
-          className="inline-flex items-center gap-1.5 text-xs font-mono text-neutral-600 hover:text-neutral-950 transition-colors py-1.5 px-3 rounded-md bg-white border border-neutral-200 shadow-xs cursor-pointer"
+          className={`inline-flex items-center gap-1.5 text-xs font-mono transition-colors py-1.5 px-3 rounded-md border shadow-xs cursor-pointer ${
+            isDark 
+              ? 'bg-[#181622] border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700' 
+              : 'bg-white border-neutral-200 text-neutral-600 hover:text-neutral-950'
+          }`}
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>
@@ -405,21 +411,23 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
       </div>
 
       {/* Page Title & Intro */}
-      <div className="space-y-4 text-center sm:text-left border-b border-neutral-200 pb-8">
+      <div className={`space-y-4 text-center sm:text-left border-b pb-8 ${isDark ? 'border-neutral-800' : 'border-neutral-200'}`}>
         <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase font-bold block">
           {lang === 'fi' ? 'KIRJOITUKSET & AJATUKSET' : lang === 'en' ? 'COLLECTED ESSAYS' : '原作者書き下ろし文集'}
         </span>
-        <h1 className="text-2xl sm:text-4xl font-serif text-neutral-950 font-medium">
+        <h1 className={`text-2xl sm:text-4xl font-serif font-medium ${isDark ? 'text-neutral-100' : 'text-neutral-950'}`}>
           {getPageTitle()}
         </h1>
-        <p className="text-xs sm:text-sm text-neutral-600 font-serif leading-relaxed max-w-2xl">
+        <p className={`text-xs sm:text-sm font-serif leading-relaxed max-w-2xl ${isDark ? 'text-neutral-300' : 'text-neutral-600'}`}>
           {getPageIntro()}
         </p>
       </div>
 
       {/* Reading Mode Selector Buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-white rounded-xl border border-neutral-200">
-        <span className="text-xs font-mono text-neutral-500 font-medium">
+      <div className={`flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl border transition-colors ${
+        isDark ? 'bg-[#181622] border-neutral-800' : 'bg-white border-neutral-200'
+      }`}>
+        <span className={`text-xs font-mono font-medium ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
           {lang === 'fi' ? 'Valitse lukukieli:' : lang === 'en' ? 'Reading language:' : '表示言語モード:'}
         </span>
         <div className="flex items-center gap-1.5 text-xs font-mono">
@@ -428,8 +436,8 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
             onClick={() => setViewMode('ja')}
             className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
               viewMode === 'ja'
-                ? 'bg-neutral-900 text-white font-medium'
-                : 'text-neutral-600 hover:bg-neutral-100'
+                ? 'bg-amber-600 text-neutral-950 font-bold shadow-xs'
+                : (isDark ? 'text-neutral-300 hover:bg-[#201d2d]' : 'text-neutral-600 hover:bg-neutral-100')
             }`}
           >
             日本語
@@ -439,8 +447,8 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
             onClick={() => setViewMode('en')}
             className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
               viewMode === 'en'
-                ? 'bg-neutral-900 text-white font-medium'
-                : 'text-neutral-600 hover:bg-neutral-100'
+                ? 'bg-amber-600 text-neutral-950 font-bold shadow-xs'
+                : (isDark ? 'text-neutral-300 hover:bg-[#201d2d]' : 'text-neutral-600 hover:bg-neutral-100')
             }`}
           >
             English
@@ -450,8 +458,8 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
             onClick={() => setViewMode('fi')}
             className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
               viewMode === 'fi'
-                ? 'bg-neutral-900 text-white font-medium'
-                : 'text-neutral-600 hover:bg-neutral-100'
+                ? 'bg-amber-600 text-neutral-950 font-bold shadow-xs'
+                : (isDark ? 'text-neutral-300 hover:bg-[#201d2d]' : 'text-neutral-600 hover:bg-neutral-100')
             }`}
           >
             Suomi
@@ -461,8 +469,8 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
             onClick={() => setViewMode('bilingual')}
             className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
               viewMode === 'bilingual'
-                ? 'bg-neutral-900 text-white font-medium'
-                : 'text-neutral-600 hover:bg-neutral-100'
+                ? 'bg-amber-600 text-neutral-950 font-bold shadow-xs'
+                : (isDark ? 'text-neutral-300 hover:bg-[#201d2d]' : 'text-neutral-600 hover:bg-neutral-100')
             }`}
           >
             {lang === 'fi' ? 'Rinnakkaislukutila' : lang === 'en' ? 'Bilingual' : '日英対訳'}
@@ -471,7 +479,9 @@ export default function EssaysPage({ lang, onNavigate }: EssaysPageProps) {
       </div>
 
       {/* Essay Index Table of Contents */}
-      <div className="bg-neutral-50/80 p-5 rounded-xl border border-neutral-200/80 space-y-3">
+      <div className={`p-5 rounded-xl border space-y-3 transition-colors ${
+        isDark ? 'bg-[#14121d] border-neutral-800' : 'bg-neutral-50/80 border-neutral-200/80'
+      }`}>
         <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase font-semibold block">
           {lang === 'fi' ? 'SISÄLLYSLUETTELO' : lang === 'en' ? 'ESSAYS INDEX' : '目次一覧'}
         </span>

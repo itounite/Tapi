@@ -1,11 +1,14 @@
 import React from 'react';
-import { Language } from '../types';
+import { Language, ThemeMode } from '../types';
 
 interface FooterProps {
   lang: Language;
+  theme?: ThemeMode;
 }
 
-export default function Footer({ lang }: FooterProps) {
+export default function Footer({ lang, theme = 'dark' }: FooterProps) {
+  const isDark = theme === 'dark';
+
   const getCopyrightNote = () => {
     if (lang === 'fi') {
       return 'Tapi Life -brändin konsepti, hahmot ja kuvitukset ovat Yoshi Tsuijin suunnittelemia ja luomia. Kaikki oikeudet pidätetään.';
@@ -38,7 +41,11 @@ export default function Footer({ lang }: FooterProps) {
   ];
 
   return (
-    <footer id="site-footer" className="relative border-t border-neutral-200/90 bg-[#F5F3EE] py-14 text-xs text-neutral-500 font-serif overflow-hidden">
+    <footer id="site-footer" className={`relative border-t py-12 sm:py-14 text-xs font-serif overflow-hidden transition-colors ${
+      isDark 
+        ? 'border-neutral-800/80 bg-[#0a0910] text-neutral-400' 
+        : 'border-neutral-200/90 bg-[#F5F3EE] text-neutral-500'
+    }`}>
       
       {/* Translucent ambient footer lights positioned strictly behind footer content */}
       <div 
@@ -46,14 +53,18 @@ export default function Footer({ lang }: FooterProps) {
         aria-hidden="true"
       >
         {/* Soft, faint warm upward glow behind footer */}
-        <div className="h-10 bg-gradient-to-t from-amber-500/8 via-amber-400/3 to-transparent w-full" />
+        <div className={`h-12 w-full ${
+          isDark 
+            ? 'bg-gradient-to-t from-amber-500/15 via-amber-400/5 to-transparent' 
+            : 'bg-gradient-to-t from-amber-500/8 via-amber-400/3 to-transparent'
+        }`} />
 
         {/* Delicate garland wire line */}
         <div className="relative w-full h-6 overflow-hidden">
           <svg 
             viewBox="0 0 1000 24" 
             preserveAspectRatio="none" 
-            className="absolute top-0 left-0 w-full h-2.5 opacity-20 stroke-neutral-700"
+            className={`absolute top-0 left-0 w-full h-2.5 ${isDark ? 'opacity-30 stroke-neutral-500' : 'opacity-20 stroke-neutral-700'}`}
           >
             <path 
               d="M0,2 Q25,7 50,2 Q75,7 100,2 Q125,7 150,2 Q175,7 200,2 Q225,7 250,2 Q275,7 300,2 Q325,7 350,2 Q375,7 400,2 Q425,7 450,2 Q475,7 500,2 Q525,7 550,2 Q575,7 600,2 Q625,7 650,2 Q675,7 700,2 Q725,7 750,2 Q775,7 800,2 Q825,7 850,2 Q875,7 900,2 Q925,7 950,2 Q975,7 1000,2" 
@@ -72,7 +83,7 @@ export default function Footer({ lang }: FooterProps) {
                 style={{ left: bulb.offset }}
               >
                 {/* Translucent mini socket cap */}
-                <div className="w-1.5 h-1 bg-stone-500/30 rounded-t-xs" />
+                <div className={`w-1.5 h-1 rounded-t-xs ${isDark ? 'bg-stone-600/40' : 'bg-stone-500/30'}`} />
 
                 {/* Translucent blinking bulb */}
                 <div
@@ -80,7 +91,9 @@ export default function Footer({ lang }: FooterProps) {
                     isOrange ? 'animate-blink-orange' : 'animate-blink-white'
                   }`}
                   style={{
-                    backgroundColor: isOrange ? 'rgba(255, 122, 0, 0.45)' : 'rgba(255, 255, 255, 0.55)',
+                    backgroundColor: isOrange 
+                      ? (isDark ? 'rgba(255, 122, 0, 0.55)' : 'rgba(255, 122, 0, 0.45)') 
+                      : (isDark ? 'rgba(255, 255, 255, 0.65)' : 'rgba(255, 255, 255, 0.55)'),
                     border: isOrange ? '1px solid rgba(255, 154, 60, 0.35)' : '1px solid rgba(255, 255, 255, 0.4)',
                     animationDelay: bulb.delay,
                   }}
@@ -94,14 +107,18 @@ export default function Footer({ lang }: FooterProps) {
       {/* Main Footer Content in Front (z-10) */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center space-y-4">
         <div className="flex justify-center items-center gap-2">
-          <span className="tracking-widest text-neutral-900 font-medium uppercase text-sm">TAPI LIFE</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-          <span className="text-[10px] text-neutral-400 uppercase font-mono notranslate" translate="no">辻義 / YOSHI TSUIJI</span>
+          <span className={`tracking-widest font-medium uppercase text-sm ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
+            TAPI LIFE
+          </span>
+          <span className={`w-1.5 h-1.5 rounded-full ${isDark ? 'bg-amber-500/50' : 'bg-neutral-300'}`} />
+          <span className={`text-[10px] uppercase font-mono notranslate ${isDark ? 'text-neutral-400' : 'text-neutral-400'}`} translate="no">
+            辻義 / YOSHI TSUIJI
+          </span>
         </div>
-        <p className="max-w-md mx-auto text-[11px] leading-relaxed text-neutral-500">
+        <p className={`max-w-md mx-auto text-[11px] leading-relaxed ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
           {getCopyrightNote()}
         </p>
-        <div className="text-[10px] font-mono text-neutral-400 pt-2 select-none">
+        <div className="text-[10px] font-mono text-neutral-500 pt-1 select-none">
           © 2026 Yoshi Tsuiji. All Rights Reserved. Follow @tapitaka_119
         </div>
       </div>

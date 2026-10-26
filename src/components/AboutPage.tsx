@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { BookOpen, Heart, Eye, Award, Mail, ArrowLeft } from 'lucide-react';
-import { Language } from '../types';
+import { Language, ThemeMode } from '../types';
 
 // Import Yoshi character avatar illustration
 import yoshiAvatar from '../assets/images/yoshi_avatar.svg';
@@ -9,9 +9,11 @@ import yoshiAvatar from '../assets/images/yoshi_avatar.svg';
 interface AboutPageProps {
   lang: Language;
   onNavigate: (path: string) => void;
+  theme?: ThemeMode;
 }
 
-export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
+export default function AboutPage({ lang, onNavigate, theme = 'dark' }: AboutPageProps) {
+  const isDark = theme === 'dark';
   const getSubhead = () => {
     if (lang === 'fi') return 'TAITEILIJAN ESITTELY';
     if (lang === 'en') return 'THE CREATIVE MIND';
@@ -61,7 +63,11 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
       <div className="flex items-center justify-between">
         <button
           onClick={() => onNavigate('/')}
-          className="inline-flex items-center gap-1.5 text-xs font-mono text-neutral-600 hover:text-neutral-950 transition-colors py-1.5 px-3 rounded-md bg-white border border-neutral-200 shadow-xs cursor-pointer"
+          className={`inline-flex items-center gap-1.5 text-xs font-mono transition-colors py-1.5 px-3 rounded-md border shadow-xs cursor-pointer ${
+            isDark 
+              ? 'bg-[#181622] border-neutral-800 text-neutral-300 hover:text-white hover:border-neutral-700' 
+              : 'bg-white border-neutral-200 text-neutral-600 hover:text-neutral-950'
+          }`}
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>
@@ -83,9 +89,13 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-white p-5 border border-neutral-200 rounded-2xl shadow-xs"
+            className={`p-5 border rounded-2xl shadow-xs transition-colors ${
+              isDark ? 'bg-[#181622] border-neutral-800' : 'bg-white border-neutral-200'
+            }`}
           >
-            <div className="relative aspect-square overflow-hidden rounded-xl border border-neutral-150 bg-[#F8F7F4] flex items-center justify-center p-4 group">
+            <div className={`relative aspect-square overflow-hidden rounded-xl border flex items-center justify-center p-4 group ${
+              isDark ? 'bg-[#201d2d] border-neutral-750' : 'bg-[#F8F7F4] border-neutral-150'
+            }`}>
               <img 
                 src={yoshiAvatar} 
                 alt="Yoshi Tsuiji - Original Character & Creator Avatar" 
@@ -94,7 +104,7 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
               />
             </div>
             <div className="mt-4 text-center space-y-1">
-              <p className="font-serif text-sm font-bold text-neutral-900 notranslate" translate="no">
+              <p className={`font-serif text-sm font-bold notranslate ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`} translate="no">
                 {lang === 'ja' ? '辻義 (Yoshi Tsuiji)' : 'Yoshi Tsuiji'}
               </p>
               <p className="font-mono text-[10px] text-neutral-400">
@@ -103,7 +113,9 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
             </div>
           </motion.div>
 
-          <div className="text-[11px] font-mono text-neutral-600 leading-relaxed bg-neutral-50 p-4 border border-neutral-200/70 rounded-xl">
+          <div className={`text-[11px] font-mono leading-relaxed p-4 border rounded-xl ${
+            isDark ? 'bg-[#14121d] border-neutral-800 text-neutral-300' : 'bg-neutral-50 border-neutral-200/70 text-neutral-600'
+          }`}>
             <p>
               {lang === 'fi' 
                 ? '✨ Yoshi Tsuijin alkuperäinen hahmokuvitus: silinterihattunsa, punaisen rusetin ja leikkisän luovuuden kera.' 
@@ -120,35 +132,41 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
             <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase font-bold block">
               {getSubhead()}
             </span>
-            <h1 className="text-3xl sm:text-4xl font-serif text-neutral-950 font-medium tracking-tight notranslate" translate="no">
+            <h1 className={`text-3xl sm:text-4xl font-serif font-medium tracking-tight notranslate ${
+              isDark ? 'text-neutral-100' : 'text-neutral-950'
+            }`} translate="no">
               {lang === 'ja' ? '辻義 (Yoshi Tsuiji)' : 'Yoshi Tsuiji'}
             </h1>
             <div className="space-y-1.5">
-              <p className="text-xs font-mono text-neutral-500">
+              <p className="text-xs font-mono text-neutral-400">
                 {getFamilyLine()}
               </p>
-              <div className="flex items-center gap-1.5 text-xs font-mono text-neutral-600 pt-0.5">
-                <Mail className="w-3.5 h-3.5 text-neutral-400" />
-                <a href="mailto:yoshi@tapi.life" className="hover:text-neutral-950 hover:underline transition-colors">
+              <div className={`flex items-center gap-1.5 text-xs font-mono pt-0.5 ${isDark ? 'text-neutral-300' : 'text-neutral-600'}`}>
+                <Mail className="w-3.5 h-3.5 text-amber-500" />
+                <a href="mailto:yoshi@tapi.life" className="hover:text-amber-400 hover:underline transition-colors">
                   yoshi@tapi.life
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="text-neutral-700 text-sm sm:text-[15px] leading-relaxed space-y-5 font-serif text-justify">
+          <div className={`text-sm sm:text-[15px] leading-relaxed space-y-5 font-serif text-justify ${
+            isDark ? 'text-neutral-300' : 'text-neutral-700'
+          }`}>
             <p>{getBioP1()}</p>
             <p>{getBioP2()}</p>
             <p>{getBioP3()}</p>
           </div>
 
           {/* Quick stats / facts */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-neutral-200">
+          <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t ${
+            isDark ? 'border-neutral-800' : 'border-neutral-200'
+          }`}>
             <div className="space-y-1">
               <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">
                 {lang === 'fi' ? 'Intohimot' : lang === 'en' ? 'Passions' : '情熱'}
               </span>
-              <span className="text-xs font-serif font-bold text-neutral-900 block">
+              <span className={`text-xs font-serif font-bold block ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
                 {lang === 'fi' ? 'Kuvataide, lukeminen ja proosa' : lang === 'en' ? 'Art, Reading & Prose' : '芸術・読書・執筆'}
               </span>
             </div>
@@ -156,7 +174,7 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
               <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">
                 {lang === 'fi' ? 'Lukutyyli' : lang === 'en' ? 'Reading Style' : '読書スタイル'}
               </span>
-              <span className="text-xs font-serif font-bold text-neutral-900 block">
+              <span className={`text-xs font-serif font-bold block ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
                 {lang === 'fi' ? 'Loputon uteliaisuus, monialainen' : lang === 'en' ? 'Voracious, Multi-genre' : '乱読・多読家、研究熱心'}
               </span>
             </div>
@@ -165,27 +183,31 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
       </div>
 
       {/* Yoshi's Pillars of Passion */}
-      <div className="space-y-8 pt-6 border-t border-neutral-200">
+      <div className={`space-y-8 pt-6 border-t ${isDark ? 'border-neutral-800' : 'border-neutral-200'}`}>
         <div className="text-center space-y-2">
           <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase block">
             {lang === 'fi' ? 'LUOVAT ARVOT' : 'CREATIVE VALUES'}
           </span>
-          <h2 className="text-xl sm:text-2xl font-serif font-medium text-neutral-950">
+          <h2 className={`text-xl sm:text-2xl font-serif font-medium ${isDark ? 'text-neutral-100' : 'text-neutral-950'}`}>
             {lang === 'fi' ? 'Yoshin maailman 3 kulmakiveä' : lang === 'en' ? 'The Pillars of Yoshi’s World' : '辻義を形づくる3つの情熱'}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Pillar 1 */}
-          <div className="p-6 bg-white border border-neutral-200 rounded-xl space-y-3">
-            <div className="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+          <div className={`p-6 border rounded-xl space-y-3 transition-colors ${
+            isDark ? 'bg-[#181622] border-neutral-800' : 'bg-white border-neutral-200'
+          }`}>
+            <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
+              isDark ? 'bg-amber-950/40 text-amber-400' : 'bg-neutral-100 text-neutral-700'
+            }`}>
               <Heart className="w-4 h-4" />
             </div>
             <div className="space-y-1.5">
-              <h3 className="font-serif text-sm font-bold text-neutral-900">
+              <h3 className={`font-serif text-sm font-bold ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
                 {lang === 'fi' ? 'Kuvitus & Muotoilu' : lang === 'en' ? 'Art & Design' : '手書きのアート＆デザイン'}
               </h3>
-              <p className="text-xs text-neutral-500 leading-relaxed">
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
                 {lang === 'fi'
                   ? 'Luonnoskirjan sivuilta syntyneet herttaiset hahmot. Yoshi piirtää ja luo itse digitaaliset kuvitukset, LINE-tarrat ja tuotteet.'
                   : lang === 'en' 
@@ -196,15 +218,19 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
           </div>
 
           {/* Pillar 2 */}
-          <div className="p-6 bg-white border border-neutral-200 rounded-xl space-y-3">
-            <div className="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+          <div className={`p-6 border rounded-xl space-y-3 transition-colors ${
+            isDark ? 'bg-[#181622] border-neutral-800' : 'bg-white border-neutral-200'
+          }`}>
+            <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
+              isDark ? 'bg-amber-950/40 text-amber-400' : 'bg-neutral-100 text-neutral-700'
+            }`}>
               <BookOpen className="w-4 h-4" />
             </div>
             <div className="space-y-1.5">
-              <h3 className="font-serif text-sm font-bold text-neutral-900">
+              <h3 className={`font-serif text-sm font-bold ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
                 {lang === 'fi' ? 'Esseet ja Tarinat' : lang === 'en' ? 'Reflective Essay Writing' : '思考と思索を綴る文筆'}
               </h3>
-              <p className="text-xs text-neutral-500 leading-relaxed">
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
                 {lang === 'fi'
                   ? 'Kirjoituksissaan Yoshi käsittelee syvällisiä teemoja – syvänmeren eliöiden sopeutumisesta japanilaisen riisin kulttuuriseen merkitykseen.'
                   : lang === 'en' 
@@ -215,15 +241,19 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
           </div>
 
           {/* Pillar 3 */}
-          <div className="p-6 bg-white border border-neutral-200 rounded-xl space-y-3">
-            <div className="w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+          <div className={`p-6 border rounded-xl space-y-3 transition-colors ${
+            isDark ? 'bg-[#181622] border-neutral-800' : 'bg-white border-neutral-200'
+          }`}>
+            <div className={`w-9 h-9 rounded-full flex items-center justify-center ${
+              isDark ? 'bg-amber-950/40 text-amber-400' : 'bg-neutral-100 text-neutral-700'
+            }`}>
               <Eye className="w-4 h-4" />
             </div>
             <div className="space-y-1.5">
-              <h3 className="font-serif text-sm font-bold text-neutral-900">
+              <h3 className={`font-serif text-sm font-bold ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
                 {lang === 'fi' ? 'Kyltymätön Lukuhalu' : lang === 'en' ? 'Voracious Reading' : 'あくなき読書体験'}
               </h3>
-              <p className="text-xs text-neutral-500 leading-relaxed">
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-neutral-400' : 'text-neutral-500'}`}>
                 {lang === 'fi'
                   ? 'Monipuolinen lukija, joka ammentaa tietoa tietosanakirjoista, historiasta ja tarinoista. Tämä tieto muuntuu huumoriksi ja oivalluksiksi.'
                   : lang === 'en' 
@@ -236,14 +266,16 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
       </div>
 
       {/* Family Support Callout block (including Finland connection) */}
-      <div className="bg-neutral-50 rounded-xl border border-neutral-200 p-6 sm:p-8 space-y-5">
+      <div className={`rounded-xl border p-6 sm:p-8 space-y-5 transition-colors ${
+        isDark ? 'bg-[#181622] border-neutral-800' : 'bg-neutral-50 border-neutral-200'
+      }`}>
         <div className="flex items-center gap-3">
-          <Award className="w-5 h-5 text-neutral-700" />
-          <h3 className="font-serif text-base sm:text-lg font-bold text-neutral-900">
+          <Award className={`w-5 h-5 ${isDark ? 'text-amber-400' : 'text-neutral-700'}`} />
+          <h3 className={`font-serif text-base sm:text-lg font-bold ${isDark ? 'text-neutral-100' : 'text-neutral-900'}`}>
             {lang === 'fi' ? 'Perheen yhteinen tuki' : lang === 'en' ? 'Family Mutual Support' : 'ひとつのチームとしての家族'}
           </h3>
         </div>
-        <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed font-serif">
+        <p className={`text-xs sm:text-sm leading-relaxed font-serif ${isDark ? 'text-neutral-300' : 'text-neutral-600'}`}>
           {lang === 'fi' ? (
             "Kuten Yoshi kauniisti kuvaa esseessään 'Tuki' (援護), Tsuijin perhe toimii saumattomana tiiminä. Äiti Hiromin antaessa jatkuvaa kannustusta ja pikkusisko Miorin jakaessa luovaa iloa, Yoshi on voinut laajentaa rajojaan – matkustaen jopa Suomeen asti esittelemään ja myymään taideteoksiaan kansainväliselle yleisölle!"
           ) : lang === 'en' ? (
@@ -255,7 +287,7 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
         <div className="pt-2 flex flex-wrap gap-4">
           <button
             onClick={() => onNavigate('/essays')}
-            className="px-5 py-2.5 bg-neutral-900 hover:bg-neutral-950 text-white rounded-lg text-xs font-mono tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-neutral-950 font-bold rounded-lg text-xs font-mono tracking-wider transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
           >
             <BookOpen className="w-3.5 h-3.5" />
             <span>{lang === 'fi' ? 'Lue "Tuki"-essee' : lang === 'en' ? 'Read "Support" Essay' : 'エッセイ「援護」を読む'}</span>
@@ -267,7 +299,11 @@ export default function AboutPage({ lang, onNavigate }: AboutPageProps) {
       <div className="flex justify-center pt-4">
         <button
           onClick={() => onNavigate('/')}
-          className="px-8 py-3 bg-neutral-900 hover:bg-neutral-950 text-white rounded-lg text-xs tracking-widest transition-all active:scale-95 font-mono cursor-pointer"
+          className={`px-8 py-3 rounded-lg text-xs tracking-widest transition-all active:scale-95 font-mono cursor-pointer border ${
+            isDark 
+              ? 'bg-[#181622] hover:bg-[#201d2e] border-amber-500/40 text-amber-300 shadow-[0_0_15px_rgba(255,140,0,0.15)]' 
+              : 'bg-neutral-900 hover:bg-neutral-950 border-neutral-900 text-white'
+          }`}
         >
           {lang === 'fi' ? 'PALAA ETUSIVULLE' : lang === 'en' ? 'RETURN TO MAIN PAGE' : 'メインページに戻る'}
         </button>
