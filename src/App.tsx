@@ -7,7 +7,8 @@ import {
   ChevronRight, 
   X,
   ArrowUpRight,
-  User
+  User,
+  GraduationCap
 } from 'lucide-react';
 
 import { Language, CharacterItem, ThemeMode } from './types';
@@ -18,6 +19,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import EssaysPage from './components/EssaysPage';
 import AboutPage from './components/AboutPage';
+import LearningPage from './components/LearningPage';
 import HalloweenAtmosphere from './components/HalloweenAtmosphere';
 import KatanaPumpkinIntro from './components/KatanaPumpkinIntro';
 import { trackPageView } from './utils/visitTracker';
@@ -126,6 +128,9 @@ export default function App() {
     if (path === '/essays' || hash === '#essays' || hash === '#/essays') {
       return '/essays';
     }
+    if (path === '/learning' || hash === '#learning' || hash === '#/learning') {
+      return '/learning';
+    }
     return '/';
   }, []);
 
@@ -186,6 +191,20 @@ export default function App() {
         title = 'エッセイ・文集 | タピ・ライフ原作者コラム';
         description = 'タピ・ライフの作者・辻義によるエッセイ、コラム、文集。深海生物の知恵から、日本米の歴史、そしてフィンランドでのオリジナルグッズ販売体験記まで。';
         keywords = 'タピライフ エッセイ, 辻義 エッセイ, 辻義 文集, コラム, 読み物, 家族エピソード, フィンランド';
+      }
+    } else if (currentPath === '/learning') {
+      if (lang === 'fi') {
+        title = 'Oppimisresurssit | Koodaus, lukeminen, matematiikka & tiede | Tapi Life';
+        description = 'Kuraattorin valitsemat parhaat ilmaiset oppimisresurssit lapsille ja nuorille: Code.org, Scratch, Alice 3D, Tynker, Kodable, StoryWeaver, ReadTheory, Worldreader ja tiedesimulaatiot.';
+        keywords = 'oppimisresurssit, koodaus lapsille, Scratch, Code.org, Storyweaver, ReadTheory, Alice 3D, matematiikka, tiede, englanti, ilmaiset kurssit';
+      } else if (lang === 'en') {
+        title = 'Learning Resources | Coding, Reading, Math & Science | Tapi Life';
+        description = 'Curated premier educational platforms for kids and lifelong learners: Code.org, Scratch, Alice 3D, Tynker, Kodable, StoryWeaver, ReadTheory, Worldreader, Khan Academy, and PhET simulations.';
+        keywords = 'Learning resources, coding for kids, Scratch, Code.org, Alice 3D, Tynker, Kodable, StoryWeaver, ReadTheory, Worldreader, STEM, math, science, reading comprehension';
+      } else {
+        title = '学習リソース (Learning) | コーディング・読解・数学・科学 | Tapi Life';
+        description = '子どもから大人まで学べる世界水準の無料・優良学習プラットフォーム厳選集。Code.org、Scratch、Alice 3D、Tynker、Kodable、StoryWeaver、ReadTheory、Worldreaderなどのカード形式まとめ。';
+        keywords = '学習リソース, プログラミング学習, コーディング, スクラッチ, Scratch, Code.org, Alice 3D, Tynker, Kodable, StoryWeaver, ReadTheory, 英語読解, 算数数学, 科学実験';
       }
     } else {
       // Home
@@ -335,6 +354,8 @@ export default function App() {
           <AboutPage lang={lang} onNavigate={navigate} theme={theme} />
         ) : currentPath === '/essays' ? (
           <EssaysPage lang={lang} onNavigate={navigate} theme={theme} />
+        ) : currentPath === '/learning' ? (
+          <LearningPage lang={lang} onNavigate={navigate} theme={theme} />
         ) : (
           /* Home Page View */
           <div>
@@ -403,7 +424,7 @@ export default function App() {
             <section className={`border-t border-b py-14 transition-colors ${
               isDark ? 'bg-[#12111b] border-neutral-800/80' : 'bg-white border-neutral-200'
             }`}>
-              <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 {/* About Yoshi Callout */}
                 <button 
@@ -479,6 +500,45 @@ export default function App() {
                         : lang === 'en' 
                         ? 'Explore original essays on biology, environmental coexistence, imagination, Japanese rice, and family collaboration.' 
                         : '自然科学、環境との共存、想像力、お米、そして家族の協力。執筆された5つのエッセイを多言語で掲載。'}
+                    </p>
+                  </div>
+                </button>
+
+                {/* Learning Resources Callout */}
+                <button 
+                  onClick={() => navigate('/learning')}
+                  className={`group text-left p-6 border rounded-xl transition-all space-y-4 cursor-pointer ${
+                    isDark 
+                      ? 'border-amber-500/30 bg-[#191526] hover:bg-[#221c35] hover:border-amber-500/60 shadow-[0_4px_20px_rgba(245,158,11,0.06)]' 
+                      : 'border-amber-200/90 bg-amber-50/40 hover:bg-amber-50 hover:border-amber-300'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                    isDark 
+                      ? 'bg-amber-500/20 text-amber-300 group-hover:bg-amber-500/30 shadow-[0_0_12px_rgba(245,158,11,0.2)]' 
+                      : 'bg-amber-100 text-amber-800 group-hover:bg-amber-200'
+                  }`}>
+                    <GraduationCap className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className={`font-serif text-base font-medium flex items-center justify-between ${
+                      isDark ? 'text-neutral-100' : 'text-neutral-900'
+                    }`}>
+                      <span>{lang === 'fi' ? 'Oppimisresurssit' : lang === 'en' ? 'Learning Resources' : '学習リソース (Learning)'}</span>
+                      <ArrowUpRight className={`w-4 h-4 transition-all ${
+                        isDark 
+                          ? 'text-amber-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5' 
+                          : 'text-amber-700 group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                      }`} />
+                    </h3>
+                    <p className={`text-[11px] leading-relaxed ${
+                      isDark ? 'text-neutral-300' : 'text-neutral-600'
+                    }`}>
+                      {lang === 'fi'
+                        ? 'Koodaus (Scratch, Code.org, Alice, Tynker, Kodable), lukutaito (StoryWeaver, ReadTheory, Worldreader) sekä Khan Academy (matematiikka, englanti ja tiede).'
+                        : lang === 'en' 
+                        ? 'Interactive resources for coding (Scratch, Code.org, Alice, Tynker, Kodable), reading (StoryWeaver, ReadTheory, Worldreader), and Khan Academy (Maths, English & Science).' 
+                        : 'Code.org、Scratch、Alice 3D、Tynker、Kodable（プログラミング）、StoryWeaver、ReadTheory、Worldreader（読書・英語読解）、Khan Academy（算数・数学・英語・理科）などの厳選集。'}
                     </p>
                   </div>
                 </button>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, BookOpen, MessageSquare, Instagram, Menu, X, Home, Sun, Moon } from 'lucide-react';
+import { User, BookOpen, MessageSquare, Instagram, Menu, X, Home, Sun, Moon, GraduationCap } from 'lucide-react';
 import { Language, ThemeMode } from '../types';
 import tapiCupLogo from '../assets/images/tapi_cup_logo.svg';
 
@@ -25,7 +25,7 @@ export default function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isDark = theme === 'dark';
 
-  const getNavLabel = (key: 'about' | 'essays' | 'stickers' | 'home') => {
+  const getNavLabel = (key: 'about' | 'essays' | 'stickers' | 'home' | 'learning') => {
     switch (key) {
       case 'home':
         if (lang === 'fi') return 'ETUSIVU';
@@ -39,6 +39,10 @@ export default function Header({
         if (lang === 'fi') return 'ESSEET & TARINAT';
         if (lang === 'en') return 'ESSAYS';
         return 'エッセイ・文集';
+      case 'learning':
+        if (lang === 'fi') return 'OPPIMINEN';
+        if (lang === 'en') return 'LEARNING';
+        return '学習リソース';
       case 'stickers':
         if (lang === 'fi') return 'LINE-TARRAT';
         if (lang === 'en') return 'STICKERS';
@@ -186,6 +190,18 @@ export default function Header({
           >
             <BookOpen className="w-3.5 h-3.5" />
             <span>{getNavLabel('essays')}</span>
+          </button>
+
+          <button 
+            onClick={() => handleNav('/learning')}
+            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1 ${
+              currentPath === '/learning' 
+                ? (isDark ? 'text-amber-400 font-bold border-b-2 border-amber-500' : 'text-neutral-950 font-bold border-b-2 border-neutral-900')
+                : (isDark ? 'hover:text-amber-300' : 'hover:text-neutral-950')
+            }`}
+          >
+            <GraduationCap className="w-3.5 h-3.5" />
+            <span>{getNavLabel('learning')}</span>
           </button>
 
           {/* External Links */}
@@ -353,6 +369,18 @@ export default function Header({
           >
             <BookOpen className="w-4 h-4" />
             <span>{getNavLabel('essays')}</span>
+          </button>
+
+          <button 
+            onClick={() => handleNav('/learning')}
+            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 ${
+              currentPath === '/learning' 
+                ? (isDark ? 'bg-amber-950/40 text-amber-300 font-bold border border-amber-500/30' : 'bg-neutral-200 text-neutral-950 font-bold') 
+                : (isDark ? 'hover:bg-neutral-800/60' : 'hover:bg-neutral-100')
+            }`}
+          >
+            <GraduationCap className="w-4 h-4" />
+            <span>{getNavLabel('learning')}</span>
           </button>
 
           <a 
