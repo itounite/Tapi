@@ -535,10 +535,10 @@ export default function App() {
                       isDark ? 'text-neutral-300' : 'text-neutral-600'
                     }`}>
                       {lang === 'fi'
-                        ? 'Koodaus (Scratch, Code.org, Alice, Tynker, Kodable), lukutaito (StoryWeaver, ReadTheory, Worldreader) sekä Khan Academy (matematiikka, englanti ja tiede).'
+                        ? 'Koodaus (Scratch, Code.org, Alice), lukutaito (StoryWeaver, ReadTheory), matematiikka ja luonnontieteet (Khan Academy, MathGames, LibreTexts, PhET).'
                         : lang === 'en' 
-                        ? 'Interactive resources for coding (Scratch, Code.org, Alice, Tynker, Kodable), reading (StoryWeaver, ReadTheory, Worldreader), and Khan Academy (Maths, English & Science).' 
-                        : 'Code.org、Scratch、Alice 3D、Tynker、Kodable（プログラミング）、StoryWeaver、ReadTheory、Worldreader（読書・英語読解）、Khan Academy（算数・数学・英語・理科）などの厳選集。'}
+                        ? 'Interactive resources for coding (Scratch, Code.org, Alice, Tynker), reading (StoryWeaver, ReadTheory), and STEM (Khan Academy, MathGames, LibreTexts, PhET).' 
+                        : 'プログラミング（Code.org, Scratch, Alice）、読解（StoryWeaver, ReadTheory）、算数・数学・理科（Khan Academy, MathGames, LibreTexts, PhET）などの厳選集。'}
                     </p>
                   </div>
                 </button>
