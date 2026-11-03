@@ -28,39 +28,28 @@ import { trackPageView } from './utils/visitTracker';
 import heroBanner from "./assets/images/tapioka_find_king_artwork.svg";
 
 export default function App() {
-  // Default language is Japanese ('ja') for Tapi Life core identity
+  // Default language is ALWAYS Japanese ('ja') on every page open and refresh
   const [lang, setLang] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
+      // Clear any stored language locks so new sessions and page opens always default to Japanese
       try {
-        // 1. Check explicit URL query param (?lang=ja|en|fi)
+        localStorage.removeItem('tapi_lang');
+        sessionStorage.removeItem('tapi_user_chosen_lang');
+
+        // Check if an explicit query parameter was provided (e.g. ?lang=en)
         const params = new URLSearchParams(window.location.search);
         const urlLang = params.get('lang');
         if (urlLang === 'ja' || urlLang === 'en' || urlLang === 'fi') {
           return urlLang;
         }
       } catch {}
-
-      // 2. Check if user explicitly chose a language during this active session
-      const sessionChoice = sessionStorage.getItem('tapi_user_chosen_lang');
-      if (sessionChoice === 'en' || sessionChoice === 'fi' || sessionChoice === 'ja') {
-        return sessionChoice;
-      }
-
-      // Clear any stale cached language that was defaulting to English
-      try {
-        localStorage.removeItem('tapi_lang');
-      } catch {}
     }
-    // Default strictly to Japanese
+    // Always default strictly to Japanese
     return 'ja';
   });
 
   const handleLanguageChange = (newLang: Language) => {
     setLang(newLang);
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('tapi_user_chosen_lang', newLang);
-      localStorage.setItem('tapi_lang', newLang);
-    }
   };
 
   // Default theme is 'dark' with orange pumpkin as requested!
