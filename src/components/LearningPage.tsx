@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Language, ThemeMode } from '../types';
 import { LEARNING_RESOURCES, LearningResource } from '../data/learningResources';
+import Bookshelf from './Bookshelf';
 
 interface LearningPageProps {
   lang: Language;
@@ -162,6 +163,36 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
             isDark ? 'text-neutral-300' : 'text-neutral-600'
           }`}>
             {t.heroSubtitle}
+          </p>
+        </div>
+
+        {/* Curated Bookshelf (Placed above open learning platforms) */}
+        <Bookshelf lang={lang} theme={theme} />
+
+        {/* Open Learning Platforms Section Header */}
+        <div className="pt-8 border-t border-neutral-800/40 text-center space-y-2 max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full border text-[11px] font-mono tracking-widest uppercase"
+            style={{
+              borderColor: isDark ? 'rgba(245, 158, 11, 0.4)' : 'rgba(217, 119, 6, 0.3)',
+              backgroundColor: isDark ? 'rgba(245, 158, 11, 0.1)' : 'rgba(254, 243, 199, 0.6)',
+              color: isDark ? '#FCD34D' : '#92400E'
+            }}
+          >
+            <Compass className="w-3.5 h-3.5" />
+            <span>
+              {lang === 'fi' 
+                ? 'Avoimet ja vuorovaikutteiset oppimisalustat' 
+                : lang === 'en' 
+                ? 'Curated Open Learning Platforms' 
+                : '厳選オープン学習プラットフォーム'}
+            </span>
+          </div>
+          <p className={`text-xs sm:text-sm font-serif ${isDark ? 'text-neutral-400' : 'text-neutral-600'}`}>
+            {lang === 'fi'
+              ? 'Koodaus, lukutaito, matematiikka ja luonnontieteet'
+              : lang === 'en'
+              ? 'Explore free and open interactive platforms for coding, reading, maths, and sciences'
+              : 'プログラミング、英語読解、算数・数学、理科の無料・オープン学習サイト'}
           </p>
         </div>
 
