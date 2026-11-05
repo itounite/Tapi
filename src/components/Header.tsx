@@ -254,22 +254,26 @@ export default function Header({
             </button>
           )}
 
-          {/* Theme Toggle: Dark with Orange Pumpkin default <-> Light Mode */}
+          {/* Theme Toggle: Light Mode default <-> Halloween Dark Mode */}
           <button
             type="button"
             onClick={onToggleTheme}
             className={`flex items-center justify-center w-8 h-8 rounded-lg border text-xs transition-all cursor-pointer ${
               isDark
                 ? 'border-amber-500/50 bg-[#1e182a] text-amber-300 hover:bg-[#282138] shadow-[0_0_10px_rgba(255,140,0,0.25)]'
-                : 'border-neutral-300/80 bg-neutral-100/90 text-amber-600 hover:bg-neutral-200/60'
+                : 'border-amber-300/80 bg-amber-50/90 text-amber-700 hover:bg-amber-100/90 hover:border-amber-400 shadow-xs'
             }`}
-            title={isDark ? "Switch to Light Mode" : "Switch to Dark Pumpkin Mode"}
-            aria-label="Toggle dark / light mode"
+            title={
+              isDark 
+                ? (lang === 'fi' ? 'Vaihda vaaleaan tilaan (☀️)' : lang === 'en' ? 'Switch to Light Mode (☀️)' : 'ライトモードに切り替え (☀️)')
+                : (lang === 'fi' ? 'Vaihda Halloween-pimeään tilaan (🎃)' : lang === 'en' ? 'Switch to Halloween Dark Mode (🎃)' : 'ハロウィン・ダークモードに切り替え (🎃)')
+            }
+            aria-label={isDark ? "Switch to Light Mode" : "Switch to Halloween Dark Mode"}
           >
             {isDark ? (
-              <span className="text-sm">🎃</span>
+              <Sun className="w-4 h-4 text-amber-300" />
             ) : (
-              <Sun className="w-4 h-4 text-amber-600" />
+              <span className="text-sm select-none filter drop-shadow-[0_0_3px_rgba(255,140,0,0.4)]">🎃</span>
             )}
           </button>
 
@@ -406,6 +410,34 @@ export default function Header({
             <Instagram className="w-4 h-4" />
             <span>INSTAGRAM (@tapitaka_119)</span>
           </a>
+
+          {/* Mobile Theme Toggle Button */}
+          <div className="pt-2 border-t border-neutral-300/40 dark:border-neutral-800/60">
+            <button
+              type="button"
+              onClick={() => {
+                onToggleTheme();
+                setMobileMenuOpen(false);
+              }}
+              className={`w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-colors cursor-pointer ${
+                isDark 
+                  ? 'bg-amber-950/40 text-amber-300 border border-amber-500/30 hover:bg-amber-900/40' 
+                  : 'bg-amber-50/90 text-amber-900 border border-amber-300 hover:bg-amber-100'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                <span className="text-base select-none">{isDark ? '☀️' : '🎃'}</span>
+                <span className="font-medium">
+                  {isDark
+                    ? (lang === 'fi' ? 'Vaihda vaaleaan tilaan' : lang === 'en' ? 'Switch to Light Mode' : 'ライトモードに切り替え')
+                    : (lang === 'fi' ? 'Halloween-pimeä tila' : lang === 'en' ? 'Halloween Dark Mode' : 'ハロウィン・ダークモード')}
+                </span>
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20">
+                {isDark ? '☀️ Light' : '🎃 Halloween'}
+              </span>
+            </button>
+          </div>
         </div>
       )}
     </header>

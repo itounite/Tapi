@@ -52,14 +52,41 @@ export default function App() {
     setLang(newLang);
   };
 
-  // Default theme is 'dark' with orange pumpkin as requested!
+  // Default theme is 'light' by default, and user can switch to Halloween dark color
   const [theme, setTheme] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('tapi_theme');
-      if (saved === 'dark' || saved === 'light') return saved;
+      try {
+        // Check if an explicit query parameter was provided (e.g. ?theme=dark)
+        const params = new URLSearchParams(window.location.search);
+        const urlTheme = params.get('theme');
+        if (urlTheme === 'dark' || urlTheme === 'light') {
+          return urlTheme;
+        }
+
+        // Check if user explicitly chose a theme during this session
+        const sessionChoice = sessionStorage.getItem('tapi_user_chosen_theme');
+        if (sessionChoice === 'dark' || sessionChoice === 'light') {
+          return sessionChoice;
+        }
+
+        // Clear legacy dark default so the site defaults to light
+        localStorage.removeItem('tapi_theme');
+      } catch {}
     }
-    return 'dark'; // Dark mode default
+    // Default strictly to Light mode
+    return 'light';
   });
+
+  const toggleTheme = () => {
+    setTheme(prev => {
+      const nextTheme = prev === 'dark' ? 'light' : 'dark';
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('tapi_user_chosen_theme', nextTheme);
+        localStorage.setItem('tapi_theme', nextTheme);
+      }
+      return nextTheme;
+    });
+  };
 
   // Opening Katana Pumpkin Slash Intro Gatekeeper
   const [showSlashIntro, setShowSlashIntro] = useState<boolean>(() => {
@@ -79,10 +106,6 @@ export default function App() {
 
   const handleReplaySlash = () => {
     setShowSlashIntro(true);
-  };
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
