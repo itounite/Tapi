@@ -22,6 +22,7 @@ import {
 import { Language, ThemeMode } from '../types';
 import { LEARNING_RESOURCES, LearningResource } from '../data/learningResources';
 import Bookshelf from './Bookshelf';
+import RaspberryPiSection from './RaspberryPiSection';
 
 interface LearningPageProps {
   lang: Language;
@@ -475,6 +476,9 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
             </button>
           </div>
         )}
+
+        {/* Full Separate Section on Raspberry Pi (Placed after the Curation Section) */}
+        <RaspberryPiSection lang={lang} theme={theme} />
 
         {/* Bottom Navigation Prompt */}
         <div className={`p-6 sm:p-8 rounded-2xl border text-center max-w-2xl mx-auto space-y-4 ${
