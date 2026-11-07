@@ -164,49 +164,71 @@ export default function VideoStorySection({ lang, theme = 'light' }: VideoStoryS
                   : 'bg-white border-neutral-200/90 hover:border-amber-300 hover:shadow-lg'
               }`}
             >
-              {/* Video Player Frame */}
-              <div className="relative aspect-video w-full bg-black overflow-hidden border-b border-neutral-800">
-                {isPlaying ? (
-                  <iframe
-                    src={youtubeEmbedUrl}
-                    title={localizedTitle}
-                    className="w-full h-full border-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
+              {/* Media Frame: Photo if customImage provided, else YouTube Video Player */}
+              {story.customImage ? (
+                <div className="relative aspect-[16/10] sm:aspect-video w-full bg-[#ebe4d7] dark:bg-[#161311] overflow-hidden border-b border-neutral-300 dark:border-neutral-800 flex items-center justify-center group/photo">
+                  <img
+                    src={story.customImage}
+                    alt={localizedTitle}
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover/photo:scale-105"
+                    loading="lazy"
                   />
-                ) : (
-                  <div className="relative w-full h-full group/video cursor-pointer" onClick={() => setActivePlayId(story.id)}>
-                    {/* YouTube High-Res Thumbnail */}
-                    <img
-                      src={`https://img.youtube.com/vi/${story.youtubeId}/hqdefault.jpg`}
-                      alt={localizedTitle}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover/video:scale-105 opacity-90"
-                      loading="lazy"
+                  {/* Subtle top badge */}
+                  <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-[10px] font-mono text-amber-300 border border-amber-400/30 flex items-center gap-1 shadow-xs">
+                    <Sparkles className="w-3 h-3 text-amber-400" />
+                    <span>{lang === 'fi' ? 'Kuva & Opetus' : lang === 'en' ? 'Parable Artwork' : '禅画・物語挿絵'}</span>
+                  </div>
+                  {/* Subtle caption overlay */}
+                  <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[11px] font-mono text-neutral-800 dark:text-neutral-200">
+                    <span className="px-2 py-0.5 rounded bg-white/85 dark:bg-black/75 backdrop-blur-xs border border-black/10 dark:border-white/10 font-bold">
+                      「そうであるか」· "Is that so?"
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative aspect-[16/10] sm:aspect-video w-full bg-black overflow-hidden border-b border-neutral-800">
+                  {isPlaying ? (
+                    <iframe
+                      src={youtubeEmbedUrl}
+                      title={localizedTitle}
+                      className="w-full h-full border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
                     />
+                  ) : (
+                    <div className="relative w-full h-full group/video cursor-pointer" onClick={() => setActivePlayId(story.id)}>
+                      {/* YouTube High-Res Thumbnail */}
+                      <img
+                        src={`https://img.youtube.com/vi/${story.youtubeId}/hqdefault.jpg`}
+                        alt={localizedTitle}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover/video:scale-105 opacity-90"
+                        loading="lazy"
+                      />
 
-                    {/* Gradient Scrim */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
+                      {/* Gradient Scrim */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
 
-                    {/* Centered Play Button */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-14 h-14 rounded-full bg-rose-600/90 group-hover/video:bg-rose-500 text-white flex items-center justify-center shadow-lg transition-transform duration-300 group-hover/video:scale-110">
-                        <Play className="w-6 h-6 fill-white ml-0.5" />
+                      {/* Centered Play Button */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-14 h-14 rounded-full bg-rose-600/90 group-hover/video:bg-rose-500 text-white flex items-center justify-center shadow-lg transition-transform duration-300 group-hover/video:scale-110">
+                          <Play className="w-6 h-6 fill-white ml-0.5" />
+                        </div>
+                      </div>
+
+                      {/* Video Duration / Type Badge */}
+                      <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-white/90">
+                        <span className="px-2 py-0.5 rounded bg-black/70 backdrop-blur-xs font-semibold">
+                          {story.isShort ? 'YouTube Shorts' : 'YouTube Video'}
+                        </span>
+                        <span className="flex items-center gap-1 hover:text-amber-300">
+                          <span>{t.playVideo}</span>
+                          <Play className="w-3 h-3 fill-current" />
+                        </span>
                       </div>
                     </div>
-
-                    {/* Video Duration / Type Badge */}
-                    <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-white/90">
-                      <span className="px-2 py-0.5 rounded bg-black/70 backdrop-blur-xs font-semibold">
-                        {story.isShort ? 'YouTube Shorts' : 'YouTube Video'}
-                      </span>
-                      <span className="flex items-center gap-1 hover:text-amber-300">
-                        <span>{t.playVideo}</span>
-                        <Play className="w-3 h-3 fill-current" />
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
 
               {/* Story Content & Synopsis */}
               <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
@@ -267,11 +289,15 @@ export default function VideoStorySection({ lang, theme = 'light' }: VideoStoryS
                     rel="noreferrer noopener"
                     className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-rose-500 hover:text-rose-400 transition-colors"
                   >
-                    <span>{t.watchOnYoutube}</span>
+                    <span>
+                      {story.customImage
+                        ? (lang === 'fi' ? 'Katso YouTube Shorts' : lang === 'en' ? 'Watch YouTube Short' : 'YouTube Shorts で見る')
+                        : t.watchOnYoutube}
+                    </span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
 
-                  {!isPlaying && (
+                  {!story.customImage && !isPlaying && (
                     <button
                       type="button"
                       onClick={() => setActivePlayId(story.id)}

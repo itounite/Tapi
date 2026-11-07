@@ -2,6 +2,7 @@ export interface VideoStoryItem {
   id: string;
   youtubeId: string;
   youtubeUrl: string;
+  customImage?: string;
   isShort?: boolean;
   titleJa: string;
   titleEn: string;
@@ -25,6 +26,7 @@ export const VIDEO_STORIES: VideoStoryItem[] = [
     id: 'hakuin-monk-baby',
     youtubeId: 'sucZmx4MTUA',
     youtubeUrl: 'https://www.youtube.com/shorts/sucZmx4MTUA',
+    customImage: '/assets/aistudio/image_963448d7.png',
     isShort: true,
     titleJa: '赤ん坊を育てた禅僧・白隠慧鶴「そうであるか」',
     titleEn: "The Monk Who Raised a Baby That Wasn't His",
@@ -35,9 +37,9 @@ export const VIDEO_STORIES: VideoStoryItem[] = [
     badgeJa: '禅の寓話 · 受容と非執着',
     badgeEn: 'Zen Parable · Radical Acceptance',
     badgeFi: 'Zen-vertaus · Takertumattomuus',
-    synopsisJa: '身に覚えのない赤ん坊の父親だと名指しされ、町中から激しい非難を浴びながらも、ただ一言「そうであるか」と静かに引き取り、愛情を注いで育て上げた白隠禅師。真実が明かされた時も動じることなく「そうであるか」と子を返したという。執着の手放し、大いなる受容（ラディカル・アクセプタンス）、そして自我（エゴ）の脱却を説く不朽の教え。',
-    synopsisEn: 'A Japanese Zen master, Hakuin Ekaku (1686–1769) who revitalized the Rinzai school of Zen. The famous "Is that so?" parable is attributed to him and illustrates the Zen concepts of non-attachment, radical acceptance, and shedding the ego.',
-    synopsisFi: 'Japanilainen zen-mestari Hakuin Ekaku (1686–1769), joka elvytti Rinzai-zenin. Kuuluisa ”Niinkö se on?” -vertaus liittyy häneen ja ilmentää takertumattomuuden, radikaalin hyväksymisen ja egon häivyttämisen syvää viisautta.',
+    synopsisJa: '約300年前の日本、富士山のふもとの村に尊敬される禅僧・白隠が暮らしていました。ある日、店の娘が身ごもり、真実を言えずに白隠が父親だと告げました。激怒した父親が山を登って問いただすと、白隠は弁解もせずただ「そうであるか」とだけ答えました。赤ん坊が生まれると寺に預けられ、評判が地に落ちる中、白隠は近所に乳を乞い、慈しみ育てました。一年後、娘は本当の父親は魚屋の若者だと告白。店主は深く詫びて赤ん坊を返してほしいと頼むと、白隠はただ「そうであるか」と優しく子を手渡し、何事もなかったかのように掃除へ戻りました。',
+    synopsisEn: 'In Japan, almost 300 years ago, a respected monk named Hakuin lived in a village at the foot of Mount Fuji. When a shopkeeper\'s daughter was going to have a baby and was afraid to tell the truth, she named Hakuin as the father. The angry shopkeeper dragged her up the mountain, and Hakuin said only, "Is that so?"—he did not argue or explain. When the baby was born, the family handed it to him, and he became the baby\'s caretaker, begging neighbors for milk and rocking the child to sleep while his reputation melted away. A year later, the girl finally told the truth—the father was a young man from the fish market—and the shopkeeper begged forgiveness and asked for the baby back. Hakuin simply said, "Is that so?", handed the baby over, and went back to sweeping.',
+    synopsisFi: 'Noin 300 vuotta sitten Japanissa, Fuji-vuoren juurella asui arvostettu zen-munkki Hakuin. Kun kauppiaan tytär tuli raskaaksi ja pelkäsi kertoa totuutta, hän nimesi Hakuinin lapsen isäksi. Vihainen kauppias raahasi tyttärensä vuorelle, johon Hakuin sanoi vain rauhallisesti: ”Niinkö se on?” – väittelemättä tai selittelemättä. Kun lapsi syntyi, perhe jätti sen Hakuinille. Hänestä tuli lapsen hellä hoitaja, joka pyysi naapureilta maitoa ja tuuditti lasta uneen maineensa murentuessa. Vuotta myöhemmin tyttö paljasti totuuden – oikea isä oli kalatorin nuorukainen. Kauppias pyysi anteeksi ja aneli lasta takaisin. Hakuin totesi vain: ”Niinkö se on?”, ojensi lapsen takaisin ja jatkoi lakaisemistaan.',
     coreMoralJa: '評価や誤解に心を乱されず、目の前の命に慈悲を注ぐ。',
     coreMoralEn: 'Non-attachment, radical acceptance, and acting from selfless kindness.',
     coreMoralFi: 'Takertumattomuus, syvä hyväksyntä ja pyyteetön lempeys.'
