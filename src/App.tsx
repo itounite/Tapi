@@ -22,6 +22,7 @@ import AboutPage from './components/AboutPage';
 import LearningPage from './components/LearningPage';
 import HalloweenAtmosphere from './components/HalloweenAtmosphere';
 import KatanaPumpkinIntro from './components/KatanaPumpkinIntro';
+import DailyQuoteBanner from './components/DailyQuoteBanner';
 import { trackPageView } from './utils/visitTracker';
 
 // Import path of hero artwork asset
@@ -360,6 +361,9 @@ export default function App() {
         onReplaySlash={handleReplaySlash}
       />
 
+      {/* Daily Inspirational Quote & Teacher Banner (Prominently placed below the Header) */}
+      <DailyQuoteBanner lang={lang} theme={theme} />
+
       {/* Main View Router Container */}
       <main className="flex-1">
         {currentPath === '/about' ? (
@@ -659,7 +663,7 @@ export default function App() {
               </div>
 
               {/* Grid display for characters with thin borders */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
                 {CHARACTERS.map((char) => (
                   <motion.div
                     key={char.id}
@@ -752,7 +756,7 @@ export default function App() {
                       initial={{ scale: 0.98, y: 10 }}
                       animate={{ scale: 1, y: 0 }}
                       exit={{ scale: 0.98, y: 10 }}
-                      className={`border rounded-xl max-w-md w-full p-6 relative overflow-hidden transition-colors ${
+                      className={`border rounded-2xl max-w-md w-full max-h-[90dvh] overflow-y-auto p-5 sm:p-6 relative transition-colors touch-momentum ${
                         isDark 
                           ? 'bg-[#181622] border-neutral-750 text-neutral-100 shadow-[0_0_35px_rgba(0,0,0,0.8)]' 
                           : 'bg-white border-neutral-300 text-neutral-900 shadow-lg'
@@ -761,7 +765,7 @@ export default function App() {
                       {/* Close Button */}
                       <button 
                         onClick={() => setSelectedCharacter(null)}
-                        className={`absolute top-5 right-5 p-1.5 rounded-full transition cursor-pointer ${
+                        className={`absolute top-4 right-4 p-2 min-w-[38px] min-h-[38px] flex items-center justify-center rounded-full transition cursor-pointer touch-manipulation active:scale-95 ${
                           isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800/60' : 'text-neutral-500 hover:bg-neutral-100'
                         }`}
                         aria-label="Close dialog"

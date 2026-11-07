@@ -56,12 +56,14 @@ export default function Header({
   };
 
   return (
-    <header className={`border-b sticky top-0 z-40 px-3 sm:px-8 py-2.5 sm:py-3 transition-colors backdrop-blur-md ${
+    <header 
+      style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 0.625rem)' }}
+      className={`border-b sticky top-0 z-40 px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 transition-colors backdrop-blur-md ${
       isDark 
         ? 'bg-[#0e0d16]/95 border-neutral-800/80 text-neutral-100' 
         : 'bg-[#FBF9F6]/95 border-neutral-200/90 text-neutral-900'
     }`}>
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <div className="max-w-6xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
         
         {/* Brand Logo & Title (Top Left) */}
         <div 
@@ -152,97 +154,97 @@ export default function Header({
           </div>
         </div>
 
-        {/* Desktop Navigation Links */}
-        <nav className={`hidden md:flex items-center gap-5 lg:gap-6 text-xs font-mono tracking-wider ${
+        {/* Desktop & Tablet Navigation Links */}
+        <nav className={`hidden md:flex items-center gap-3 lg:gap-5 xl:gap-6 text-[11px] lg:text-xs font-mono tracking-wider ${
           isDark ? 'text-neutral-300' : 'text-neutral-600'
         }`}>
           <button 
             onClick={() => handleNav('/')}
-            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1 ${
+            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 whitespace-nowrap ${
               currentPath === '/' 
                 ? (isDark ? 'text-amber-400 font-bold border-b-2 border-amber-500' : 'text-neutral-950 font-bold border-b-2 border-neutral-900')
                 : (isDark ? 'hover:text-amber-300' : 'hover:text-neutral-950')
             }`}
           >
-            <Home className="w-3.5 h-3.5" />
+            <Home className="w-3.5 h-3.5 shrink-0" />
             <span>{getNavLabel('home')}</span>
           </button>
 
           <button 
             onClick={() => handleNav('/about')}
-            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1 ${
+            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 whitespace-nowrap ${
               currentPath === '/about' 
                 ? (isDark ? 'text-amber-400 font-bold border-b-2 border-amber-500' : 'text-neutral-950 font-bold border-b-2 border-neutral-900')
                 : (isDark ? 'hover:text-amber-300' : 'hover:text-neutral-950')
             }`}
           >
-            <User className="w-3.5 h-3.5" />
+            <User className="w-3.5 h-3.5 shrink-0" />
             <span>{getNavLabel('about')}</span>
           </button>
 
           <button 
             onClick={() => handleNav('/essays')}
-            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1 ${
+            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 whitespace-nowrap ${
               currentPath === '/essays' 
                 ? (isDark ? 'text-amber-400 font-bold border-b-2 border-amber-500' : 'text-neutral-950 font-bold border-b-2 border-neutral-900')
                 : (isDark ? 'hover:text-amber-300' : 'hover:text-neutral-950')
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5" />
+            <BookOpen className="w-3.5 h-3.5 shrink-0" />
             <span>{getNavLabel('essays')}</span>
           </button>
 
           <button 
             onClick={() => handleNav('/learning')}
-            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1 ${
+            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 whitespace-nowrap ${
               currentPath === '/learning' 
                 ? (isDark ? 'text-amber-400 font-bold border-b-2 border-amber-500' : 'text-neutral-950 font-bold border-b-2 border-neutral-900')
                 : (isDark ? 'hover:text-amber-300' : 'hover:text-neutral-950')
             }`}
           >
-            <GraduationCap className="w-3.5 h-3.5" />
+            <GraduationCap className="w-3.5 h-3.5 shrink-0" />
             <span>{getNavLabel('learning')}</span>
           </button>
 
           {/* External Links */}
-          <div className="flex items-center gap-3 pl-1 border-l border-neutral-300/60 dark:border-neutral-800">
+          <div className="flex items-center gap-2 lg:gap-3 pl-1 border-l border-neutral-300/60 dark:border-neutral-800">
             <a 
               href="https://store.line.me/stickershop/author/4712842/en" 
               target="_blank" 
               rel="noreferrer" 
-              className={`transition-colors flex items-center gap-1 font-medium py-1 ${
+              className={`transition-colors flex items-center gap-1 font-medium py-1.5 whitespace-nowrap ${
                 isDark ? 'hover:text-amber-300 text-neutral-400' : 'hover:text-neutral-950 text-neutral-500'
               }`}
               title="Official LINE Stickers (公式スタンプ)"
             >
-              <MessageSquare className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline">{getNavLabel('stickers')}</span>
+              <MessageSquare className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden xl:inline">{getNavLabel('stickers')}</span>
             </a>
 
             <a 
               href="https://www.instagram.com/tapitaka_119/" 
               target="_blank" 
               rel="noreferrer" 
-              className={`transition-colors flex items-center gap-1 font-medium py-1 ${
+              className={`transition-colors flex items-center gap-1 font-medium py-1.5 whitespace-nowrap ${
                 isDark ? 'hover:text-amber-300 text-neutral-400' : 'hover:text-neutral-950 text-neutral-500'
               }`}
               title="Instagram (@tapitaka_119)"
             >
-              <Instagram className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline">INSTAGRAM</span>
+              <Instagram className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden xl:inline">INSTAGRAM</span>
             </a>
           </div>
         </nav>
 
         {/* Right Section: Streamlined Action Controls (Katana, Theme Toggle, Language Switcher) */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           
           {/* Katana Pumpkin Slash Trigger Icon Button */}
           {onReplaySlash && (
             <button
               type="button"
               onClick={onReplaySlash}
-              className={`flex items-center justify-center w-8 h-8 rounded-lg border text-xs transition-all cursor-pointer ${
+              className={`flex items-center justify-center w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-lg border text-xs transition-all cursor-pointer active:scale-95 touch-manipulation ${
                 isDark 
                   ? 'border-amber-500/40 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 shadow-[0_0_8px_rgba(255,140,0,0.2)]' 
                   : 'border-amber-300 bg-amber-50/80 text-amber-800 hover:bg-amber-100'
@@ -258,7 +260,7 @@ export default function Header({
           <button
             type="button"
             onClick={onToggleTheme}
-            className={`flex items-center justify-center w-8 h-8 rounded-lg border text-xs transition-all cursor-pointer ${
+            className={`flex items-center justify-center w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-lg border text-xs transition-all cursor-pointer active:scale-95 touch-manipulation ${
               isDark
                 ? 'border-amber-500/50 bg-[#1e182a] text-amber-300 hover:bg-[#282138] shadow-[0_0_10px_rgba(255,140,0,0.25)]'
                 : 'border-amber-300/80 bg-amber-50/90 text-amber-700 hover:bg-amber-100/90 hover:border-amber-400 shadow-xs'
@@ -278,13 +280,13 @@ export default function Header({
           </button>
 
           {/* 3-Way Minimalist Language Selector */}
-          <div className={`inline-flex items-center p-0.5 rounded-lg border text-xs font-mono ${
+          <div className={`inline-flex items-center p-0.5 rounded-lg border text-xs font-mono shrink-0 ${
             isDark ? 'border-neutral-800 bg-neutral-900/90' : 'border-neutral-200 bg-neutral-100/90'
           }`}>
             <button
               type="button"
               onClick={() => onLanguageChange('ja')}
-              className={`px-2 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+              className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer touch-manipulation ${
                 lang === 'ja'
                   ? (isDark ? 'bg-amber-500/25 text-amber-300 font-bold' : 'bg-white text-neutral-900 shadow-xs font-bold')
                   : (isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-500 hover:text-neutral-900')
@@ -296,7 +298,7 @@ export default function Header({
             <button
               type="button"
               onClick={() => onLanguageChange('en')}
-              className={`px-2 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+              className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer touch-manipulation ${
                 lang === 'en'
                   ? (isDark ? 'bg-amber-500/25 text-amber-300 font-bold' : 'bg-white text-neutral-900 shadow-xs font-bold')
                   : (isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-500 hover:text-neutral-900')
@@ -308,7 +310,7 @@ export default function Header({
             <button
               type="button"
               onClick={() => onLanguageChange('fi')}
-              className={`px-2 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+              className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer touch-manipulation ${
                 lang === 'fi'
                   ? (isDark ? 'bg-amber-500/25 text-amber-300 font-bold' : 'bg-white text-neutral-900 shadow-xs font-bold')
                   : (isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-500 hover:text-neutral-900')
@@ -323,8 +325,8 @@ export default function Header({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`md:hidden p-1.5 rounded-md transition-colors cursor-pointer ${
-              isDark ? 'text-neutral-300 hover:text-white hover:bg-neutral-800/60' : 'text-neutral-700 hover:text-neutral-950 hover:bg-neutral-200/60'
+            className={`md:hidden p-2 rounded-md transition-colors cursor-pointer min-w-[38px] min-h-[38px] flex items-center justify-center touch-manipulation ${
+              isDark ? 'text-neutral-300 hover:text-white hover:bg-neutral-800/60 active:bg-neutral-800' : 'text-neutral-700 hover:text-neutral-950 hover:bg-neutral-200/60 active:bg-neutral-200'
             }`}
             aria-label="Toggle navigation menu"
           >
@@ -334,56 +336,59 @@ export default function Header({
 
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer Menu with Safe Area Support */}
       {mobileMenuOpen && (
-        <div className={`md:hidden mt-3 pt-3 border-t pb-2 space-y-2 font-mono text-xs ${
-          isDark ? 'border-neutral-800 text-neutral-200' : 'border-neutral-200 text-neutral-700'
-        }`}>
+        <div 
+          style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0.75rem)' }}
+          className={`md:hidden mt-3 pt-3 border-t space-y-1 font-mono text-xs animate-in slide-in-from-top-2 duration-150 ${
+            isDark ? 'border-neutral-800 text-neutral-200' : 'border-neutral-200 text-neutral-700'
+          }`}
+        >
           <button 
             onClick={() => handleNav('/')}
-            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 ${
+            className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
               currentPath === '/' 
                 ? (isDark ? 'bg-amber-950/40 text-amber-300 font-bold border border-amber-500/30' : 'bg-neutral-200 text-neutral-950 font-bold') 
-                : (isDark ? 'hover:bg-neutral-800/60' : 'hover:bg-neutral-100')
+                : (isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800' : 'hover:bg-neutral-100 active:bg-neutral-200')
             }`}
           >
-            <Home className="w-4 h-4" />
+            <Home className="w-4 h-4 shrink-0" />
             <span>{getNavLabel('home')}</span>
           </button>
 
           <button 
             onClick={() => handleNav('/about')}
-            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 ${
+            className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
               currentPath === '/about' 
                 ? (isDark ? 'bg-amber-950/40 text-amber-300 font-bold border border-amber-500/30' : 'bg-neutral-200 text-neutral-950 font-bold') 
-                : (isDark ? 'hover:bg-neutral-800/60' : 'hover:bg-neutral-100')
+                : (isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800' : 'hover:bg-neutral-100 active:bg-neutral-200')
             }`}
           >
-            <User className="w-4 h-4" />
+            <User className="w-4 h-4 shrink-0" />
             <span>{getNavLabel('about')}</span>
           </button>
 
           <button 
             onClick={() => handleNav('/essays')}
-            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 ${
+            className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
               currentPath === '/essays' 
                 ? (isDark ? 'bg-amber-950/40 text-amber-300 font-bold border border-amber-500/30' : 'bg-neutral-200 text-neutral-950 font-bold') 
-                : (isDark ? 'hover:bg-neutral-800/60' : 'hover:bg-neutral-100')
+                : (isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800' : 'hover:bg-neutral-100 active:bg-neutral-200')
             }`}
           >
-            <BookOpen className="w-4 h-4" />
+            <BookOpen className="w-4 h-4 shrink-0" />
             <span>{getNavLabel('essays')}</span>
           </button>
 
           <button 
             onClick={() => handleNav('/learning')}
-            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 ${
+            className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
               currentPath === '/learning' 
                 ? (isDark ? 'bg-amber-950/40 text-amber-300 font-bold border border-amber-500/30' : 'bg-neutral-200 text-neutral-950 font-bold') 
-                : (isDark ? 'hover:bg-neutral-800/60' : 'hover:bg-neutral-100')
+                : (isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800' : 'hover:bg-neutral-100 active:bg-neutral-200')
             }`}
           >
-            <GraduationCap className="w-4 h-4" />
+            <GraduationCap className="w-4 h-4 shrink-0" />
             <span>{getNavLabel('learning')}</span>
           </button>
 
@@ -391,11 +396,11 @@ export default function Header({
             href="https://store.line.me/stickershop/author/4712842/en" 
             target="_blank" 
             rel="noreferrer" 
-            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 ${
-              isDark ? 'hover:bg-neutral-800/60 text-neutral-300' : 'hover:bg-neutral-100 text-neutral-700'
+            className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
+              isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800 text-neutral-300' : 'hover:bg-neutral-100 active:bg-neutral-200 text-neutral-700'
             }`}
           >
-            <MessageSquare className="w-4 h-4" />
+            <MessageSquare className="w-4 h-4 shrink-0" />
             <span>{getNavLabel('stickers')}</span>
           </a>
 
@@ -403,11 +408,11 @@ export default function Header({
             href="https://www.instagram.com/tapitaka_119/" 
             target="_blank" 
             rel="noreferrer" 
-            className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 ${
-              isDark ? 'hover:bg-neutral-800/60 text-neutral-300' : 'hover:bg-neutral-100 text-neutral-700'
+            className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
+              isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800 text-neutral-300' : 'hover:bg-neutral-100 active:bg-neutral-200 text-neutral-700'
             }`}
           >
-            <Instagram className="w-4 h-4" />
+            <Instagram className="w-4 h-4 shrink-0" />
             <span>INSTAGRAM (@tapitaka_119)</span>
           </a>
 
@@ -419,7 +424,7 @@ export default function Header({
                 onToggleTheme();
                 setMobileMenuOpen(false);
               }}
-              className={`w-full text-left px-3 py-2 rounded-lg flex items-center justify-between transition-colors cursor-pointer ${
+              className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center justify-between min-h-[44px] transition-colors cursor-pointer touch-manipulation ${
                 isDark 
                   ? 'bg-amber-950/40 text-amber-300 border border-amber-500/30 hover:bg-amber-900/40' 
                   : 'bg-amber-50/90 text-amber-900 border border-amber-300 hover:bg-amber-100'

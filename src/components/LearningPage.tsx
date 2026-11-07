@@ -202,13 +202,13 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
             
             {/* Category Filter Pills */}
-            <div className={`flex flex-wrap items-center gap-1.5 p-1 rounded-xl border text-xs font-mono ${
+            <div className={`flex items-center gap-1.5 p-1 rounded-xl border text-xs font-mono overflow-x-auto no-scrollbar touch-momentum shrink-0 max-w-full ${
               isDark ? 'bg-[#14121e] border-neutral-800' : 'bg-neutral-100 border-neutral-200'
             }`}>
               <button
                 type="button"
                 onClick={() => setSelectedCategory('all')}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium ${
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium whitespace-nowrap min-h-[36px] flex items-center touch-manipulation active:scale-95 ${
                   selectedCategory === 'all'
                     ? (isDark ? 'bg-amber-500/25 text-amber-300 font-bold border border-amber-500/40' : 'bg-white text-neutral-900 shadow-xs font-bold')
                     : (isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-600 hover:text-neutral-900')
@@ -220,7 +220,7 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
               <button
                 type="button"
                 onClick={() => setSelectedCategory('coding')}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium flex items-center gap-1.5 whitespace-nowrap min-h-[36px] touch-manipulation active:scale-95 ${
                   selectedCategory === 'coding'
                     ? (isDark ? 'bg-amber-500/25 text-amber-300 font-bold border border-amber-500/40' : 'bg-white text-neutral-900 shadow-xs font-bold')
                     : (isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-600 hover:text-neutral-900')
@@ -233,7 +233,7 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
               <button
                 type="button"
                 onClick={() => setSelectedCategory('reading')}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium flex items-center gap-1.5 whitespace-nowrap min-h-[36px] touch-manipulation active:scale-95 ${
                   selectedCategory === 'reading'
                     ? (isDark ? 'bg-amber-500/25 text-amber-300 font-bold border border-amber-500/40' : 'bg-white text-neutral-900 shadow-xs font-bold')
                     : (isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-600 hover:text-neutral-900')
@@ -246,7 +246,7 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
               <button
                 type="button"
                 onClick={() => setSelectedCategory('stem')}
-                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer font-medium flex items-center gap-1.5 whitespace-nowrap min-h-[36px] touch-manipulation active:scale-95 ${
                   selectedCategory === 'stem'
                     ? (isDark ? 'bg-amber-500/25 text-amber-300 font-bold border border-amber-500/40' : 'bg-white text-neutral-900 shadow-xs font-bold')
                     : (isDark ? 'text-neutral-400 hover:text-neutral-200' : 'text-neutral-600 hover:text-neutral-900')

@@ -141,8 +141,8 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
         <div
           ref={scrollContainerRef}
           onScroll={checkScroll}
-          className="flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth pb-4 px-1 no-scrollbar snap-x snap-mandatory items-end"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          className="flex gap-3 sm:gap-5 overflow-x-auto scroll-smooth pb-4 px-1 no-scrollbar snap-x snap-mandatory items-end touch-pan-x touch-momentum"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
         >
           {CURATED_BOOKS.map((book) => {
             const localizedTitle = lang === 'fi' ? book.titleFi : lang === 'en' ? book.titleEn : book.titleJa;
@@ -152,7 +152,7 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
             return (
               <div
                 key={book.id}
-                className="w-[145px] sm:w-[160px] md:w-[172px] lg:w-[175px] shrink-0 snap-start group flex flex-col justify-end"
+                className="w-[135px] sm:w-[155px] md:w-[168px] lg:w-[175px] shrink-0 snap-start group flex flex-col justify-end select-none"
               >
                 {/* Book Card with 3D Depth & Shadow */}
                 <div 
@@ -242,21 +242,21 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
       {/* Book Detail Modal / Modal drawer on click */}
       {activeBook && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200"
           onClick={() => setActiveBook(null)}
         >
           <div 
-            className={`relative max-w-lg w-full rounded-2xl border p-6 sm:p-7 space-y-5 transition-all shadow-2xl ${
+            className={`relative max-w-lg w-full max-h-[90dvh] overflow-y-auto rounded-2xl border p-5 sm:p-7 space-y-4 sm:space-y-5 transition-all shadow-2xl ${
               isDark 
                 ? 'bg-[#181524] border-amber-500/30 text-[#F5F3EC]' 
                 : 'bg-white border-amber-200 text-[#2E2E2E]'
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex gap-4 items-start">
+            <div className="flex gap-3.5 sm:gap-4 items-start">
               {/* Cover Thumbnail */}
               <div 
-                className="w-24 sm:w-28 shrink-0 rounded-md overflow-hidden shadow-lg border border-white/10"
+                className="w-20 sm:w-28 shrink-0 rounded-md overflow-hidden shadow-lg border border-white/10"
                 style={{ aspectRatio: '2 / 3' }}
               >
                 <img
@@ -271,7 +271,7 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-sm bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">
                   {lang === 'fi' ? activeBook.badgeFi : lang === 'en' ? activeBook.badgeEn : activeBook.badgeJa}
                 </span>
-                <h3 className={`font-serif text-lg sm:text-xl font-bold leading-tight ${
+                <h3 className={`font-serif text-base sm:text-xl font-bold leading-tight ${
                   isDark ? 'text-neutral-100' : 'text-neutral-900'
                 }`}>
                   {lang === 'fi' ? activeBook.titleFi : lang === 'en' ? activeBook.titleEn : activeBook.titleJa}
@@ -283,7 +283,7 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
             </div>
 
             {/* Core Message / Lesson */}
-            <div className={`p-4 rounded-xl border space-y-2 ${
+            <div className={`p-3.5 sm:p-4 rounded-xl border space-y-2 ${
               isDark ? 'bg-[#12101b] border-neutral-800' : 'bg-amber-50/70 border-amber-200/60'
             }`}>
               <div className="flex items-center gap-2 text-xs font-mono font-medium text-amber-400">
@@ -307,7 +307,7 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
               <button
                 type="button"
                 onClick={() => setActiveBook(null)}
-                className={`px-4 py-2 rounded-xl text-xs font-mono transition-colors cursor-pointer border ${
+                className={`px-4 py-2.5 rounded-xl text-xs font-mono transition-colors cursor-pointer border min-h-[44px] flex items-center justify-center touch-manipulation active:scale-95 ${
                   isDark 
                     ? 'border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-neutral-300' 
                     : 'border-neutral-300 bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
@@ -319,7 +319,7 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
                 href={activeBook.goodreadsUrl}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all shadow-md hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all shadow-md hover:shadow-lg min-h-[44px] touch-manipulation active:scale-95"
               >
                 <span>{t.viewOnGoodreads}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
