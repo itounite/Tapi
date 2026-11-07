@@ -4,6 +4,7 @@ export interface VideoStoryItem {
   youtubeUrl: string;
   customImage?: string;
   isShort?: boolean;
+  hidden?: boolean;
   titleJa: string;
   titleEn: string;
   titleFi: string;
@@ -24,6 +25,7 @@ export interface VideoStoryItem {
 export const VIDEO_STORIES: VideoStoryItem[] = [
   {
     id: 'hakuin-monk-baby',
+    hidden: true, // Hidden for now as it may not be suitable for young kids
     youtubeId: 'sucZmx4MTUA',
     youtubeUrl: 'https://www.youtube.com/shorts/sucZmx4MTUA',
     customImage: '/assets/aistudio/image_963448d7.png',

@@ -64,6 +64,12 @@ export default function VideoStorySection({ lang, theme = 'light' }: VideoStoryS
     playVideo: lang === 'fi' ? 'Toista video' : lang === 'en' ? 'Play Video' : '動画を再生'
   };
 
+  const visibleStories = VIDEO_STORIES.filter((story) => !story.hidden);
+
+  if (visibleStories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="space-y-6 max-w-5xl mx-auto pt-8">
       {/* Header with Title and Scroll Controls */}
@@ -99,42 +105,44 @@ export default function VideoStorySection({ lang, theme = 'light' }: VideoStoryS
             </p>
           </div>
 
-          {/* Scroll Navigation Arrows */}
-          <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
-            <span className="text-[11px] font-mono text-neutral-400 hidden sm:inline-block mr-2">
-              {t.scrollHint}
-            </span>
-            <button
-              type="button"
-              onClick={() => scroll('left')}
-              disabled={!canScrollLeft}
-              aria-label="Scroll video stories left"
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95 touch-manipulation ${
-                canScrollLeft
-                  ? isDark 
-                    ? 'bg-amber-950/60 hover:bg-amber-900/80 border-amber-500/40 text-amber-300 shadow-sm' 
-                    : 'bg-white hover:bg-amber-50 border-neutral-300 text-neutral-800 shadow-sm'
-                  : 'opacity-30 cursor-not-allowed border-neutral-700 text-neutral-500'
-              }`}
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => scroll('right')}
-              disabled={!canScrollRight}
-              aria-label="Scroll video stories right"
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95 touch-manipulation ${
-                canScrollRight
-                  ? isDark 
-                    ? 'bg-amber-950/60 hover:bg-amber-900/80 border-amber-500/40 text-amber-300 shadow-sm' 
-                    : 'bg-white hover:bg-amber-50 border-neutral-300 text-neutral-800 shadow-sm'
-                  : 'opacity-30 cursor-not-allowed border-neutral-700 text-neutral-500'
-              }`}
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
+          {/* Scroll Navigation Arrows (visible when more than 1 story) */}
+          {visibleStories.length > 1 && (
+            <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
+              <span className="text-[11px] font-mono text-neutral-400 hidden sm:inline-block mr-2">
+                {t.scrollHint}
+              </span>
+              <button
+                type="button"
+                onClick={() => scroll('left')}
+                disabled={!canScrollLeft}
+                aria-label="Scroll video stories left"
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95 touch-manipulation ${
+                  canScrollLeft
+                    ? isDark 
+                      ? 'bg-amber-950/60 hover:bg-amber-900/80 border-amber-500/40 text-amber-300 shadow-sm' 
+                      : 'bg-white hover:bg-amber-50 border-neutral-300 text-neutral-800 shadow-sm'
+                    : 'opacity-30 cursor-not-allowed border-neutral-700 text-neutral-500'
+                }`}
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scroll('right')}
+                disabled={!canScrollRight}
+                aria-label="Scroll video stories right"
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border active:scale-95 touch-manipulation ${
+                  canScrollRight
+                    ? isDark 
+                      ? 'bg-amber-950/60 hover:bg-amber-900/80 border-amber-500/40 text-amber-300 shadow-sm' 
+                      : 'bg-white hover:bg-amber-50 border-neutral-300 text-neutral-800 shadow-sm'
+                    : 'opacity-30 cursor-not-allowed border-neutral-700 text-neutral-500'
+                }`}
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -142,10 +150,12 @@ export default function VideoStorySection({ lang, theme = 'light' }: VideoStoryS
       <div
         ref={scrollContainerRef}
         onScroll={checkScroll}
-        className="flex gap-5 sm:gap-6 overflow-x-auto scroll-smooth pb-4 px-1 no-scrollbar snap-x snap-mandatory touch-pan-x touch-momentum items-stretch"
+        className={`flex gap-5 sm:gap-6 overflow-x-auto scroll-smooth pb-4 px-1 no-scrollbar touch-pan-x touch-momentum ${
+          visibleStories.length > 1 ? 'snap-x snap-mandatory items-stretch' : 'justify-center items-center'
+        }`}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {VIDEO_STORIES.map((story) => {
+        {visibleStories.map((story) => {
           const localizedTitle = lang === 'fi' ? story.titleFi : lang === 'en' ? story.titleEn : story.titleJa;
           const localizedAuthor = lang === 'fi' ? story.authorFi : lang === 'en' ? story.authorEn : story.authorJa;
           const localizedBadge = lang === 'fi' ? story.badgeFi : lang === 'en' ? story.badgeEn : story.badgeJa;
@@ -158,7 +168,11 @@ export default function VideoStorySection({ lang, theme = 'light' }: VideoStoryS
           return (
             <div
               key={story.id}
-              className={`w-[310px] sm:w-[380px] md:w-[440px] shrink-0 snap-start rounded-2xl border transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-sm ${
+              className={`${
+                visibleStories.length === 1
+                  ? 'w-full max-w-2xl'
+                  : 'w-[310px] sm:w-[380px] md:w-[440px] shrink-0 snap-start'
+              } rounded-2xl border transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-sm ${
                 isDark 
                   ? 'bg-[#181524] border-neutral-800 hover:border-amber-500/50 hover:shadow-xl' 
                   : 'bg-white border-neutral-200/90 hover:border-amber-300 hover:shadow-lg'
