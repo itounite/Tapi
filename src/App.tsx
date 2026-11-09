@@ -20,8 +20,7 @@ import Footer from './components/Footer';
 import EssaysPage from './components/EssaysPage';
 import AboutPage from './components/AboutPage';
 import LearningPage from './components/LearningPage';
-import HalloweenAtmosphere from './components/HalloweenAtmosphere';
-import KatanaPumpkinIntro from './components/KatanaPumpkinIntro';
+import ChristmasAtmosphere from './components/ChristmasAtmosphere';
 import DailyQuoteBanner from './components/DailyQuoteBanner';
 import { trackPageView } from './utils/visitTracker';
 
@@ -53,7 +52,7 @@ export default function App() {
     setLang(newLang);
   };
 
-  // Default theme is 'light' by default, and user can switch to Halloween dark color
+  // Default theme is 'light' by default, and user can switch to cozy dark mode
   const [theme, setTheme] = useState<ThemeMode>(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -87,26 +86,6 @@ export default function App() {
       }
       return nextTheme;
     });
-  };
-
-  // Opening Katana Pumpkin Slash Intro Gatekeeper
-  const [showSlashIntro, setShowSlashIntro] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const alreadySlashed = sessionStorage.getItem('tapi_slashed_pumpkin');
-      return !alreadySlashed;
-    }
-    return true;
-  });
-
-  const handleCompleteSlash = () => {
-    setShowSlashIntro(false);
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('tapi_slashed_pumpkin', 'true');
-    }
-  };
-
-  const handleReplaySlash = () => {
-    setShowSlashIntro(true);
   };
 
   const [selectedCharacter, setSelectedCharacter] = useState<CharacterItem | null>(null);
@@ -348,7 +327,7 @@ export default function App() {
       {/* 
         Unified Constant Header across ALL pages!
         Includes: Logo at top left next to TAPI LIFE, responsive navigation, 
-        theme switcher (Dark with pumpkin orange default <-> Light mode),
+        theme switcher (Cozy Dark mode <-> Light mode),
         and 3-way language switcher (JP / EN / FI).
       */}
       <Header 
@@ -358,7 +337,6 @@ export default function App() {
         onNavigate={navigate}
         theme={theme}
         onToggleTheme={toggleTheme}
-        onReplaySlash={handleReplaySlash}
       />
 
       {/* Daily Inspirational Quote & Teacher Banner (Prominently placed below the Header) */}
@@ -882,23 +860,8 @@ export default function App() {
       {/* Constant Footer across ALL pages */}
       <Footer lang={lang} theme={theme} />
 
-      {/* Ambient Minimalist Halloween Atmosphere: Translucent Background Ghost, Blinking Bottom Lights, Left & Right Extremes */}
-      <HalloweenAtmosphere theme={theme} />
-
-      {/* 
-        Opening Katana Pumpkin Slash Gatekeeper Experience
-        "when someone opens the page - first thing they need to do is slash the pumpkin - with japanese sword -
-        say it in japanese cut the pumpkin and the pumpking should bright bling orange - at the centre and everything
-        is opaque behind, but tranclucent - when they cut then the page appears"
-      */}
-      <AnimatePresence>
-        {showSlashIntro && (
-          <KatanaPumpkinIntro 
-            lang={lang} 
-            onComplete={handleCompleteSlash} 
-          />
-        )}
-      </AnimatePresence>
+      {/* Subtle Christmas Holiday Atmosphere: Delicate Fairy Lights, Minimalist Pine Trees & Soft Snowflakes */}
+      <ChristmasAtmosphere theme={theme} />
 
     </div>
   );

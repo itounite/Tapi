@@ -10,7 +10,6 @@ interface HeaderProps {
   onNavigate: (path: string) => void;
   theme: ThemeMode;
   onToggleTheme: () => void;
-  onReplaySlash?: () => void;
 }
 
 export default function Header({ 
@@ -19,8 +18,7 @@ export default function Header({
   currentPath, 
   onNavigate,
   theme,
-  onToggleTheme,
-  onReplaySlash
+  onToggleTheme
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isDark = theme === 'dark';
@@ -83,7 +81,7 @@ export default function Header({
             />
           </div>
 
-          {/* Clean TAPI [Bright Pumpkin] LIFE Brand Title */}
+          {/* Clean TAPI [Subtle Christmas Tree] LIFE Brand Title */}
           <div className="flex items-center gap-1.5">
             <span className={`font-serif tracking-widest text-base sm:text-lg font-bold uppercase leading-none transition-colors ${
               isDark ? 'text-neutral-100 group-hover:text-amber-400' : 'text-neutral-900 group-hover:text-amber-800'
@@ -91,58 +89,33 @@ export default function Header({
               TAPI
             </span>
 
-            {/* Bright and Lighted Pumpkin between TAPI and LIFE */}
+            {/* Subtle Christmas Pine Tree with Star between TAPI and LIFE */}
             <div 
               className="inline-flex items-center justify-center self-center" 
-              title="Happy Halloween! 🎃"
+              title="Happy Holidays & Seasons Greetings! 🎄"
             >
               <svg 
-                viewBox="0 0 32 32" 
-                className="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_8px_rgba(245,158,11,0.95)]"
-                style={{
-                  filter: 'drop-shadow(0 0 4px #FFA000) drop-shadow(0 0 10px #FFD54F) drop-shadow(0 0 16px rgba(255,160,0,0.7))'
-                }}
+                viewBox="0 0 24 24" 
+                className="w-5 h-5 sm:w-5.5 sm:h-5.5 transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_6px_rgba(252,211,77,0.7)]"
               >
-                <defs>
-                  <radialGradient id="brightPumpkinLight" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#FFFFFF" />
-                    <stop offset="35%" stopColor="#FFF9A6" />
-                    <stop offset="70%" stopColor="#FFB300" />
-                    <stop offset="100%" stopColor="#FF6D00" />
-                  </radialGradient>
-                  <linearGradient id="pumpkinSkinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#FFB020" />
-                    <stop offset="45%" stopColor="#FF7A00" />
-                    <stop offset="100%" stopColor="#E65100" />
-                  </linearGradient>
-                </defs>
-
-                {/* Stem */}
-                <path d="M15 5.5 Q16 1.5 19 1.5 Q18 4.5 16.5 6.5 Z" fill="#2E7D32" stroke="#1B5E20" strokeWidth="0.8" />
-                
-                {/* Lobes */}
-                <ellipse cx="9.5" cy="18" rx="6.2" ry="8.5" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
-                <ellipse cx="22.5" cy="18" rx="6.2" ry="8.5" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
-                <ellipse cx="12.5" cy="18" rx="5.8" ry="9.5" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
-                <ellipse cx="19.5" cy="18" rx="5.8" ry="9.5" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
-                <ellipse cx="16" cy="18" rx="5.4" ry="10" fill="url(#pumpkinSkinGrad)" stroke="#BF360C" strokeWidth="0.7" />
-
-                {/* Eyes */}
-                <polygon points="10.5,14 14,16 10.5,17" fill="url(#brightPumpkinLight)" stroke="#FFF9C4" strokeWidth="0.5" />
-                <polygon points="21.5,14 18,16 21.5,17" fill="url(#brightPumpkinLight)" stroke="#FFF9C4" strokeWidth="0.5" />
-
-                {/* Nose */}
-                <polygon points="16,16 15,18.5 17,18.5" fill="url(#brightPumpkinLight)" stroke="#FFF9C4" strokeWidth="0.4" />
-
-                {/* Grinning Mouth */}
-                <path 
-                  d="M10 20 Q16 26.5 22 20 Q19 22.8 16 21.5 Q13 22.8 10 20 Z" 
-                  fill="url(#brightPumpkinLight)" 
-                  stroke="#FFF9C4" 
-                  strokeWidth="0.5" 
+                {/* Golden Star at the pinnacle */}
+                <polygon 
+                  points="12,1.5 13.5,5 17,5 14,7.5 15,11 12,9 9,11 10,7.5 7,5 10.5,5" 
+                  fill="#FCD34D" 
+                  stroke="#F59E0B" 
+                  strokeWidth="0.4"
                 />
-                <rect x="13.2" y="20.8" width="1.4" height="1.5" fill="#FFE082" />
-                <rect x="17.4" y="21.8" width="1.4" height="1.4" fill="#FFE082" />
+                {/* Pine Tree Foliage - Layered Tiers */}
+                <polygon points="12,4.5 7.5,9.5 16.5,9.5" fill="#059669" />
+                <polygon points="12,8 6,14 18,14" fill="#047857" />
+                <polygon points="12,12 4.5,19 19.5,19" fill="#065F46" />
+                {/* Small Wooden Trunk */}
+                <rect x="10.5" y="19" width="3" height="4" rx="0.5" fill="#78350F" />
+                {/* Tiny Subtle Baubles / Lights */}
+                <circle cx="10" cy="8" r="0.8" fill="#F87171" />
+                <circle cx="14" cy="12.5" r="0.9" fill="#FCD34D" />
+                <circle cx="9" cy="16" r="0.8" fill="#6EE7B7" />
+                <circle cx="15" cy="17" r="0.85" fill="#F87171" />
               </svg>
             </div>
 
@@ -236,46 +209,29 @@ export default function Header({
           </div>
         </nav>
 
-        {/* Right Section: Streamlined Action Controls (Katana, Theme Toggle, Language Switcher) */}
+        {/* Right Section: Streamlined Action Controls (Theme Toggle, Language Switcher) */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           
-          {/* Katana Pumpkin Slash Trigger Icon Button */}
-          {onReplaySlash && (
-            <button
-              type="button"
-              onClick={onReplaySlash}
-              className={`flex items-center justify-center w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-lg border text-xs transition-all cursor-pointer active:scale-95 touch-manipulation ${
-                isDark 
-                  ? 'border-amber-500/40 bg-amber-950/40 text-amber-300 hover:bg-amber-900/60 hover:border-amber-400 shadow-[0_0_8px_rgba(255,140,0,0.2)]' 
-                  : 'border-amber-300 bg-amber-50/80 text-amber-800 hover:bg-amber-100'
-              }`}
-              title="日本刀でカボチャを一刀両断 (Slash Pumpkin with Katana)"
-              aria-label="Slash Pumpkin with Katana"
-            >
-              <span className="text-sm">⚔️</span>
-            </button>
-          )}
-
-          {/* Theme Toggle: Light Mode default <-> Halloween Dark Mode */}
+          {/* Theme Toggle: Light Mode <-> Cozy Dark Mode */}
           <button
             type="button"
             onClick={onToggleTheme}
             className={`flex items-center justify-center w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-lg border text-xs transition-all cursor-pointer active:scale-95 touch-manipulation ${
               isDark
-                ? 'border-amber-500/50 bg-[#1e182a] text-amber-300 hover:bg-[#282138] shadow-[0_0_10px_rgba(255,140,0,0.25)]'
-                : 'border-amber-300/80 bg-amber-50/90 text-amber-700 hover:bg-amber-100/90 hover:border-amber-400 shadow-xs'
+                ? 'border-emerald-500/40 bg-[#16211a] text-amber-300 hover:bg-[#1e2f25] shadow-[0_0_8px_rgba(52,211,153,0.2)]'
+                : 'border-emerald-200 bg-emerald-50/70 text-emerald-800 hover:bg-emerald-100/80 shadow-xs'
             }`}
             title={
               isDark 
                 ? (lang === 'fi' ? 'Vaihda vaaleaan tilaan (☀️)' : lang === 'en' ? 'Switch to Light Mode (☀️)' : 'ライトモードに切り替え (☀️)')
-                : (lang === 'fi' ? 'Vaihda Halloween-pimeään tilaan (🎃)' : lang === 'en' ? 'Switch to Halloween Dark Mode (🎃)' : 'ハロウィン・ダークモードに切り替え (🎃)')
+                : (lang === 'fi' ? 'Vaihda talviseen tummaan tilaan (🌙)' : lang === 'en' ? 'Switch to Cozy Dark Mode (🌙)' : 'コージー・ダークモードに切り替え (🌙)')
             }
-            aria-label={isDark ? "Switch to Light Mode" : "Switch to Halloween Dark Mode"}
+            aria-label={isDark ? "Switch to Light Mode" : "Switch to Cozy Dark Mode"}
           >
             {isDark ? (
               <Sun className="w-4 h-4 text-amber-300" />
             ) : (
-              <span className="text-sm select-none filter drop-shadow-[0_0_3px_rgba(255,140,0,0.4)]">🎃</span>
+              <Moon className="w-4 h-4 text-emerald-800" />
             )}
           </button>
 
@@ -426,20 +382,20 @@ export default function Header({
               }}
               className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center justify-between min-h-[44px] transition-colors cursor-pointer touch-manipulation ${
                 isDark 
-                  ? 'bg-amber-950/40 text-amber-300 border border-amber-500/30 hover:bg-amber-900/40' 
-                  : 'bg-amber-50/90 text-amber-900 border border-amber-300 hover:bg-amber-100'
+                  ? 'bg-emerald-950/30 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-900/40' 
+                  : 'bg-emerald-50/80 text-emerald-900 border border-emerald-300/80 hover:bg-emerald-100'
               }`}
             >
               <span className="flex items-center gap-2">
-                <span className="text-base select-none">{isDark ? '☀️' : '🎃'}</span>
+                <span className="text-base select-none">{isDark ? '☀️' : '🌙'}</span>
                 <span className="font-medium">
                   {isDark
                     ? (lang === 'fi' ? 'Vaihda vaaleaan tilaan' : lang === 'en' ? 'Switch to Light Mode' : 'ライトモードに切り替え')
-                    : (lang === 'fi' ? 'Halloween-pimeä tila' : lang === 'en' ? 'Halloween Dark Mode' : 'ハロウィン・ダークモード')}
+                    : (lang === 'fi' ? 'Talvinen tumma tila' : lang === 'en' ? 'Cozy Dark Mode' : 'コージー・ダークモード')}
                 </span>
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20">
-                {isDark ? '☀️ Light' : '🎃 Halloween'}
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20">
+                {isDark ? '☀️ Light' : '🌙 Dark'}
               </span>
             </button>
           </div>
