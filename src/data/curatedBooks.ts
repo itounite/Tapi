@@ -20,6 +20,25 @@ export interface CuratedBook {
 
 export const CURATED_BOOKS: CuratedBook[] = [
   {
+    id: 'why-i-write',
+    title: 'Why I Write',
+    titleJa: 'なぜ書くか (Why I Write)',
+    titleEn: 'Why I Write',
+    titleFi: 'Miksi kirjoitan (Why I Write)',
+    author: 'George Orwell',
+    goodreadsUrl: 'https://www.goodreads.com/en/book/show/9644.Why_I_Write',
+    coverImage: '/assets/aistudio/IMG-20260424-WA0000_6b33e7f3.jpg',
+    badgeJa: '真実と言葉の力',
+    badgeEn: 'Truth, Clarity & Purpose',
+    badgeFi: 'Totuus, selkeys ja tarkoitus',
+    coreLessonJa: 'ジョージ・オーウェルが自身の作家としての動機と、言葉の欺瞞に立ち向かう姿勢を明晰に記した不朽のエッセイ。純粋なエゴイズム、美的好奇心、歴史的衝動、そして政治的目的という書く動機を探求し、飾り立てた言葉の罠を見抜き、真実を誠実に伝えることの重みを教える。',
+    coreLessonEn: 'A masterwork on clarity, honesty, and intellectual courage. Orwell explores the four great motives for writing—sheer egoism, aesthetic enthusiasm, historical impulse, and political purpose—while dissecting how dishonest language manipulates reality. It teaches young thinkers to speak truth plainly and think with clarity.',
+    coreLessonFi: 'Mestarillinen tutkielma ajattelun selkeydestä, rehellisyydestä ja intellektuellista rohkeudesta. Orwell erittelee neljä kirjoittamisen perimmäistä motiivia ja osoittaa, miten epärehellinen kieli voi vääristää todellisuutta. Teos opettaa ilmaisemaan totuutta selkeästi ja vaalimaan rehellistä ajattelua.',
+    quoteJa: '「政治的な言葉というものは、嘘を真実らしく、殺人を立派なものに聞こえさせ、ただの風に確固たる実体があるかのように見せかけるために仕組まれている。」',
+    quoteEn: '“Political language is designed to make lies sound truthful and murder respectable, and to give an appearance of solidity to pure wind.”',
+    quoteFi: '”Poliittinen kieli on suunniteltu saamaan valheet kuulostamaan totuudelta ja murha kunnialliselta, ja antamaan pelkälle tuulelle vankan olemuksen.”',
+  },
+  {
     id: 'boy-mole-fox-horse',
     title: 'The Boy, the Mole, the Fox and the Horse',
     titleJa: 'ぼく モグラ キツネ 馬 (The Boy, the Mole, the Fox and the Horse)',
