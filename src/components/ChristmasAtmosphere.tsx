@@ -39,12 +39,9 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
     { color: '#FDE68A', glow: 'rgba(253, 230, 138, 0.65)', delay: '1.8s' },
   ];
 
-  // Dynamic ink colors for hand-drawn sticky characters & tree
+  // Dynamic ink colors for hand-drawn sticky characters
   const inkColor = isDark ? '#F8FAFC' : '#1E293B';
-  const treeFoliagePrimary = isDark ? '#065F46' : '#047857';
-  const treeFoliageSecondary = isDark ? '#047857' : '#059669';
-  const treeFoliageDark = isDark ? '#064E3B' : '#065F46';
-  const trunkColor = isDark ? '#78350F' : '#451A03';
+  const bootsColor = isDark ? '#78350F' : '#451A03';
 
   return (
     <>
@@ -102,117 +99,9 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
       </div>
 
       {/* ==================================================================================== */}
-      {/* 2. LEFT SIDE: SINGLE TALL CHRISTMAS PINE TREE (STANDING ON BASELINE, NO PLATFORM)    */}
-      {/* ==================================================================================== */}
-      <div
-        className="fixed bottom-0 left-0 pointer-events-none z-10 select-none overflow-visible"
-        aria-hidden="true"
-      >
-        <motion.div
-          initial={{ opacity: 0, x: -15 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.0, ease: 'easeOut' }}
-          className={`w-36 h-60 sm:w-52 sm:h-80 md:w-60 md:h-[400px] max-w-[36vw] transition-opacity ${
-            isDark ? 'opacity-[0.88]' : 'opacity-[0.82]'
-          }`}
-        >
-          <svg viewBox="0 0 200 410" className="w-full h-full overflow-visible">
-            <g transform="translate(10, 0)">
-              {/* Wooden Trunk rooted directly at baseline */}
-              <rect x="84" y="360" width="14" height="42" rx="3" fill={trunkColor} stroke={inkColor} strokeWidth="1.4" />
-              <line x1="88" y1="368" x2="88" y2="398" stroke={isDark ? '#92400E' : '#B45309'} strokeWidth="1" />
-              <line x1="93" y1="365" x2="93" y2="400" stroke={isDark ? '#92400E' : '#B45309'} strokeWidth="1" />
-
-              {/* TALL PINE TIERS - Layered sketched evergreen branches */}
-              {/* Tier 6 (Bottom tier) */}
-              <path
-                d="M91,280 C60,315 25,340 18,365 C45,360 75,355 91,360 C107,355 137,360 164,365 C157,340 122,315 91,280 Z"
-                fill={treeFoliageDark}
-                stroke={inkColor}
-                strokeWidth="1.6"
-                strokeLinejoin="round"
-              />
-              {/* Tier 5 */}
-              <path
-                d="M91,220 C65,255 35,275 30,300 C55,295 80,292 91,295 C102,292 127,295 152,300 C147,275 117,255 91,220 Z"
-                fill={treeFoliagePrimary}
-                stroke={inkColor}
-                strokeWidth="1.6"
-                strokeLinejoin="round"
-              />
-              {/* Tier 4 */}
-              <path
-                d="M91,165 C70,195 45,215 40,240 C62,235 82,233 91,235 C100,233 120,235 142,240 C137,215 112,195 91,165 Z"
-                fill={treeFoliageSecondary}
-                stroke={inkColor}
-                strokeWidth="1.6"
-                strokeLinejoin="round"
-              />
-              {/* Tier 3 */}
-              <path
-                d="M91,115 C72,140 55,160 52,182 C70,178 84,176 91,178 C98,176 112,178 130,182 C127,160 110,140 91,115 Z"
-                fill={treeFoliagePrimary}
-                stroke={inkColor}
-                strokeWidth="1.6"
-                strokeLinejoin="round"
-              />
-              {/* Tier 2 */}
-              <path
-                d="M91,65 C76,85 65,105 62,125 C76,122 85,120 91,122 C97,120 106,122 120,125 C117,105 106,85 91,65 Z"
-                fill={treeFoliageSecondary}
-                stroke={inkColor}
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-              />
-              {/* Tier 1 (Apex top tier) */}
-              <path
-                d="M91,20 C82,40 75,60 72,77 C82,74 88,73 91,74 C94,73 100,74 110,77 C107,60 100,40 91,20 Z"
-                fill={treeFoliagePrimary}
-                stroke={inkColor}
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-              />
-
-              {/* Hand-drawn Garland Tinsel Wire */}
-              <path
-                d="M80,75 Q98,98 115,125 Q85,148 55,180 Q95,205 135,242 Q85,270 35,308 Q95,335 155,362"
-                fill="none"
-                stroke="#FCD34D"
-                strokeWidth="1.2"
-                strokeDasharray="3,3"
-                opacity="0.85"
-              />
-
-              {/* Colorful Twinkling Baubles */}
-              <circle cx="98" cy="90" r="3" fill="#EF4444" stroke={inkColor} strokeWidth="0.8" className="animate-blink-white" />
-              <circle cx="78" cy="140" r="3.2" fill="#FCD34D" stroke={inkColor} strokeWidth="0.8" className="animate-blink-orange" />
-              <circle cx="112" cy="170" r="3.5" fill="#3B82F6" stroke={inkColor} strokeWidth="0.8" className="animate-blink-white" />
-              <circle cx="66" cy="215" r="3.6" fill="#F43F5E" stroke={inkColor} strokeWidth="0.8" className="animate-blink-orange" />
-              <circle cx="105" cy="235" r="3.5" fill="#FBBF24" stroke={inkColor} strokeWidth="0.8" className="animate-blink-white" />
-              <circle cx="52" cy="275" r="3.8" fill="#10B981" stroke={inkColor} strokeWidth="0.8" className="animate-blink-white" />
-              <circle cx="128" cy="295" r="3.6" fill="#EF4444" stroke={inkColor} strokeWidth="0.8" className="animate-blink-orange" />
-              <circle cx="80" cy="330" r="4" fill="#FCD34D" stroke={inkColor} strokeWidth="0.8" className="animate-blink-white" />
-              <circle cx="145" cy="350" r="3.8" fill="#EC4899" stroke={inkColor} strokeWidth="0.8" className="animate-blink-orange" />
-
-              {/* Golden Star at the Pinnacle */}
-              <g transform="translate(91, 18)">
-                <polygon
-                  points="0,-16 4.5,-5 16,-5 7,2 10.5,13 0,6 -10.5,13 -7,2 -16,-5 -4.5,-5"
-                  fill="#FCD34D"
-                  stroke="#F59E0B"
-                  strokeWidth="1"
-                  className="animate-sway-gentle"
-                  style={{ transformOrigin: '0px 0px' }}
-                />
-              </g>
-            </g>
-          </svg>
-        </motion.div>
-      </div>
-
-      {/* ==================================================================================== */}
-      {/* 3. RIGHT SIDE: STICKY FAMILY (MOTHER IN NAVY, GIRL IN PINK, BOY IN BLACK, NO PLATFORM) */}
-      {/*    & ARCHED SCRIBBLED "Onnellinen" + "幸せな" IN PINK ABOVE                          */}
+      {/* 2. RIGHT SIDE: STICKY FAMILY (MOTHER IN NAVY, GIRL IN PINK, BOY IN BLACK, NO PLATFORM) */}
+      {/*    & ARCHED SCRIBBLED "Onnellinen" + "幸せな" IN CRISP PINK ABOVE                   */}
+      {/*    Downsized on mobile so it stays neatly in the corner and never obscures text.      */}
       {/* ==================================================================================== */}
       <div
         className="fixed bottom-0 right-0 pointer-events-none z-10 select-none overflow-visible"
@@ -222,31 +111,42 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
           initial={{ opacity: 0, x: 15 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.0, ease: 'easeOut' }}
-          className={`w-40 h-56 sm:w-60 sm:h-76 md:w-72 md:h-92 max-w-[46vw] transition-opacity ${
-            isDark ? 'opacity-[0.95]' : 'opacity-[0.90]'
+          className={`w-24 h-34 sm:w-48 sm:h-64 md:w-60 md:h-80 max-w-[28vw] sm:max-w-[36vw] transition-opacity ${
+            isDark ? 'opacity-[0.95]' : 'opacity-[0.92]'
           }`}
         >
           <svg viewBox="0 0 320 380" className="w-full h-full overflow-visible">
             <defs>
+              {/* Drop shadow filter to guarantee text pop on both dark and light modes */}
+              <filter id="scribbleTextFilter" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow 
+                  dx="0" 
+                  dy="1.2" 
+                  stdDeviation={isDark ? "1.8" : "1"} 
+                  floodColor={isDark ? "rgba(0, 0, 0, 0.9)" : "rgba(255, 255, 255, 0.95)"} 
+                />
+              </filter>
+
               {/* Arch Path for the Hand-Scribbled Text "Onnellinen" */}
               <path
                 id="onnellinenScribbleArchPath"
-                d="M 30,132 Q 160,52 290,132"
+                d="M 25,124 Q 160,42 295,124"
                 fill="none"
               />
 
               {/* Concentric Lower Arch Path for the Hand-Scribbled Japanese Text "幸せな" */}
               <path
                 id="shiawasenaScribbleArchPath"
-                d="M 60,165 Q 160,98 260,165"
+                d="M 52,156 Q 160,84 268,156"
                 fill="none"
               />
             </defs>
 
             {/* ------------------------------------------------------------- */}
             {/* "Onnellinen" & "幸せな" IN SWEET GIRL'S PINK SCRIBBLE STYLE   */}
+            {/* Highly visible, bold, legible without obstructive black fills */}
             {/* ------------------------------------------------------------- */}
-            <g className="select-none">
+            <g className="select-none" filter="url(#scribbleTextFilter)">
               {/* LINE 1: Onnellinen (arched in girl's pink scribble handwriting) */}
               <text>
                 <textPath
@@ -254,33 +154,13 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
                   startOffset="50%"
                   textAnchor="middle"
                   style={{
-                    fontFamily: "'Chalkboard SE', 'Comic Sans MS', 'Patrick Hand', 'Caveat', cursive, sans-serif",
-                    fontSize: '25px',
+                    fontFamily: "'Chalkboard SE', 'Comic Sans MS', 'Caveat', cursive, sans-serif",
+                    fontSize: '27px',
                     fontWeight: '800',
-                    letterSpacing: '0.07em',
-                    fill: isDark ? '#020617' : '#FFFFFF',
-                    stroke: isDark ? '#0F172A' : '#FFE4E6',
-                    strokeWidth: isDark ? '4px' : '3px',
-                    strokeLinecap: 'round',
-                    strokeLinejoin: 'round',
-                  }}
-                >
-                  Onnellinen
-                </textPath>
-              </text>
-              <text>
-                <textPath
-                  href="#onnellinenScribbleArchPath"
-                  startOffset="50%"
-                  textAnchor="middle"
-                  style={{
-                    fontFamily: "'Chalkboard SE', 'Comic Sans MS', 'Patrick Hand', 'Caveat', cursive, sans-serif",
-                    fontSize: '25px',
-                    fontWeight: '800',
-                    letterSpacing: '0.07em',
-                    fill: isDark ? '#FB7185' : '#E11D48',
-                    stroke: isDark ? '#F43F5E' : '#E11D48',
-                    strokeWidth: '0.8px',
+                    letterSpacing: '0.06em',
+                    fill: isDark ? '#FDA4AF' : '#E11D48',
+                    stroke: isDark ? '#BE123C' : '#9F1239',
+                    strokeWidth: '0.75px',
                     strokeLinecap: 'round',
                     strokeLinejoin: 'round',
                   }}
@@ -297,32 +177,12 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
                   textAnchor="middle"
                   style={{
                     fontFamily: "'Yuji Boku', 'Klee One', 'Zen Maru Gothic', 'Comic Sans MS', sans-serif, cursive",
-                    fontSize: '20px',
+                    fontSize: '22px',
                     fontWeight: '900',
                     letterSpacing: '0.12em',
-                    fill: isDark ? '#020617' : '#FFFFFF',
-                    stroke: isDark ? '#0F172A' : '#FFE4E6',
-                    strokeWidth: isDark ? '4px' : '3px',
-                    strokeLinecap: 'round',
-                    strokeLinejoin: 'round',
-                  }}
-                >
-                  幸せな
-                </textPath>
-              </text>
-              <text>
-                <textPath
-                  href="#shiawasenaScribbleArchPath"
-                  startOffset="50%"
-                  textAnchor="middle"
-                  style={{
-                    fontFamily: "'Yuji Boku', 'Klee One', 'Zen Maru Gothic', 'Comic Sans MS', sans-serif, cursive",
-                    fontSize: '20px',
-                    fontWeight: '900',
-                    letterSpacing: '0.12em',
-                    fill: isDark ? '#FB7185' : '#E11D48',
-                    stroke: isDark ? '#F43F5E' : '#E11D48',
-                    strokeWidth: '0.7px',
+                    fill: isDark ? '#FDA4AF' : '#E11D48',
+                    stroke: isDark ? '#BE123C' : '#9F1239',
+                    strokeWidth: '0.75px',
                     strokeLinecap: 'round',
                     strokeLinejoin: 'round',
                   }}
@@ -331,26 +191,26 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
                 </textPath>
               </text>
 
-              {/* Sweet scribbled pink hearts */}
+              {/* Sweet scribbled pink hearts on either side */}
               <path
-                d="M 52,145 C 48,139 38,141 38,149 C 38,156 48,164 52,168 C 56,164 66,156 66,149 C 66,141 56,139 52,145 Z"
+                d="M 44,136 C 40,130 31,132 31,139 C 31,146 41,153 44,157 C 47,153 57,146 57,139 C 57,132 48,130 44,136 Z"
                 fill={isDark ? '#F43F5E' : '#FDA4AF'}
                 stroke={isDark ? '#FDA4AF' : '#E11D48'}
-                strokeWidth="1.5"
+                strokeWidth="1.4"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                transform="rotate(-15 52 153)"
-                opacity="0.9"
+                transform="rotate(-15 44 144)"
+                opacity="0.95"
               />
               <path
-                d="M 268,145 C 264,139 254,141 254,149 C 254,156 264,164 268,168 C 272,164 282,156 282,149 C 282,141 272,139 268,145 Z"
+                d="M 276,136 C 272,130 263,132 263,139 C 263,146 273,153 276,157 C 279,153 289,146 289,139 C 289,132 280,130 276,136 Z"
                 fill={isDark ? '#F43F5E' : '#FDA4AF'}
                 stroke={isDark ? '#FDA4AF' : '#E11D48'}
-                strokeWidth="1.5"
+                strokeWidth="1.4"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                transform="rotate(15 268 153)"
-                opacity="0.9"
+                transform="rotate(15 276 144)"
+                opacity="0.95"
               />
             </g>
 
@@ -399,8 +259,8 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
               {/* Legs & Winter Boots directly standing at baseline (y=150 inside group = y=375 in SVG) */}
               <line x1="-5" y1="68" x2="-6" y2="145" stroke={inkColor} strokeWidth="2.4" strokeLinecap="round" />
               <line x1="5" y1="68" x2="6" y2="145" stroke={inkColor} strokeWidth="2.4" strokeLinecap="round" />
-              <rect x="-11" y="142" width="9" height="6.5" rx="2" fill={trunkColor} stroke={inkColor} strokeWidth="1.2" />
-              <rect x="3" y="142" width="9" height="6.5" rx="2" fill={trunkColor} stroke={inkColor} strokeWidth="1.2" />
+              <rect x="-11" y="142" width="9" height="6.5" rx="2" fill={bootsColor} stroke={inkColor} strokeWidth="1.2" />
+              <rect x="3" y="142" width="9" height="6.5" rx="2" fill={bootsColor} stroke={inkColor} strokeWidth="1.2" />
             </g>
 
             {/* B. LITTLE GIRL STICKY CHARACTER (Left, in PINK DRESS) */}
@@ -495,7 +355,7 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
       </div>
 
       {/* ========================================================= */}
-      {/* 4. GENTLE, VERY SPARSE AMBIENT SNOWFLAKES                 */}
+      {/* 3. GENTLE, VERY SPARSE AMBIENT SNOWFLAKES                 */}
       {/* ========================================================= */}
       <div 
         className="fixed inset-0 pointer-events-none z-0 select-none overflow-hidden"
