@@ -1,3 +1,5 @@
+import hirakuBioCover from '../assets/images/hiraku_bio_world_cover_1794680707367.jpg';
+
 export interface CuratedBook {
   id: string;
   title: string;
@@ -6,7 +8,11 @@ export interface CuratedBook {
   titleFi: string;
   author: string;
   goodreadsUrl: string;
-  coverImage: string; // all books have user-provided screenshots
+  externalShortLabel?: string;
+  externalLabelJa?: string;
+  externalLabelEn?: string;
+  externalLabelFi?: string;
+  coverImage: string; // all books have user-provided screenshots or generated artwork
   coreLessonJa: string;
   coreLessonEn: string;
   coreLessonFi: string;
@@ -37,6 +43,29 @@ export const CURATED_BOOKS: CuratedBook[] = [
     quoteJa: '「政治的な言葉というものは、嘘を真実らしく、殺人を立派なものに聞こえさせ、ただの風に確固たる実体があるかのように見せかけるために仕組まれている。」',
     quoteEn: '“Political language is designed to make lies sound truthful and murder respectable, and to give an appearance of solidity to pure wind.”',
     quoteFi: '”Poliittinen kieli on suunniteltu saamaan valheet kuulostamaan totuudelta ja murha kunnialliselta, ja antamaan pelkälle tuulelle vankan olemuksen.”',
+  },
+  {
+    id: 'hiraku-bio-world',
+    title: 'ひらく、ひらく「バイオの世界」 ―14歳からの生物工学入門',
+    titleJa: 'ひらく、ひらく「バイオの世界」 ―14歳からの生物工学入門',
+    titleEn: 'Exploring the World of Biotechnology (From Age 14)',
+    titleFi: 'Biotekniikan maailma (14-vuotiaasta alkaen)',
+    author: '日本生物工学会 編 (化学同人)',
+    goodreadsUrl: 'https://miraibook.jp/book/book-detail/01482',
+    externalShortLabel: 'みらいぶっく',
+    externalLabelJa: 'みらいぶっくで詳細を見る',
+    externalLabelEn: 'View on Miraibook',
+    externalLabelFi: 'Näytä Miraibookissa',
+    coverImage: hirakuBioCover,
+    badgeJa: '14歳からの生物工学入門',
+    badgeEn: 'Bioengineering from Age 14',
+    badgeFi: 'Biotekniikan perusteet',
+    coreLessonJa: 'iPS細胞、バイオエタノール、微生物の力、組換え作物まで——最前線の研究者が14歳から読めるようにイラスト豊かに解き明かす生物工学（バイオテクノロジー）の入門書。生命の仕組みを「ものづくり」や地球規模の課題解決へとつなげる科学の面白さを教えてくれる一冊。',
+    coreLessonEn: 'An illustrated introduction to bioengineering written by leading researchers for readers aged 14 and up. Covering iPS cells, biofuels, microbes, and genetic engineering, it reveals how understanding living systems empowers young minds to solve real-world health and environmental challenges.',
+    coreLessonFi: 'Kuvitettu johdatus biotekniikkaan ja bioprosesseihin yli 14-vuotiaille nuorille. Kirja esittelee ymmärrettävästi iPS-soluja, biopolttoaineita ja mikrobien maailmaa osoittaen, miten elämän mekanismien ymmärtäminen auttaa ratkaisemaan globaaleja haasteita.',
+    quoteJa: '「生命の不思議を知ることは、未来の医療・環境・食料をひらく確かな扉になる。」',
+    quoteEn: '“Understanding the blueprint of life opens the door to designing a healthier, more sustainable future.”',
+    quoteFi: '”Elämän mekanismien ymmärtäminen avaa oven kestävämmän ja terveemmän tulevaisuuden rakentamiseen.”',
   },
   {
     id: 'boy-mole-fox-horse',

@@ -529,10 +529,10 @@ export default function App() {
                       isDark ? 'text-neutral-300' : 'text-neutral-600'
                     }`}>
                       {lang === 'fi'
-                        ? 'Koodaus (Scratch, Code.org, Alice), lukutaito (StoryWeaver, ReadTheory), matematiikka ja luonnontieteet (Khan Academy, MathGames, LibreTexts, PhET).'
+                        ? 'Koodaus (Scratch, Code.org, Alice), lukutaito (StoryWeaver, ReadTheory), iGEM-lukiotiede sekä matematiikka ja luonnontieteet (Khan Academy, PhET).'
                         : lang === 'en' 
-                        ? 'Interactive resources for coding (Scratch, Code.org, Alice, Tynker), reading (StoryWeaver, ReadTheory), and STEM (Khan Academy, MathGames, LibreTexts, PhET).' 
-                        : 'プログラミング（Code.org, Scratch, Alice）、読解（StoryWeaver, ReadTheory）、算数・数学・理科（Khan Academy, MathGames, LibreTexts, PhET）などの厳選集。'}
+                        ? 'Interactive resources for coding (Scratch, Code.org, Alice), reading (StoryWeaver, ReadTheory), iGEM High School synbio, and STEM (Khan Academy, PhET).' 
+                        : 'プログラミング（Code.org, Scratch, Alice）、読解（StoryWeaver, ReadTheory）、iGEM高校生合成生物学、算数・数学・理科（Khan Academy, PhET）の厳選集。'}
                     </p>
                   </div>
                 </button>

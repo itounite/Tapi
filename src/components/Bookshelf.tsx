@@ -194,7 +194,7 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
                       onClick={(e) => e.stopPropagation()}
                       className="inline-flex items-center justify-center gap-1 w-full py-1 px-1.5 rounded-sm bg-amber-500 hover:bg-amber-400 text-stone-950 text-[10px] font-mono font-bold transition-colors"
                     >
-                      <span>Goodreads</span>
+                      <span>{book.externalShortLabel || 'Goodreads'}</span>
                       <ExternalLink className="w-2.5 h-2.5" />
                     </a>
                   </div>
@@ -321,7 +321,13 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
                 rel="noreferrer noopener"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-mono font-bold transition-all shadow-md hover:shadow-lg min-h-[44px] touch-manipulation active:scale-95"
               >
-                <span>{t.viewOnGoodreads}</span>
+                <span>
+                  {lang === 'fi'
+                    ? (activeBook.externalLabelFi || t.viewOnGoodreads)
+                    : lang === 'en'
+                    ? (activeBook.externalLabelEn || t.viewOnGoodreads)
+                    : (activeBook.externalLabelJa || t.viewOnGoodreads)}
+                </span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
