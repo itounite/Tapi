@@ -1,4 +1,3 @@
-import hirakuBioCover from '../assets/images/hiraku_bio_world_cover_1794680707367.jpg';
 
 export interface CuratedBook {
   id: string;
@@ -46,17 +45,17 @@ export const CURATED_BOOKS: CuratedBook[] = [
   },
   {
     id: 'hiraku-bio-world',
-    title: 'ひらく、ひらく「バイオの世界」 ―14歳からの生物工学入門',
-    titleJa: 'ひらく、ひらく「バイオの世界」 ―14歳からの生物工学入門',
+    title: 'ひらく、ひらく「バイオの世界」: 14歳からの生物工学入門',
+    titleJa: 'ひらく、ひらく「バイオの世界」: 14歳からの生物工学入門',
     titleEn: 'Exploring the World of Biotechnology (From Age 14)',
     titleFi: 'Biotekniikan maailma (14-vuotiaasta alkaen)',
     author: '日本生物工学会 編 (化学同人)',
-    goodreadsUrl: 'https://miraibook.jp/book/book-detail/01482',
-    externalShortLabel: 'みらいぶっく',
-    externalLabelJa: 'みらいぶっくで詳細を見る',
-    externalLabelEn: 'View on Miraibook',
-    externalLabelFi: 'Näytä Miraibookissa',
-    coverImage: hirakuBioCover,
+    goodreadsUrl: 'https://www.amazon.co.jp/gp/product/4759815384/',
+    externalShortLabel: 'Amazon',
+    externalLabelJa: 'Amazon.co.jp で詳細を見る',
+    externalLabelEn: 'View on Amazon.co.jp',
+    externalLabelFi: 'Näytä Amazonissa',
+    coverImage: '/assets/aistudio/image_dc259064.png',
     badgeJa: '14歳からの生物工学入門',
     badgeEn: 'Bioengineering from Age 14',
     badgeFi: 'Biotekniikan perusteet',
