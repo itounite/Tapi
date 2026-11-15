@@ -67,7 +67,7 @@ export default function Bookshelf({ lang, theme = 'dark' }: BookshelfProps) {
   };
 
   return (
-    <div className={`mt-14 pt-10 pb-8 px-4 sm:px-6 rounded-3xl border transition-all ${
+    <div className={`mt-0 pt-8 sm:pt-10 pb-8 px-4 sm:px-6 rounded-3xl border transition-all ${
       isDark 
         ? 'bg-[#12101a] border-amber-900/40 shadow-[0_12px_40px_rgba(0,0,0,0.6)]' 
         : 'bg-[#fcfaf7] border-amber-200/80 shadow-md'

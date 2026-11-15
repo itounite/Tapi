@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Code, 
@@ -17,7 +17,11 @@ import {
   Globe,
   Calculator,
   Compass,
-  Dna
+  Dna,
+  BookMarked,
+  Cpu,
+  Film,
+  List
 } from 'lucide-react';
 import { Language, ThemeMode } from '../types';
 import { LEARNING_RESOURCES, LearningResource } from '../data/learningResources';
@@ -43,6 +47,87 @@ export default function LearningPage({
   const isDark = theme === 'dark';
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'coding' | 'reading' | 'stem'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeIndexId, setActiveIndexId] = useState<string>('bookshelf');
+
+  const sectionIndex = useMemo(
+    () => [
+      {
+        id: 'bookshelf',
+        num: '01',
+        icon: BookMarked,
+        labelEn: 'Bookshelf',
+        labelJa: 'おすすめの書籍・本棚',
+        labelFi: 'Kirjahylly',
+      },
+      {
+        id: 'inspiring-videos',
+        num: '02',
+        icon: Film,
+        labelEn: 'Learning Philosophy · Video Stories & Documentaries',
+        labelJa: '学びの哲学・映像物語＆ドキュメンタリー',
+        labelFi: 'Oppimisfilosofia · Videot & dokumentit',
+      },
+      {
+        id: 'open-platforms',
+        num: '03',
+        icon: Compass,
+        labelEn: 'Open Learning Platforms',
+        labelJa: 'オープン学習プラットフォーム',
+        labelFi: 'Avoimet oppimisalustat',
+      },
+      {
+        id: 'robotics-raspberry-pi',
+        num: '04',
+        icon: Cpu,
+        labelEn: 'Robotics, Tinkering & Coding — Raspberry Pi',
+        labelJa: 'ロボティクス・ものづくり & Raspberry Pi',
+        labelFi: 'Robotiikka, rakentelu & koodaus — Raspberry Pi',
+      },
+      {
+        id: 'biology-igem',
+        num: '05',
+        icon: Dna,
+        labelEn: 'Biology, Genetic Engineering & iGEM',
+        labelJa: '生物学・遺伝子工学 & iGEM',
+        labelFi: 'Biologia, geenitekniikka & iGEM',
+      },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    if (activeSection !== 'curated' || typeof IntersectionObserver === 'undefined') return;
+    const ids = sectionIndex.map((s) => s.id);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length > 0 && visible[0].target.id) {
+          setActiveIndexId(visible[0].target.id);
+        }
+      },
+      {
+        rootMargin: '-110px 0px -55% 0px',
+        threshold: [0, 0.15],
+      }
+    );
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [activeSection, sectionIndex]);
+
+  const scrollToSection = (id: string) => {
+    setActiveIndexId(id);
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   // Icon mapping
   const renderIcon = (iconName: LearningResource['iconName']) => {
@@ -132,7 +217,7 @@ export default function LearningPage({
     <div className={`min-h-screen py-8 sm:py-14 px-4 sm:px-8 transition-colors ${
       isDark ? 'bg-[#0d0c14] text-[#F5F3EC]' : 'bg-[#FBF9F6] text-[#2E2E2E]'
     }`}>
-      <div className="max-w-6xl mx-auto space-y-10 sm:space-y-12">
+      <div className={`${activeSection === 'curated' ? 'max-w-7xl' : 'max-w-6xl'} mx-auto space-y-10 sm:space-y-12`}>
 
         {/* Back Link Breadcrumb */}
         <div>
@@ -247,12 +332,183 @@ export default function LearningPage({
             embedded
           />
         ) : (
-          <>
-        {/* Curated Bookshelf (Placed above open learning platforms) */}
-        <Bookshelf lang={lang} theme={theme} />
+          <div className="grid grid-cols-1 lg:grid-cols-[268px_minmax(0,1fr)] gap-7 xl:gap-9 items-start">
+            {/* Left-Side Sticky Index Sidebar (Appears before Inspiring Bookshelf on mobile & desktop) */}
+            <aside
+              aria-label={lang === 'fi' ? 'Osiohakemisto' : lang === 'en' ? 'Learning Sections Index' : 'ページ目次'}
+              className="lg:sticky lg:top-24 space-y-4"
+            >
+              <div
+                className={`p-4 sm:p-5 rounded-2xl border space-y-4 transition-colors ${
+                  isDark
+                    ? 'bg-[#13111c] border-neutral-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.45)]'
+                    : 'bg-white border-neutral-200/90 shadow-xs'
+                }`}
+              >
+                {/* Index Header */}
+                <div className={`flex items-center justify-between gap-2 pb-3 border-b ${
+                  isDark ? 'border-neutral-800' : 'border-neutral-100'
+                }`}>
+                  <div className="flex items-center gap-2">
+                    <List className={`w-4 h-4 shrink-0 ${isDark ? 'text-amber-400' : 'text-amber-700'}`} />
+                    <span className={`text-[11px] font-mono font-bold tracking-widest uppercase ${
+                      isDark ? 'text-neutral-200' : 'text-neutral-800'
+                    }`}>
+                      {lang === 'fi' ? 'HAKEMISTO' : lang === 'en' ? 'SECTION INDEX' : 'セクション目次'}
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-mono tabular-nums text-neutral-400">
+                    5 {lang === 'fi' ? 'osiota' : lang === 'en' ? 'sections' : '章'}
+                  </span>
+                </div>
 
-        {/* Open Learning Platforms Section Header */}
-        <div className="pt-8 border-t border-neutral-800/40 text-center space-y-2 max-w-2xl mx-auto">
+                {/* Quick Search Box inside Index */}
+                <div className="space-y-1.5">
+                  <div className="relative">
+                    <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={
+                        lang === 'fi'
+                          ? 'Hae alustoja (Python, Scratch...)'
+                          : lang === 'en'
+                          ? 'Quick search platforms...'
+                          : '教材を検索 (Python, Scratch...)'
+                      }
+                      className={`w-full pl-8 pr-7 py-2 rounded-xl text-[11px] font-mono border transition-all outline-hidden ${
+                        isDark
+                          ? 'bg-[#0e0c16] border-neutral-800 text-neutral-100 placeholder-neutral-500 focus:border-amber-500/60'
+                          : 'bg-neutral-50 border-neutral-200 text-neutral-900 placeholder-neutral-400 focus:border-amber-600'
+                      }`}
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery('')}
+                        aria-label="Clear search"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-[11px] font-mono text-neutral-400 hover:text-neutral-200 cursor-pointer"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+
+                  {searchQuery.trim() && (
+                    <button
+                      type="button"
+                      onClick={() => scrollToSection('open-platforms')}
+                      className={`w-full text-left px-2.5 py-1.5 rounded-lg text-[11px] font-mono font-semibold flex items-center justify-between transition-colors cursor-pointer ${
+                        isDark
+                          ? 'bg-amber-500/15 text-amber-300 hover:bg-amber-500/25'
+                          : 'bg-amber-50 text-amber-900 hover:bg-amber-100'
+                      }`}
+                    >
+                      <span>
+                        {lang === 'fi'
+                          ? `${filteredResources.length} tulosta`
+                          : lang === 'en'
+                          ? `${filteredResources.length} matching resources`
+                          : `${filteredResources.length} 件ヒット`}
+                      </span>
+                      <span>↓</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* 5 Numbered Navigation Items */}
+                <nav aria-label="Learning Page Sections" className="space-y-1">
+                  {sectionIndex.map((sec) => {
+                    const IconComp = sec.icon;
+                    const label =
+                      lang === 'fi' ? sec.labelFi : lang === 'en' ? sec.labelEn : sec.labelJa;
+                    const isActive = activeIndexId === sec.id;
+
+                    return (
+                      <button
+                        key={sec.id}
+                        type="button"
+                        onClick={() => scrollToSection(sec.id)}
+                        className={`w-full text-left px-3 py-2.5 rounded-xl flex items-start gap-2.5 text-xs transition-all cursor-pointer min-h-[42px] ${
+                          isActive
+                            ? isDark
+                              ? 'bg-amber-500/15 text-amber-300 border border-amber-500/35 font-semibold'
+                              : 'bg-amber-50 text-amber-950 border border-amber-300/80 font-semibold'
+                            : isDark
+                            ? 'text-neutral-300 hover:bg-neutral-800/70 hover:text-neutral-100 border border-transparent'
+                            : 'text-neutral-700 hover:bg-neutral-100/80 hover:text-neutral-950 border border-transparent'
+                        }`}
+                      >
+                        <span
+                          className={`font-mono text-[10px] font-bold tabular-nums mt-0.5 shrink-0 ${
+                            isActive
+                              ? isDark
+                                ? 'text-amber-300'
+                                : 'text-amber-700'
+                              : 'text-neutral-400'
+                          }`}
+                        >
+                          {sec.num}
+                        </span>
+                        <IconComp
+                          className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${
+                            isActive
+                              ? isDark
+                                ? 'text-amber-300'
+                                : 'text-amber-700'
+                              : 'text-neutral-400'
+                          }`}
+                        />
+                        <span className="font-serif leading-snug">{label}</span>
+                      </button>
+                    );
+                  })}
+                </nav>
+
+                {/* Quick Switch to BioBuilder Game */}
+                <div className={`pt-3 border-t ${isDark ? 'border-neutral-800' : 'border-neutral-100'}`}>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate('/learning/biobuilder')}
+                    className={`w-full px-3 py-2.5 rounded-xl border text-xs font-mono font-bold flex items-center justify-between gap-2 transition-colors cursor-pointer min-h-[40px] ${
+                      isDark
+                        ? 'border-teal-500/35 bg-teal-950/30 hover:bg-teal-900/40 text-teal-300'
+                        : 'border-teal-200 bg-teal-50/70 hover:bg-teal-100/70 text-teal-900'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 truncate">
+                      <Dna className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">
+                        {lang === 'fi'
+                          ? 'Pelaa BioBuilder-peliä'
+                          : lang === 'en'
+                          ? 'Play BioBuilder Game'
+                          : 'BioBuilder ゲームへ'}
+                      </span>
+                    </span>
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            {/* Right Main Learning Sections Column */}
+            <div className="min-w-0 space-y-10 sm:space-y-12">
+              {/* 01 · Curated Bookshelf */}
+              <div id="bookshelf" className="scroll-mt-24">
+                <Bookshelf lang={lang} theme={theme} />
+              </div>
+
+              {/* 02 · Learning Philosophy with Video Stories & Documentaries */}
+              <div id="inspiring-videos" className="scroll-mt-24">
+                <VideoStorySection lang={lang} theme={theme} />
+              </div>
+
+              {/* 03 · Open Learning Platforms */}
+              <div id="open-platforms" className="scroll-mt-24 space-y-8">
+                {/* Open Learning Platforms Section Header */}
+                <div className="pt-8 border-t border-neutral-800/40 text-center space-y-2 max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full border text-[11px] font-mono tracking-widest uppercase"
             style={{
               borderColor: isDark ? 'rgba(245, 158, 11, 0.4)' : 'rgba(217, 119, 6, 0.3)',
@@ -558,52 +814,56 @@ export default function LearningPage({
           </div>
         )}
 
-        {/* Full Separate Section on Raspberry Pi (Placed after the Curation Section) */}
-        <RaspberryPiSection lang={lang} theme={theme} />
+              </div>
 
-        {/* Dedicated iGEM High School Synthetic Biology Section */}
-        <IgemHighSchoolSection lang={lang} theme={theme} onNavigate={onNavigate} />
+              {/* 04 · Robotics, Tinkering & Coding — Raspberry Pi */}
+              <div id="robotics-raspberry-pi" className="scroll-mt-24">
+                <RaspberryPiSection lang={lang} theme={theme} />
+              </div>
 
-        {/* Video Story Section with Scroll Option (Placed at the bottom of the learning page) */}
-        <VideoStorySection lang={lang} theme={theme} />
+              {/* 05 · Biology, Genetic Engineering & iGEM */}
+              <div id="biology-igem" className="scroll-mt-24">
+                <IgemHighSchoolSection lang={lang} theme={theme} onNavigate={onNavigate} />
+              </div>
 
-        {/* Bottom Navigation Prompt */}
-        <div className={`p-6 sm:p-8 rounded-2xl border text-center max-w-2xl mx-auto space-y-4 ${
-          isDark ? 'bg-[#14121e] border-neutral-800' : 'bg-white border-neutral-200'
-        }`}>
-          <h3 className={`font-serif text-base sm:text-lg font-bold ${
-            isDark ? 'text-neutral-100' : 'text-neutral-900'
-          }`}>
-            {lang === 'fi' 
-              ? 'Haluatko lukea lisää Yoshi Tsuijin tarinoita ja luovuutta?' 
-              : lang === 'en' 
-              ? 'Curious to explore Yoshi Tsuiji’s original stories & art?' 
-              : '辻義の世界観やオリジナルエッセイもぜひお読みください'}
-          </h3>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <button
-              onClick={() => onNavigate('/')}
-              className={`px-4 py-2 rounded-xl text-xs font-mono font-medium transition-colors cursor-pointer border ${
-                isDark 
-                  ? 'border-neutral-700 bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200' 
-                  : 'border-neutral-300 bg-neutral-100 hover:bg-neutral-200 text-neutral-800'
-              }`}
-            >
-              {t.backHome}
-            </button>
-            <button
-              onClick={() => onNavigate('/essays')}
-              className={`px-4 py-2 rounded-xl text-xs font-mono font-medium transition-colors cursor-pointer ${
-                isDark 
-                  ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40 hover:bg-amber-500/40' 
-                  : 'bg-amber-600 text-white hover:bg-amber-700'
-              }`}
-            >
-              {lang === 'fi' ? 'Lue esseitä' : lang === 'en' ? 'Read Essays' : 'エッセイ・文集へ'}
-            </button>
+              {/* Bottom Navigation Prompt */}
+              <div className={`p-6 sm:p-8 rounded-2xl border text-center max-w-2xl mx-auto space-y-4 ${
+                isDark ? 'bg-[#14121e] border-neutral-800' : 'bg-white border-neutral-200'
+              }`}>
+                <h3 className={`font-serif text-base sm:text-lg font-bold ${
+                  isDark ? 'text-neutral-100' : 'text-neutral-900'
+                }`}>
+                  {lang === 'fi' 
+                    ? 'Haluatko lukea lisää Yoshi Tsuijin tarinoita ja luovuutta?' 
+                    : lang === 'en' 
+                    ? 'Curious to explore Yoshi Tsuiji’s original stories & art?' 
+                    : '辻義の世界観やオリジナルエッセイもぜひお読みください'}
+                </h3>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <button
+                    onClick={() => onNavigate('/')}
+                    className={`px-4 py-2 rounded-xl text-xs font-mono font-medium transition-colors cursor-pointer border ${
+                      isDark 
+                        ? 'border-neutral-700 bg-neutral-800/80 hover:bg-neutral-700 text-neutral-200' 
+                        : 'border-neutral-300 bg-neutral-100 hover:bg-neutral-200 text-neutral-800'
+                    }`}
+                  >
+                    {t.backHome}
+                  </button>
+                  <button
+                    onClick={() => onNavigate('/essays')}
+                    className={`px-4 py-2 rounded-xl text-xs font-mono font-medium transition-colors cursor-pointer ${
+                      isDark 
+                        ? 'bg-amber-500/25 text-amber-300 border border-amber-500/40 hover:bg-amber-500/40' 
+                        : 'bg-amber-600 text-white hover:bg-amber-700'
+                    }`}
+                  >
+                    {lang === 'fi' ? 'Lue esseitä' : lang === 'en' ? 'Read Essays' : 'エッセイ・文集へ'}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-          </>
         )}
 
       </div>
