@@ -10,14 +10,14 @@ import {
   Sparkles, 
   GraduationCap, 
   ArrowLeft,
-  Filter,
   Gamepad2,
   Terminal,
   Box,
   FileText,
   Globe,
   Calculator,
-  Compass
+  Compass,
+  Dna
 } from 'lucide-react';
 import { Language, ThemeMode } from '../types';
 import { LEARNING_RESOURCES, LearningResource } from '../data/learningResources';
@@ -25,14 +25,21 @@ import Bookshelf from './Bookshelf';
 import RaspberryPiSection from './RaspberryPiSection';
 import IgemHighSchoolSection from './IgemHighSchoolSection';
 import VideoStorySection from './VideoStorySection';
+import BioBuilderPage from './BioBuilderPage';
 
 interface LearningPageProps {
   lang: Language;
   onNavigate: (path: string) => void;
   theme?: ThemeMode;
+  activeSection?: 'curated' | 'biobuilder';
 }
 
-export default function LearningPage({ lang, onNavigate, theme = 'dark' }: LearningPageProps) {
+export default function LearningPage({
+  lang,
+  onNavigate,
+  theme = 'dark',
+  activeSection = 'curated',
+}: LearningPageProps) {
   const isDark = theme === 'dark';
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'coding' | 'reading' | 'stem'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -167,8 +174,80 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
           }`}>
             {t.heroSubtitle}
           </p>
+
+          {/* Learning Subsection Switcher: Curated Resources (/learning/curated) | BioBuilder Game (/learning/biobuilder) */}
+          <div className="pt-2 flex justify-center">
+            <div
+              role="tablist"
+              aria-label="Learning Subsections"
+              className={`inline-flex items-center gap-1.5 p-1.5 rounded-2xl border ${
+                isDark
+                  ? 'bg-[#14121e] border-neutral-800'
+                  : 'bg-white border-neutral-200/90 shadow-xs'
+              }`}
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeSection === 'curated'}
+                onClick={() => onNavigate('/learning/curated')}
+                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer min-h-[42px] whitespace-nowrap ${
+                  activeSection === 'curated'
+                    ? isDark
+                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                      : 'bg-neutral-900 text-white shadow-xs'
+                    : isDark
+                    ? 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
+                }`}
+              >
+                <Compass className="w-4 h-4 shrink-0" />
+                <span>
+                  {lang === 'fi'
+                    ? 'Kuraatoidut resurssit'
+                    : lang === 'en'
+                    ? 'Curated Resources'
+                    : '厳選リソース・書籍'}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeSection === 'biobuilder'}
+                onClick={() => onNavigate('/learning/biobuilder')}
+                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer min-h-[42px] whitespace-nowrap ${
+                  activeSection === 'biobuilder'
+                    ? isDark
+                      ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40'
+                      : 'bg-teal-700 text-white shadow-xs'
+                    : isDark
+                    ? 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/60'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
+                }`}
+              >
+                <Dna className="w-4 h-4 shrink-0" />
+                <span>
+                  {lang === 'fi'
+                    ? 'BioBuilder-peli'
+                    : lang === 'en'
+                    ? 'BioBuilder Game'
+                    : 'BioBuilder ゲーム'}
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
 
+        {activeSection === 'biobuilder' ? (
+          <BioBuilderPage
+            lang={lang}
+            onNavigate={onNavigate}
+            theme={theme}
+            embedded
+          />
+        ) : (
+          <>
         {/* Curated Bookshelf (Placed above open learning platforms) */}
         <Bookshelf lang={lang} theme={theme} />
 
@@ -483,7 +562,7 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
         <RaspberryPiSection lang={lang} theme={theme} />
 
         {/* Dedicated iGEM High School Synthetic Biology Section */}
-        <IgemHighSchoolSection lang={lang} theme={theme} />
+        <IgemHighSchoolSection lang={lang} theme={theme} onNavigate={onNavigate} />
 
         {/* Video Story Section with Scroll Option (Placed at the bottom of the learning page) */}
         <VideoStorySection lang={lang} theme={theme} />
@@ -524,6 +603,8 @@ export default function LearningPage({ lang, onNavigate, theme = 'dark' }: Learn
             </button>
           </div>
         </div>
+          </>
+        )}
 
       </div>
     </div>

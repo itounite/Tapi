@@ -120,13 +120,39 @@ export default function App() {
     if (path === '/essays' || hash === '#essays' || hash === '#/essays') {
       return '/essays';
     }
-    if (path === '/learning' || hash === '#learning' || hash === '#/learning') {
-      return '/learning';
+    if (
+      path === '/learning/biobuilder' ||
+      path === '/biobuilder' ||
+      hash === '#/learning/biobuilder' ||
+      hash === '#biobuilder' ||
+      hash === '#/biobuilder'
+    ) {
+      return '/learning/biobuilder';
+    }
+    if (
+      path === '/learning/curated' ||
+      path === '/learning' ||
+      hash === '#/learning/curated' ||
+      hash === '#learning' ||
+      hash === '#/learning'
+    ) {
+      return '/learning/curated';
     }
     return '/';
   }, []);
 
   const [currentPath, setCurrentPath] = useState<string>(resolveCurrentPath);
+
+  // Normalize bare /learning -> /learning/curated and /biobuilder -> /learning/biobuilder in address bar
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const rawPath = window.location.pathname;
+    if (rawPath === '/learning') {
+      window.history.replaceState({}, '', `/learning/curated${window.location.search}${window.location.hash}`);
+    } else if (rawPath === '/biobuilder') {
+      window.history.replaceState({}, '', `/learning/biobuilder${window.location.search}${window.location.hash}`);
+    }
+  }, [currentPath]);
 
   // Sync state with back/forward browser navigation and hash changes
   useEffect(() => {
@@ -184,17 +210,31 @@ export default function App() {
         description = 'タピ・ライフの作者・辻義によるエッセイ、コラム、文集。深海生物の知恵から、日本米の歴史、そしてフィンランドでのオリジナルグッズ販売体験記まで。';
         keywords = 'タピライフ エッセイ, 辻義 エッセイ, 辻義 文集, コラム, 読み物, 家族エピソード, フィンランド';
       }
-    } else if (currentPath === '/learning') {
+    } else if (currentPath === '/learning/biobuilder') {
       if (lang === 'fi') {
-        title = 'Oppimisresurssit | Koodaus, lukeminen, matematiikka & tiede | Tapi Life';
+        title = 'BioBuilder Academy | Oppiminen | Tapi Life';
+        description = 'Pelaa BioBuilder Academy -peliä ja ohjelmoi mikrobeja, kasveja ja soluja DNA-geenipalikoilla 12 tehtävässä.';
+        keywords = 'BioBuilder Academy, synteettinen biologia, iGEM, geeniopeli, oppimispeli';
+      } else if (lang === 'en') {
+        title = 'BioBuilder Academy | Learning | Tapi Life';
+        description = 'Play BioBuilder Academy under /learning/biobuilder: design microbes, drought-resistant crops, immune cells, and glowing trees across 12 synthetic biology missions.';
+        keywords = 'BioBuilder Academy, synthetic biology game, iGEM, DNA engineering, STEM game';
+      } else {
+        title = 'BioBuilder Academy | 学習リソース | Tapi Life';
+        description = '微生物、植物、免疫細胞、光る街路樹をDNAパーツでプログラムする合成生物学ゲーム（全12ミッション）。';
+        keywords = 'BioBuilder Academy, 合成生物学, iGEM, DNAゲーム, 理科パズル';
+      }
+    } else if (currentPath.startsWith('/learning')) {
+      if (lang === 'fi') {
+        title = 'Kuraatoidut oppimisresurssit | Oppiminen | Tapi Life';
         description = 'Kuraattorin valitsemat parhaat ilmaiset oppimisresurssit lapsille ja nuorille: Code.org, Scratch, Alice 3D, Tynker, Kodable, StoryWeaver, ReadTheory, Worldreader ja tiedesimulaatiot.';
         keywords = 'oppimisresurssit, koodaus lapsille, Scratch, Code.org, Storyweaver, ReadTheory, Alice 3D, matematiikka, tiede, englanti, ilmaiset kurssit';
       } else if (lang === 'en') {
-        title = 'Learning Resources | Coding, Reading, Math & Science | Tapi Life';
+        title = 'Curated Learning Resources | Learning | Tapi Life';
         description = 'Curated premier educational platforms for kids and lifelong learners: Code.org, Scratch, Alice 3D, Tynker, Kodable, StoryWeaver, ReadTheory, Worldreader, Khan Academy, and PhET simulations.';
         keywords = 'Learning resources, coding for kids, Scratch, Code.org, Alice 3D, Tynker, Kodable, StoryWeaver, ReadTheory, Worldreader, STEM, math, science, reading comprehension';
       } else {
-        title = '学習リソース (Learning) | コーディング・読解・数学・科学 | Tapi Life';
+        title = '厳選学習リソース (Learning) | コーディング・読解・数学・科学 | Tapi Life';
         description = '子どもから大人まで学べる世界水準の無料・優良学習プラットフォーム厳選集。Code.org、Scratch、Alice 3D、Tynker、Kodable、StoryWeaver、ReadTheory、Worldreaderなどのカード形式まとめ。';
         keywords = '学習リソース, プログラミング学習, コーディング, スクラッチ, Scratch, Code.org, Alice 3D, Tynker, Kodable, StoryWeaver, ReadTheory, 英語読解, 算数数学, 科学実験';
       }
@@ -252,8 +292,14 @@ export default function App() {
 
   // Safe SPA navigation helper
   const navigate = (path: string) => {
-    window.history.pushState({}, '', path);
-    setCurrentPath(path);
+    const normalizedPath =
+      path === '/learning'
+        ? '/learning/curated'
+        : path === '/biobuilder'
+        ? '/learning/biobuilder'
+        : path;
+    window.history.pushState({}, '', normalizedPath);
+    setCurrentPath(normalizedPath);
     window.scrollTo(0, 0);
   };
 
@@ -348,8 +394,13 @@ export default function App() {
           <AboutPage lang={lang} onNavigate={navigate} theme={theme} />
         ) : currentPath === '/essays' ? (
           <EssaysPage lang={lang} onNavigate={navigate} theme={theme} />
-        ) : currentPath === '/learning' ? (
-          <LearningPage lang={lang} onNavigate={navigate} theme={theme} />
+        ) : currentPath.startsWith('/learning') ? (
+          <LearningPage
+            lang={lang}
+            onNavigate={navigate}
+            theme={theme}
+            activeSection={currentPath === '/learning/biobuilder' ? 'biobuilder' : 'curated'}
+          />
         ) : (
           /* Home Page View */
           <div>

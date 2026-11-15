@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, BookOpen, MessageSquare, Instagram, Menu, X, Home, Sun, Moon, GraduationCap } from 'lucide-react';
+import { User, BookOpen, MessageSquare, Instagram, Menu, X, Home, Sun, Moon, GraduationCap, ChevronDown, Compass, Dna } from 'lucide-react';
 import { Language, ThemeMode } from '../types';
 import tapiCupLogo from '../assets/images/tapi_cup_logo.svg';
 
@@ -21,7 +21,19 @@ export default function Header({
   onToggleTheme
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [learningMenuOpen, setLearningMenuOpen] = useState(false);
   const isDark = theme === 'dark';
+
+  const getLearningSubLabel = (key: 'curated' | 'biobuilder') => {
+    if (key === 'curated') {
+      if (lang === 'fi') return 'Kuraatoidut resurssit';
+      if (lang === 'en') return 'Curated Resources';
+      return '厳選リソース・書籍';
+    }
+    if (lang === 'fi') return 'BioBuilder-peli';
+    if (lang === 'en') return 'BioBuilder Game';
+    return 'BioBuilder ゲーム';
+  };
 
   const getNavLabel = (key: 'about' | 'essays' | 'stickers' | 'home' | 'learning') => {
     switch (key) {
@@ -51,6 +63,7 @@ export default function Header({
   const handleNav = (path: string) => {
     onNavigate(path);
     setMobileMenuOpen(false);
+    setLearningMenuOpen(false);
   };
 
   return (
@@ -167,17 +180,85 @@ export default function Header({
             <span>{getNavLabel('essays')}</span>
           </button>
 
-          <button 
-            onClick={() => handleNav('/learning')}
-            className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 whitespace-nowrap ${
-              currentPath === '/learning' 
-                ? (isDark ? 'text-amber-400 font-bold border-b-2 border-amber-500' : 'text-neutral-950 font-bold border-b-2 border-neutral-900')
-                : (isDark ? 'hover:text-amber-300' : 'hover:text-neutral-950')
-            }`}
+          <div
+            className="relative group"
+            onMouseEnter={() => setLearningMenuOpen(true)}
+            onMouseLeave={() => setLearningMenuOpen(false)}
           >
-            <GraduationCap className="w-3.5 h-3.5 shrink-0" />
-            <span>{getNavLabel('learning')}</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => handleNav('/learning/curated')}
+              aria-haspopup="menu"
+              aria-expanded={learningMenuOpen}
+              className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 whitespace-nowrap ${
+                currentPath.startsWith('/learning')
+                  ? (isDark ? 'text-amber-400 font-bold border-b-2 border-amber-500' : 'text-neutral-950 font-bold border-b-2 border-neutral-900')
+                  : (isDark ? 'hover:text-amber-300' : 'hover:text-neutral-950')
+              }`}
+            >
+              <GraduationCap className="w-3.5 h-3.5 shrink-0" />
+              <span>{getNavLabel('learning')}</span>
+              <ChevronDown
+                className={`w-3 h-3 shrink-0 transition-transform duration-200 ${
+                  learningMenuOpen ? 'rotate-180' : 'group-hover:rotate-180'
+                }`}
+              />
+            </button>
+
+            {/* Hover Dropdown Menu with Curated Resources & BioBuilder Game */}
+            <div
+              role="menu"
+              className={`absolute left-0 top-full pt-2 w-56 z-50 transition-all duration-150 ${
+                learningMenuOpen
+                  ? 'opacity-100 visible translate-y-0 pointer-events-auto'
+                  : 'opacity-0 invisible -translate-y-1 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:pointer-events-auto'
+              }`}
+            >
+              <div
+                className={`rounded-xl border p-1.5 shadow-lg ${
+                  isDark
+                    ? 'bg-[#151322] border-neutral-800 text-neutral-200 shadow-[0_12px_30px_rgba(0,0,0,0.65)]'
+                    : 'bg-white border-neutral-200/95 text-neutral-800 shadow-[0_10px_28px_rgba(0,0,0,0.08)]'
+                }`}
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => handleNav('/learning/curated')}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 text-[11px] font-mono transition-colors cursor-pointer whitespace-nowrap ${
+                    currentPath === '/learning/curated' || currentPath === '/learning'
+                      ? isDark
+                        ? 'bg-amber-500/20 text-amber-300 font-bold'
+                        : 'bg-neutral-100 text-neutral-950 font-bold'
+                      : isDark
+                      ? 'hover:bg-neutral-800/80 text-neutral-300'
+                      : 'hover:bg-neutral-100/80 text-neutral-700'
+                  }`}
+                >
+                  <Compass className="w-3.5 h-3.5 shrink-0 text-amber-500" />
+                  <span>{getLearningSubLabel('curated')}</span>
+                </button>
+
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => handleNav('/learning/biobuilder')}
+                  className={`w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 text-[11px] font-mono transition-colors cursor-pointer whitespace-nowrap ${
+                    currentPath === '/learning/biobuilder'
+                      ? isDark
+                        ? 'bg-teal-500/20 text-teal-300 font-bold'
+                        : 'bg-teal-50 text-teal-900 font-bold'
+                      : isDark
+                      ? 'hover:bg-neutral-800/80 text-neutral-300'
+                      : 'hover:bg-neutral-100/80 text-neutral-700'
+                  }`}
+                >
+                  <Dna className="w-3.5 h-3.5 shrink-0 text-teal-600 dark:text-teal-400" />
+                  <span>{getLearningSubLabel('biobuilder')}</span>
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* External Links */}
           <div className="flex items-center gap-2 lg:gap-3 pl-1 border-l border-neutral-300/60 dark:border-neutral-800">
@@ -336,17 +417,53 @@ export default function Header({
             <span>{getNavLabel('essays')}</span>
           </button>
 
-          <button 
-            onClick={() => handleNav('/learning')}
-            className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
-              currentPath === '/learning' 
-                ? (isDark ? 'bg-amber-950/40 text-amber-300 font-bold border border-amber-500/30' : 'bg-neutral-200 text-neutral-950 font-bold') 
-                : (isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800' : 'hover:bg-neutral-100 active:bg-neutral-200')
-            }`}
-          >
-            <GraduationCap className="w-4 h-4 shrink-0" />
-            <span>{getNavLabel('learning')}</span>
-          </button>
+          <div className="space-y-1">
+            <button 
+              onClick={() => handleNav('/learning/curated')}
+              className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
+                currentPath.startsWith('/learning') 
+                  ? (isDark ? 'bg-amber-950/40 text-amber-300 font-bold border border-amber-500/30' : 'bg-neutral-200 text-neutral-950 font-bold') 
+                  : (isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800' : 'hover:bg-neutral-100 active:bg-neutral-200')
+              }`}
+            >
+              <GraduationCap className="w-4 h-4 shrink-0" />
+              <span>{getNavLabel('learning')}</span>
+            </button>
+
+            <div className={`pl-6 space-y-1 border-l ml-5 ${isDark ? 'border-neutral-800' : 'border-neutral-200'}`}>
+              <button
+                onClick={() => handleNav('/learning/curated')}
+                className={`w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 min-h-[40px] transition-colors touch-manipulation ${
+                  currentPath === '/learning/curated'
+                    ? isDark
+                      ? 'text-amber-300 font-bold bg-amber-950/30'
+                      : 'text-neutral-950 font-bold bg-neutral-100'
+                    : isDark
+                    ? 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/50'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
+                }`}
+              >
+                <Compass className="w-3.5 h-3.5 shrink-0 text-amber-500" />
+                <span>{getLearningSubLabel('curated')}</span>
+              </button>
+
+              <button
+                onClick={() => handleNav('/learning/biobuilder')}
+                className={`w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-2.5 min-h-[40px] transition-colors touch-manipulation ${
+                  currentPath === '/learning/biobuilder'
+                    ? isDark
+                      ? 'text-teal-300 font-bold bg-teal-950/30'
+                      : 'text-teal-900 font-bold bg-teal-50'
+                    : isDark
+                    ? 'text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800/50'
+                    : 'text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100'
+                }`}
+              >
+                <Dna className="w-3.5 h-3.5 shrink-0 text-teal-600 dark:text-teal-400" />
+                <span>{getLearningSubLabel('biobuilder')}</span>
+              </button>
+            </div>
+          </div>
 
           <a 
             href="https://store.line.me/stickershop/author/4712842/en" 
