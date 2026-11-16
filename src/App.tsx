@@ -22,6 +22,7 @@ import AboutPage from './components/AboutPage';
 import LearningPage from './components/LearningPage';
 import ChristmasAtmosphere from './components/ChristmasAtmosphere';
 import DailyQuoteBanner from './components/DailyQuoteBanner';
+import HangingBookmark from './components/HangingBookmark';
 import { trackPageView } from './utils/visitTracker';
 
 // Import path of hero artwork asset
@@ -109,11 +110,15 @@ export default function App() {
   }, [theme]);
   
   // Custom SPA Path Routing State with hash/param support
+  // Root '/' directly lands on '/learning/curated' by default; Home page is served at '/home'
   const resolveCurrentPath = useCallback((): string => {
-    if (typeof window === 'undefined') return '/';
+    if (typeof window === 'undefined') return '/learning/curated';
     const path = window.location.pathname;
     const hash = window.location.hash;
 
+    if (path === '/home' || hash === '#home' || hash === '#/home') {
+      return '/home';
+    }
     if (path === '/about' || hash === '#about' || hash === '#/about') {
       return '/about';
     }
@@ -138,16 +143,20 @@ export default function App() {
     ) {
       return '/learning/curated';
     }
-    return '/';
+    return '/learning/curated';
   }, []);
 
   const [currentPath, setCurrentPath] = useState<string>(resolveCurrentPath);
 
-  // Normalize bare /learning -> /learning/curated and /biobuilder -> /learning/biobuilder in address bar
+  // Normalize root '/', bare /learning -> /learning/curated and /biobuilder -> /learning/biobuilder in address bar
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const rawPath = window.location.pathname;
-    if (rawPath === '/learning') {
+    const rawHash = window.location.hash;
+    if (
+      (rawPath === '/' && rawHash !== '#home' && rawHash !== '#/home') ||
+      rawPath === '/learning'
+    ) {
       window.history.replaceState({}, '', `/learning/curated${window.location.search}${window.location.hash}`);
     } else if (rawPath === '/biobuilder') {
       window.history.replaceState({}, '', `/learning/biobuilder${window.location.search}${window.location.hash}`);
@@ -290,10 +299,12 @@ export default function App() {
     if (twitterDesc) twitterDesc.setAttribute('content', description);
   }, [currentPath, lang]);
 
-  // Safe SPA navigation helper
+  // Safe SPA navigation helper (explicit HOME clicks go to '/home')
   const navigate = (path: string) => {
     const normalizedPath =
-      path === '/learning'
+      path === '/'
+        ? '/home'
+        : path === '/learning'
         ? '/learning/curated'
         : path === '/biobuilder'
         ? '/learning/biobuilder'
@@ -383,6 +394,15 @@ export default function App() {
         onNavigate={navigate}
         theme={theme}
         onToggleTheme={toggleTheme}
+      />
+
+      {/* Hanging Bookmarks with Thread from Top Header */}
+      <HangingBookmark
+        lang={lang}
+        theme={theme}
+        currentPath={currentPath}
+        onNavigateCurated={() => navigate('/learning/curated')}
+        onNavigateEssays={() => navigate('/essays')}
       />
 
       {/* Daily Inspirational Quote & Teacher Banner (Prominently placed below the Header) */}

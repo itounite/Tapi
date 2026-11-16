@@ -147,7 +147,7 @@ export default function Header({
           <button 
             onClick={() => handleNav('/')}
             className={`transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 whitespace-nowrap ${
-              currentPath === '/' 
+              currentPath === '/' || currentPath === '/home'
                 ? (isDark ? 'text-amber-400 font-bold border-b-2 border-amber-500' : 'text-neutral-950 font-bold border-b-2 border-neutral-900')
                 : (isDark ? 'hover:text-amber-300' : 'hover:text-neutral-950')
             }`}
@@ -384,7 +384,7 @@ export default function Header({
           <button 
             onClick={() => handleNav('/')}
             className={`w-full text-left px-3.5 py-3 rounded-lg flex items-center gap-3 min-h-[44px] transition-colors touch-manipulation ${
-              currentPath === '/' 
+              currentPath === '/' || currentPath === '/home'
                 ? (isDark ? 'bg-amber-950/40 text-amber-300 font-bold border border-amber-500/30' : 'bg-neutral-200 text-neutral-950 font-bold') 
                 : (isDark ? 'hover:bg-neutral-800/60 active:bg-neutral-800' : 'hover:bg-neutral-100 active:bg-neutral-200')
             }`}
