@@ -1,9 +1,68 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { ThemeMode } from '../types';
+import { Language, ThemeMode } from '../types';
+import BackgroundMusicPlayer from './BackgroundMusicPlayer';
 
 interface ChristmasAtmosphereProps {
   theme?: ThemeMode;
+  lang?: Language;
+}
+
+interface BirthdayCountdown {
+  isBirthdayToday: boolean;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+function getNovember24Countdown(): BirthdayCountdown {
+  const now = new Date();
+  const isPreviewBirthday =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('birthday') === 'nov24';
+
+  const startOfNov24_2026 = new Date(2026, 10, 24, 0, 0, 0, 0);
+  const endOfNov24_2026 = new Date(2026, 10, 25, 0, 0, 0, 0);
+  const nowMs = now.getTime();
+
+  const isBirthdayToday =
+    isPreviewBirthday ||
+    (nowMs >= startOfNov24_2026.getTime() && nowMs < endOfNov24_2026.getTime());
+
+  if (isBirthdayToday) {
+    const remainingMs = Math.max(0, endOfNov24_2026.getTime() - nowMs);
+    const totalSeconds = Math.floor(remainingMs / 1000);
+    return {
+      isBirthdayToday: true,
+      hours: Math.floor(totalSeconds / 3600),
+      minutes: Math.floor((totalSeconds % 3600) / 60),
+      seconds: totalSeconds % 60,
+    };
+  }
+
+  let target = startOfNov24_2026;
+  if (nowMs >= endOfNov24_2026.getTime()) {
+    let targetYear = now.getFullYear();
+    const month = now.getMonth();
+    const date = now.getDate();
+    if (month > 10 || (month === 10 && date >= 24)) {
+      targetYear += 1;
+    }
+    target = new Date(targetYear, 10, 24, 0, 0, 0, 0);
+  }
+
+  const diffMs = Math.max(0, target.getTime() - nowMs);
+  const totalSeconds = Math.floor(diffMs / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return {
+    isBirthdayToday: false,
+    hours,
+    minutes,
+    seconds,
+  };
 }
 
 /**
@@ -18,8 +77,63 @@ interface ChristmasAtmosphereProps {
  * 4. Fully size-optimized for mobile viewports so it never crowds or overflows on phones
  * 5. Ambient, gentle drifting snowflakes in the background
  */
-export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosphereProps) {
+export default function ChristmasAtmosphere({ theme = 'dark', lang = 'ja' }: ChristmasAtmosphereProps) {
   const isDark = theme === 'dark';
+  const [countdown, setCountdown] = useState<BirthdayCountdown>(() => getNovember24Countdown());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setCountdown(getNovember24Countdown());
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const paddedMins = String(countdown.minutes).padStart(2, '0');
+  const paddedSecs = String(countdown.seconds).padStart(2, '0');
+
+  const timerLabel = countdown.isBirthdayToday
+    ? lang === 'fi'
+      ? '🎂 Hyvää syntymäpäivää!'
+      : lang === 'en'
+      ? '🎂 Happy Birthday!'
+      : '🎂 今日が誕生日!'
+    : lang === 'fi'
+    ? `Aikaa jäljellä ${countdown.hours} t ${paddedMins} m`
+    : lang === 'en'
+    ? `${countdown.hours}h ${paddedMins}m ${paddedSecs}s`
+    : `あと ${countdown.hours}時間 ${paddedMins}分`;
+
+  // Rich, lively popping glitter stars & confetti sparkles across the page
+  const poppingGlitters = [
+    { left: '5%', top: '12%', size: 18, color: '#FCD34D', delay: 0, duration: 1.9, shape: 'star' },
+    { left: '11%', top: '34%', size: 13, color: '#F472B6', delay: 0.35, duration: 1.7, shape: 'dot' },
+    { left: '16%', top: '68%', size: 16, color: '#6EE7B7', delay: 0.8, duration: 2.2, shape: 'star' },
+    { left: '21%', top: '22%', size: 20, color: '#FDE68A', delay: 0.15, duration: 1.8, shape: 'star' },
+    { left: '27%', top: '52%', size: 12, color: '#C084FC', delay: 1.0, duration: 2.1, shape: 'dot' },
+    { left: '33%', top: '15%', size: 17, color: '#FB7185', delay: 0.5, duration: 1.85, shape: 'star' },
+    { left: '39%', top: '39%', size: 19, color: '#FCD34D', delay: 1.25, duration: 2.0, shape: 'star' },
+    { left: '45%', top: '76%', size: 14, color: '#38BDF8', delay: 0.25, duration: 1.75, shape: 'dot' },
+    { left: '52%', top: '26%', size: 20, color: '#F472B6', delay: 0.7, duration: 1.95, shape: 'star' },
+    { left: '58%', top: '61%', size: 13, color: '#6EE7B7', delay: 1.35, duration: 2.15, shape: 'dot' },
+    { left: '64%', top: '14%', size: 18, color: '#FCD34D', delay: 0.45, duration: 1.8, shape: 'star' },
+    { left: '70%', top: '46%', size: 16, color: '#C084FC', delay: 0.9, duration: 2.05, shape: 'star' },
+    { left: '76%', top: '29%', size: 19, color: '#FB7185', delay: 0.1, duration: 1.75, shape: 'star' },
+    { left: '82%', top: '66%', size: 14, color: '#FDE68A', delay: 1.15, duration: 2.2, shape: 'dot' },
+    { left: '88%', top: '18%', size: 18, color: '#FCD34D', delay: 0.6, duration: 1.9, shape: 'star' },
+    { left: '93%', top: '48%', size: 14, color: '#F472B6', delay: 1.45, duration: 2.0, shape: 'dot' },
+    { left: '9%', top: '84%', size: 15, color: '#FCD34D', delay: 1.1, duration: 1.9, shape: 'star' },
+    { left: '47%', top: '9%', size: 16, color: '#6EE7B7', delay: 0.85, duration: 1.7, shape: 'star' },
+    { left: '74%', top: '83%', size: 17, color: '#FB7185', delay: 0.3, duration: 2.0, shape: 'star' },
+    { left: '24%', top: '88%', size: 12, color: '#38BDF8', delay: 0.65, duration: 1.85, shape: 'dot' },
+    { left: '61%', top: '35%', size: 15, color: '#FDE047', delay: 0.2, duration: 1.65, shape: 'star' },
+    { left: '85%', top: '37%', size: 16, color: '#C084FC', delay: 0.95, duration: 1.95, shape: 'star' },
+    { left: '14%', top: '47%', size: 15, color: '#F472B6', delay: 0.55, duration: 1.8, shape: 'star' },
+    { left: '90%', top: '76%', size: 15, color: '#6EE7B7', delay: 1.3, duration: 2.1, shape: 'star' },
+    { left: '36%', top: '64%', size: 14, color: '#FCD34D', delay: 0.4, duration: 1.75, shape: 'dot' },
+    { left: '67%', top: '72%', size: 16, color: '#F472B6', delay: 1.05, duration: 1.9, shape: 'star' },
+    { left: '54%', top: '49%', size: 12, color: '#38BDF8', delay: 0.75, duration: 1.65, shape: 'dot' },
+    { left: '79%', top: '11%', size: 16, color: '#FDE047', delay: 0.15, duration: 1.85, shape: 'star' },
+  ];
 
   // Light colors: Warm Gold, Soft Pine Emerald, Gentle Berry Red, Winter Ice White
   const fairyLights = [
@@ -354,6 +468,162 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
         </motion.div>
       </div>
 
+      {/* ==================================================================================== */}
+      {/* 2B. LEFT SIDE: SMALL LITTLE GIRL WITH BIRTHDAY HAT, "誕生日おめでとう" & HOURS TIMER */}
+      {/* ==================================================================================== */}
+      <div
+        className="fixed bottom-0 left-1.5 sm:left-3 pointer-events-none z-10 select-none overflow-visible flex flex-col items-start"
+        aria-hidden="true"
+      >
+        <motion.div
+          initial={{ opacity: 0, x: -12 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, ease: 'easeOut' }}
+          className="flex flex-col items-start"
+        >
+          {/* Compact Greeting + Live Hours Timer Tag + Background Music Control */}
+          <div
+            className={`mb-0.5 ml-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-xl border backdrop-blur-sm shadow-xs max-w-[186px] sm:max-w-[228px] ${
+              isDark
+                ? 'bg-[#1f162b]/90 border-pink-400/35 text-pink-100 shadow-[0_4px_14px_rgba(0,0,0,0.45)]'
+                : 'bg-[#fff9fb]/92 border-rose-200 text-neutral-900 shadow-[0_4px_12px_rgba(225,29,72,0.1)]'
+            }`}
+          >
+            <div
+              className={`font-serif text-[11px] sm:text-xs font-bold leading-tight tracking-tight ${
+                isDark ? 'text-pink-300' : 'text-rose-700'
+              }`}
+            >
+              誕生日おめでとう
+            </div>
+            <div
+              className={`mt-0.5 font-mono text-[9.5px] sm:text-[10.5px] font-semibold tabular-nums leading-tight ${
+                countdown.isBirthdayToday
+                  ? isDark
+                    ? 'text-amber-300'
+                    : 'text-amber-700'
+                  : isDark
+                  ? 'text-neutral-200'
+                  : 'text-neutral-700'
+              }`}
+            >
+              {timerLabel}
+            </div>
+
+            {/* Background Music: Cherry by Spitz plays only during Nov 24, 2026 (24-hour window) */}
+            {countdown.isBirthdayToday && (
+              <BackgroundMusicPlayer lang={lang} theme={theme} />
+            )}
+          </div>
+
+          {/* Small Little Girl SVG with Birthday Party Hat */}
+          <div className="w-20 h-26 sm:w-28 sm:h-36 md:w-32 md:h-40">
+            <svg viewBox="0 0 150 185" className="w-full h-full overflow-visible">
+              {/* Little sparkling stars around her hat */}
+              <polygon
+                points="118,22 121,29 128,29 122,34 124,41 118,37 112,41 114,34 108,29 115,29"
+                fill="#FCD34D"
+                stroke="#F59E0B"
+                strokeWidth="0.9"
+                className="animate-blink-orange"
+              />
+              <polygon
+                points="26,48 28,53 33,53 29,56 30.5,61 26,58 21.5,61 23,56 19,53 24,53"
+                fill="#F472B6"
+                opacity="0.85"
+              />
+
+              {/* Little Girl Character Group */}
+              <g transform="translate(74, 72)">
+                {/* Birthday Party Hat sitting sweetly on top of her head */}
+                <g transform="translate(0, -16) rotate(-5)">
+                  {/* Pom-pom at hat tip */}
+                  <circle cx="0" cy="-34" r="5" fill="#FDE047" stroke={inkColor} strokeWidth="1.5" />
+                  {/* Party Hat Cone */}
+                  <polygon
+                    points="-15,-4 0,-31 15,-4"
+                    fill="#F43F5E"
+                    stroke={inkColor}
+                    strokeWidth="1.8"
+                    strokeLinejoin="round"
+                  />
+                  {/* Decorative Festive Stripes / Polka Dots on Hat */}
+                  <path d="M-9,-12 L9,-12" stroke="#FDE047" strokeWidth="2.5" strokeLinecap="round" />
+                  <circle cx="-3" cy="-19" r="2" fill="#FFFFFF" />
+                  <circle cx="4" cy="-21" r="1.8" fill="#A7F3D0" />
+                  <circle cx="2" cy="-7" r="2" fill="#FFFFFF" />
+                  {/* Fluffy White Hat Brim */}
+                  <rect x="-16.5" y="-5" width="33" height="5.5" rx="2.75" fill="#FFFBEB" stroke={inkColor} strokeWidth="1.3" />
+                </g>
+
+                {/* Cute Pigtails with Pink Ribbons */}
+                <path d="M-12,-4 Q-24,-8 -27,4" fill="none" stroke={inkColor} strokeWidth="2.4" strokeLinecap="round" />
+                <circle cx="-16" cy="-5" r="3" fill="#EC4899" />
+                <path d="M12,-4 Q24,-8 27,4" fill="none" stroke={inkColor} strokeWidth="2.4" strokeLinecap="round" />
+                <circle cx="16" cy="-5" r="3" fill="#EC4899" />
+
+                {/* Head */}
+                <circle
+                  cx="0"
+                  cy="0"
+                  r="14.5"
+                  fill={isDark ? '#1E293B' : '#FEF3C7'}
+                  stroke={inkColor}
+                  strokeWidth="2.2"
+                />
+
+                {/* Cheerful Eyes, Rosy Cheeks & Happy Smile */}
+                <path d="M-6,-2 Q-4,-5 -2,-2" fill="none" stroke={inkColor} strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M2,-2 Q4,-5 6,-2" fill="none" stroke={inkColor} strokeWidth="1.8" strokeLinecap="round" />
+                <circle cx="-8" cy="2" r="2.6" fill="#FDA4AF" opacity="0.9" />
+                <circle cx="8" cy="2" r="2.6" fill="#FDA4AF" opacity="0.9" />
+                <path d="M-4,4 Q0,8.5 4,4" fill="none" stroke={inkColor} strokeWidth="1.7" strokeLinecap="round" />
+
+                {/* Festive Neck Ribbon */}
+                <rect x="-7" y="13" width="14" height="4.5" rx="2" fill="#FBBF24" stroke={inkColor} strokeWidth="1.1" />
+
+                {/* Cute Birthday Dress */}
+                <polygon
+                  points="-17,56 0,17 17,56"
+                  fill="#FB7185"
+                  stroke={inkColor}
+                  strokeWidth="1.8"
+                  strokeLinejoin="round"
+                />
+                {/* Cream Ruffle Trim on Dress */}
+                <rect x="-18.5" y="53" width="37" height="5" rx="2.5" fill="#FFFBEB" stroke={inkColor} strokeWidth="1.1" />
+                {/* Cute tiny heart on dress */}
+                <circle cx="0" cy="36" r="2.5" fill="#FDE047" />
+
+                {/* Left Arm waving cheerfully */}
+                <path d="M-8,24 Q-20,16 -24,6" fill="none" stroke={inkColor} strokeWidth="2.1" strokeLinecap="round" />
+                <circle cx="-24.5" cy="5" r="2.5" fill="#FDE047" stroke={inkColor} strokeWidth="1" />
+
+                {/* Right Arm holding a little pastel birthday balloon */}
+                <path d="M8,24 Q20,20 28,12" fill="none" stroke={inkColor} strokeWidth="2.1" strokeLinecap="round" />
+                <path d="M28,12 Q32,1 31,-11" fill="none" stroke={isDark ? '#FDE68A' : '#94A3B8'} strokeWidth="1.2" />
+                <ellipse
+                  cx="31"
+                  cy="-21"
+                  rx="9.5"
+                  ry="11.5"
+                  fill="#F472B6"
+                  stroke={inkColor}
+                  strokeWidth="1.5"
+                />
+                <ellipse cx="28" cy="-25" rx="2.5" ry="4" fill="#FFFFFF" opacity="0.55" transform="rotate(-18 28 -25)" />
+
+                {/* Legs & Little Party Shoes standing right at bottom baseline */}
+                <line x1="-5.5" y1="58" x2="-5.5" y2="108" stroke={inkColor} strokeWidth="2.3" strokeLinecap="round" />
+                <line x1="5.5" y1="58" x2="5.5" y2="108" stroke={inkColor} strokeWidth="2.3" strokeLinecap="round" />
+                <rect x="-10" y="106" width="8.5" height="5.5" rx="2" fill="#E11D48" stroke={inkColor} strokeWidth="1.1" />
+                <rect x="2" y="106" width="8.5" height="5.5" rx="2" fill="#E11D48" stroke={inkColor} strokeWidth="1.1" />
+              </g>
+            </svg>
+          </div>
+        </motion.div>
+      </div>
+
       {/* ========================================================= */}
       {/* 3. GENTLE, VERY SPARSE AMBIENT SNOWFLAKES                 */}
       {/* ========================================================= */}
@@ -393,6 +663,58 @@ export default function ChristmasAtmosphere({ theme = 'dark' }: ChristmasAtmosph
               filter: isDark ? 'blur(0.5px) drop-shadow(0 0 2px rgba(255,255,255,0.4))' : 'none',
             }}
           />
+        ))}
+      </div>
+
+      {/* ========================================================= */}
+      {/* 4. LIVELY POPPING GLITTER SHIMMER ACROSS THE PAGE         */}
+      {/* ========================================================= */}
+      <div
+        className="fixed inset-0 pointer-events-none z-20 select-none overflow-hidden"
+        aria-hidden="true"
+      >
+        {poppingGlitters.map((glitter, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, scale: 0.25, rotate: 0 }}
+            animate={{
+              opacity: [0, 0.98, 0.35, 1, 0],
+              scale: [0.25, 1.38, 0.78, 1.45, 0.25],
+              rotate: glitter.shape === 'star' ? [0, 50, 110, 175, 220] : [0, 0, 0, 0, 0],
+              y: [0, -10, 6, -12, 0],
+            }}
+            transition={{
+              duration: glitter.duration,
+              delay: glitter.delay,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+            className="absolute"
+            style={{
+              left: glitter.left,
+              top: glitter.top,
+              width: `${glitter.size}px`,
+              height: `${glitter.size}px`,
+              filter: `drop-shadow(0 0 8px ${glitter.color})`,
+            }}
+          >
+            {glitter.shape === 'star' ? (
+              <svg viewBox="0 0 24 24" className="w-full h-full">
+                <path
+                  d="M12 1 L14.6 9.4 L23 12 L14.6 14.6 L12 23 L9.4 14.6 L1 12 L9.4 9.4 Z"
+                  fill={glitter.color}
+                />
+              </svg>
+            ) : (
+              <div
+                className="w-2.5 h-2.5 rounded-full mx-auto my-auto"
+                style={{
+                  backgroundColor: glitter.color,
+                  boxShadow: `0 0 10px ${glitter.color}`,
+                }}
+              />
+            )}
+          </motion.div>
         ))}
       </div>
     </>

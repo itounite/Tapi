@@ -931,8 +931,8 @@ export default function App() {
       {/* Constant Footer across ALL pages */}
       <Footer lang={lang} theme={theme} />
 
-      {/* Subtle Christmas Holiday Atmosphere: Delicate Fairy Lights, Minimalist Pine Trees & Soft Snowflakes */}
-      <ChristmasAtmosphere theme={theme} />
+      {/* Subtle Christmas & Birthday Atmosphere: Fairy Lights, Sticky Family, Birthday Girl & Nov 24 Glitter */}
+      <ChristmasAtmosphere theme={theme} lang={lang} />
 
     </div>
   );
