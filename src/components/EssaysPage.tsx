@@ -4,7 +4,6 @@ import { BookOpen, Clock, ArrowRight, ArrowLeft } from 'lucide-react';
 import tapiSupportImg from '../assets/images/tapi_essay_support.png';
 import tapiRiceImg from '../assets/images/tapi_essay_rice.png';
 import tapiDanceImg from '../assets/images/tapi_essay_dance.png';
-import turtleStickerImg from '../assets/images/turtle_sticker.jpg';
 import macrovectorPollutionImg from '../assets/images/macrovector_pollution_1790877055707.jpg';
 
 import { Language, ThemeMode } from '../types';
@@ -21,6 +20,7 @@ interface EssayImage {
   captionJa?: string;
   captionEn?: string;
   captionFi?: string;
+  note?: string;
   credit?: {
     text: string;
     url: string;
@@ -73,15 +73,9 @@ export default function EssaysPage({ lang, onNavigate, theme = 'dark' }: EssaysP
       readTimeJa: '読了時間 約5分',
       readTimeFi: 'Lukuajaksi n. 5 min',
       image: {
-        src: turtleStickerImg,
-        alt: 'Jockomo Nature Sea Turtle Sticker',
-        captionJa: '自然界の適応と進化を象徴するウミガメのインレイステッカー',
-        captionEn: 'Sea turtle inlay sticker symbolizing marine life adaptation and evolution',
-        captionFi: 'Merikilpikonnan helmiäiskuviointi kuvaamassa merieliöiden sopeutumista ja evoluutiota',
-        credit: {
-          text: 'Jockomo Nature Sea Turtle Sticker',
-          url: 'https://www.thomann.fi/jockomo_nature_sea_turtle_sticker.htm'
-        }
+        src: '/assets/aistudio/motion_photo_2380081781195144041_7f477382.jpg',
+        alt: 'Pink tortoise by a little girl and a Pearl',
+        note: 'Pink 🩷 tortoise by a little girl and a Pearl 🦪',
       },
       contentJa: [
         '自然界では、環境の変化が生物に与える影響は非常に大きい。生物は、どのような環境でも生存期間に、絶えず適応し進化してきた。その過程で、生命は極めて適切な適応能力を発揮し、過酷な環境でも生き抜くための工夫をしている。まず、環境の変化が生物にどのような影響を与えるかを考えることが重要だ。',
@@ -364,9 +358,20 @@ export default function EssaysPage({ lang, onNavigate, theme = 'dark' }: EssaysP
             src={essay.image.src}
             alt={essay.image.alt}
             referrerPolicy="no-referrer"
-            className="w-full h-full object-contain"
+            className={`w-full h-full ${essay.image.note ? 'object-cover rounded-lg' : 'object-contain'}`}
           />
         </div>
+        {essay.image.note && (
+          <div className="mt-1.5 text-center px-0.5 w-full">
+            <p
+              className={`text-[10px] sm:text-[11px] leading-snug font-serif font-medium break-words ${
+                isDark ? 'text-pink-200' : 'text-neutral-700'
+              }`}
+            >
+              {essay.image.note}
+            </p>
+          </div>
+        )}
         {essay.image.credit && (
           <div className="mt-1.5 text-center px-0.5 w-full">
             <p className="text-[9px] sm:text-[10px] leading-tight text-neutral-500 font-sans">
