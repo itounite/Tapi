@@ -15,22 +15,22 @@ interface BirthdayCountdown {
   seconds: number;
 }
 
-function getNovember24Countdown(): BirthdayCountdown {
+function getDecember4Countdown(): BirthdayCountdown {
   const now = new Date();
   const isPreviewBirthday =
     typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).get('birthday') === 'nov24';
+    new URLSearchParams(window.location.search).get('birthday') === 'dec4';
 
-  const startOfNov24_2026 = new Date(2026, 10, 24, 0, 0, 0, 0);
-  const endOfNov24_2026 = new Date(2026, 10, 25, 0, 0, 0, 0);
+  const startOfDec4_2026 = new Date(2026, 11, 4, 0, 0, 0, 0);
+  const endOfDec4_2026 = new Date(2026, 11, 5, 0, 0, 0, 0);
   const nowMs = now.getTime();
 
   const isBirthdayToday =
     isPreviewBirthday ||
-    (nowMs >= startOfNov24_2026.getTime() && nowMs < endOfNov24_2026.getTime());
+    (nowMs >= startOfDec4_2026.getTime() && nowMs < endOfDec4_2026.getTime());
 
   if (isBirthdayToday) {
-    const remainingMs = Math.max(0, endOfNov24_2026.getTime() - nowMs);
+    const remainingMs = Math.max(0, endOfDec4_2026.getTime() - nowMs);
     const totalSeconds = Math.floor(remainingMs / 1000);
     return {
       isBirthdayToday: true,
@@ -40,15 +40,15 @@ function getNovember24Countdown(): BirthdayCountdown {
     };
   }
 
-  let target = startOfNov24_2026;
-  if (nowMs >= endOfNov24_2026.getTime()) {
+  let target = startOfDec4_2026;
+  if (nowMs >= endOfDec4_2026.getTime()) {
     let targetYear = now.getFullYear();
     const month = now.getMonth();
     const date = now.getDate();
-    if (month > 10 || (month === 10 && date >= 24)) {
+    if (month > 11 || (month === 11 && date >= 4)) {
       targetYear += 1;
     }
-    target = new Date(targetYear, 10, 24, 0, 0, 0, 0);
+    target = new Date(targetYear, 11, 4, 0, 0, 0, 0);
   }
 
   const diffMs = Math.max(0, target.getTime() - nowMs);
@@ -69,21 +69,20 @@ function getNovember24Countdown(): BirthdayCountdown {
  * ChristmasAtmosphere
  * Features:
  * 1. Delicate, warm twinkling fairy lights garland along top edge
- * 2. LEFT SIDE: Three slender hand-drawn sticky Christmas pine trees (1 tall + 2 small)
- *    standing naturally on the baseline without any artificial platform
+ * 2. LEFT SIDE: Cute little birthday boy wearing a birthday hat with "誕生日おめでとう" & hours countdown to Dec 4
  * 3. RIGHT SIDE: Sticky character family (Mother in dark navy blue, Little Girl in pink, Boy in black)
  *    standing naturally without any platform, with "Onnellinen" and "幸せな" scribbled in pink
  *    in concentric child-like arches above them
  * 4. Fully size-optimized for mobile viewports so it never crowds or overflows on phones
- * 5. Ambient, gentle drifting snowflakes in the background
+ * 5. Ambient drifting snowflakes + lively popping glitter shimmer
  */
 export default function ChristmasAtmosphere({ theme = 'dark', lang = 'ja' }: ChristmasAtmosphereProps) {
   const isDark = theme === 'dark';
-  const [countdown, setCountdown] = useState<BirthdayCountdown>(() => getNovember24Countdown());
+  const [countdown, setCountdown] = useState<BirthdayCountdown>(() => getDecember4Countdown());
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setCountdown(getNovember24Countdown());
+      setCountdown(getDecember4Countdown());
     }, 1000);
     return () => window.clearInterval(timer);
   }, []);
@@ -469,7 +468,7 @@ export default function ChristmasAtmosphere({ theme = 'dark', lang = 'ja' }: Chr
       </div>
 
       {/* ==================================================================================== */}
-      {/* 2B. LEFT SIDE: SMALL LITTLE GIRL WITH BIRTHDAY HAT, "誕生日おめでとう" & HOURS TIMER */}
+      {/* 2B. LEFT SIDE: SMALL LITTLE BIRTHDAY BOY WITH PARTY HAT, "誕生日おめでとう" & TIMER  */}
       {/* ==================================================================================== */}
       <div
         className="fixed bottom-0 left-1.5 sm:left-3 pointer-events-none z-10 select-none overflow-visible flex flex-col items-start"
@@ -485,13 +484,13 @@ export default function ChristmasAtmosphere({ theme = 'dark', lang = 'ja' }: Chr
           <div
             className={`mb-0.5 ml-1 px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded-xl border backdrop-blur-sm shadow-xs max-w-[186px] sm:max-w-[228px] ${
               isDark
-                ? 'bg-[#1f162b]/90 border-pink-400/35 text-pink-100 shadow-[0_4px_14px_rgba(0,0,0,0.45)]'
-                : 'bg-[#fff9fb]/92 border-rose-200 text-neutral-900 shadow-[0_4px_12px_rgba(225,29,72,0.1)]'
+                ? 'bg-[#151c2e]/90 border-sky-400/35 text-sky-100 shadow-[0_4px_14px_rgba(0,0,0,0.45)]'
+                : 'bg-[#f8fbff]/92 border-sky-200 text-neutral-900 shadow-[0_4px_12px_rgba(37,99,235,0.1)]'
             }`}
           >
             <div
               className={`font-serif text-[11px] sm:text-xs font-bold leading-tight tracking-tight ${
-                isDark ? 'text-pink-300' : 'text-rose-700'
+                isDark ? 'text-sky-300' : 'text-sky-800'
               }`}
             >
               誕生日おめでとう
@@ -510,16 +509,16 @@ export default function ChristmasAtmosphere({ theme = 'dark', lang = 'ja' }: Chr
               {timerLabel}
             </div>
 
-            {/* Background Music: Cherry by Spitz plays only during Nov 24, 2026 (24-hour window) */}
+            {/* Background Music: Cherry by Spitz plays strictly during Dec 4, 2026 (24-hour window) */}
             {countdown.isBirthdayToday && (
               <BackgroundMusicPlayer lang={lang} theme={theme} />
             )}
           </div>
 
-          {/* Small Little Girl SVG with Birthday Party Hat */}
+          {/* Small Little Birthday Boy SVG with Party Hat */}
           <div className="w-20 h-26 sm:w-28 sm:h-36 md:w-32 md:h-40">
             <svg viewBox="0 0 150 185" className="w-full h-full overflow-visible">
-              {/* Little sparkling stars around her hat */}
+              {/* Little sparkling stars around his birthday hat */}
               <polygon
                 points="118,22 121,29 128,29 122,34 124,41 118,37 112,41 114,34 108,29 115,29"
                 fill="#FCD34D"
@@ -529,20 +528,20 @@ export default function ChristmasAtmosphere({ theme = 'dark', lang = 'ja' }: Chr
               />
               <polygon
                 points="26,48 28,53 33,53 29,56 30.5,61 26,58 21.5,61 23,56 19,53 24,53"
-                fill="#F472B6"
-                opacity="0.85"
+                fill="#38BDF8"
+                opacity="0.9"
               />
 
-              {/* Little Girl Character Group */}
+              {/* Little Birthday Boy Character Group */}
               <g transform="translate(74, 72)">
-                {/* Birthday Party Hat sitting sweetly on top of her head */}
+                {/* Birthday Party Hat sitting cheerfully on top of his head */}
                 <g transform="translate(0, -16) rotate(-5)">
                   {/* Pom-pom at hat tip */}
                   <circle cx="0" cy="-34" r="5" fill="#FDE047" stroke={inkColor} strokeWidth="1.5" />
                   {/* Party Hat Cone */}
                   <polygon
                     points="-15,-4 0,-31 15,-4"
-                    fill="#F43F5E"
+                    fill="#2563EB"
                     stroke={inkColor}
                     strokeWidth="1.8"
                     strokeLinejoin="round"
@@ -550,17 +549,27 @@ export default function ChristmasAtmosphere({ theme = 'dark', lang = 'ja' }: Chr
                   {/* Decorative Festive Stripes / Polka Dots on Hat */}
                   <path d="M-9,-12 L9,-12" stroke="#FDE047" strokeWidth="2.5" strokeLinecap="round" />
                   <circle cx="-3" cy="-19" r="2" fill="#FFFFFF" />
-                  <circle cx="4" cy="-21" r="1.8" fill="#A7F3D0" />
-                  <circle cx="2" cy="-7" r="2" fill="#FFFFFF" />
+                  <circle cx="4" cy="-21" r="1.8" fill="#6EE7B7" />
+                  <circle cx="2" cy="-7" r="2" fill="#F43F5E" />
                   {/* Fluffy White Hat Brim */}
                   <rect x="-16.5" y="-5" width="33" height="5.5" rx="2.75" fill="#FFFBEB" stroke={inkColor} strokeWidth="1.3" />
                 </g>
 
-                {/* Cute Pigtails with Pink Ribbons */}
-                <path d="M-12,-4 Q-24,-8 -27,4" fill="none" stroke={inkColor} strokeWidth="2.4" strokeLinecap="round" />
-                <circle cx="-16" cy="-5" r="3" fill="#EC4899" />
-                <path d="M12,-4 Q24,-8 27,4" fill="none" stroke={inkColor} strokeWidth="2.4" strokeLinecap="round" />
-                <circle cx="16" cy="-5" r="3" fill="#EC4899" />
+                {/* Cute Tousled Boy Hair */}
+                <path
+                  d="M-12,-7 Q-7,-17 0,-13 Q7,-18 12,-7"
+                  fill="none"
+                  stroke={inkColor}
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M-14,-2 Q-16,-7 -12,-9 M14,-2 Q16,-7 12,-9"
+                  fill="none"
+                  stroke={inkColor}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
 
                 {/* Head */}
                 <circle
@@ -575,49 +584,66 @@ export default function ChristmasAtmosphere({ theme = 'dark', lang = 'ja' }: Chr
                 {/* Cheerful Eyes, Rosy Cheeks & Happy Smile */}
                 <path d="M-6,-2 Q-4,-5 -2,-2" fill="none" stroke={inkColor} strokeWidth="1.8" strokeLinecap="round" />
                 <path d="M2,-2 Q4,-5 6,-2" fill="none" stroke={inkColor} strokeWidth="1.8" strokeLinecap="round" />
-                <circle cx="-8" cy="2" r="2.6" fill="#FDA4AF" opacity="0.9" />
-                <circle cx="8" cy="2" r="2.6" fill="#FDA4AF" opacity="0.9" />
+                <circle cx="-8" cy="2" r="2.6" fill="#FDA4AF" opacity="0.88" />
+                <circle cx="8" cy="2" r="2.6" fill="#FDA4AF" opacity="0.88" />
                 <path d="M-4,4 Q0,8.5 4,4" fill="none" stroke={inkColor} strokeWidth="1.7" strokeLinecap="round" />
 
-                {/* Festive Neck Ribbon */}
-                <rect x="-7" y="13" width="14" height="4.5" rx="2" fill="#FBBF24" stroke={inkColor} strokeWidth="1.1" />
+                {/* Cute Red Party Bow Tie */}
+                <polygon points="-7,13 0,16 -7,19" fill="#EF4444" stroke={inkColor} strokeWidth="1" strokeLinejoin="round" />
+                <polygon points="7,13 0,16 7,19" fill="#EF4444" stroke={inkColor} strokeWidth="1" strokeLinejoin="round" />
+                <circle cx="0" cy="16" r="2" fill="#FDE047" stroke={inkColor} strokeWidth="0.9" />
 
-                {/* Cute Birthday Dress */}
-                <polygon
-                  points="-17,56 0,17 17,56"
-                  fill="#FB7185"
+                {/* Little Boy Party Sweater / Jacket */}
+                <rect
+                  x="-13"
+                  y="17"
+                  width="26"
+                  height="32"
+                  rx="5"
+                  fill="#0284C7"
                   stroke={inkColor}
                   strokeWidth="1.8"
-                  strokeLinejoin="round"
                 />
-                {/* Cream Ruffle Trim on Dress */}
-                <rect x="-18.5" y="53" width="37" height="5" rx="2.5" fill="#FFFBEB" stroke={inkColor} strokeWidth="1.1" />
-                {/* Cute tiny heart on dress */}
-                <circle cx="0" cy="36" r="2.5" fill="#FDE047" />
+                {/* Cute Gold Star Emblem on Sweater */}
+                <polygon
+                  points="0,25 2,30 7,30 3,33 4.5,38 0,35 -4.5,38 -3,33 -7,30 -2,30"
+                  fill="#FDE047"
+                />
+                {/* Cozy Shorts */}
+                <rect
+                  x="-12"
+                  y="47"
+                  width="24"
+                  height="13"
+                  rx="3"
+                  fill="#1E293B"
+                  stroke={inkColor}
+                  strokeWidth="1.6"
+                />
 
                 {/* Left Arm waving cheerfully */}
-                <path d="M-8,24 Q-20,16 -24,6" fill="none" stroke={inkColor} strokeWidth="2.1" strokeLinecap="round" />
-                <circle cx="-24.5" cy="5" r="2.5" fill="#FDE047" stroke={inkColor} strokeWidth="1" />
+                <path d="M-13,24 Q-22,16 -26,6" fill="none" stroke={inkColor} strokeWidth="2.1" strokeLinecap="round" />
+                <circle cx="-26.5" cy="5" r="2.5" fill="#FDE047" stroke={inkColor} strokeWidth="1" />
 
-                {/* Right Arm holding a little pastel birthday balloon */}
-                <path d="M8,24 Q20,20 28,12" fill="none" stroke={inkColor} strokeWidth="2.1" strokeLinecap="round" />
-                <path d="M28,12 Q32,1 31,-11" fill="none" stroke={isDark ? '#FDE68A' : '#94A3B8'} strokeWidth="1.2" />
+                {/* Right Arm holding a sky-blue birthday balloon */}
+                <path d="M13,24 Q22,20 29,12" fill="none" stroke={inkColor} strokeWidth="2.1" strokeLinecap="round" />
+                <path d="M29,12 Q33,1 32,-11" fill="none" stroke={isDark ? '#FDE68A' : '#94A3B8'} strokeWidth="1.2" />
                 <ellipse
-                  cx="31"
+                  cx="32"
                   cy="-21"
                   rx="9.5"
                   ry="11.5"
-                  fill="#F472B6"
+                  fill="#38BDF8"
                   stroke={inkColor}
                   strokeWidth="1.5"
                 />
-                <ellipse cx="28" cy="-25" rx="2.5" ry="4" fill="#FFFFFF" opacity="0.55" transform="rotate(-18 28 -25)" />
+                <ellipse cx="29" cy="-25" rx="2.5" ry="4" fill="#FFFFFF" opacity="0.55" transform="rotate(-18 29 -25)" />
 
-                {/* Legs & Little Party Shoes standing right at bottom baseline */}
-                <line x1="-5.5" y1="58" x2="-5.5" y2="108" stroke={inkColor} strokeWidth="2.3" strokeLinecap="round" />
-                <line x1="5.5" y1="58" x2="5.5" y2="108" stroke={inkColor} strokeWidth="2.3" strokeLinecap="round" />
-                <rect x="-10" y="106" width="8.5" height="5.5" rx="2" fill="#E11D48" stroke={inkColor} strokeWidth="1.1" />
-                <rect x="2" y="106" width="8.5" height="5.5" rx="2" fill="#E11D48" stroke={inkColor} strokeWidth="1.1" />
+                {/* Legs & Little Sneakers standing right at bottom baseline */}
+                <line x1="-6" y1="60" x2="-6" y2="108" stroke={inkColor} strokeWidth="2.3" strokeLinecap="round" />
+                <line x1="6" y1="60" x2="6" y2="108" stroke={inkColor} strokeWidth="2.3" strokeLinecap="round" />
+                <rect x="-10.5" y="106" width="9" height="5.5" rx="2" fill="#2563EB" stroke={inkColor} strokeWidth="1.1" />
+                <rect x="2" y="106" width="9" height="5.5" rx="2" fill="#2563EB" stroke={inkColor} strokeWidth="1.1" />
               </g>
             </svg>
           </div>
